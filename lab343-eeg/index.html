@@ -2,10 +2,11 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>Room 343 EEG Booking</title>
-<link rel="stylesheet" href="lib/fullcalendar/core-main.css">
-<link rel="stylesheet" href="lib/fullcalendar/daygrid-main.css">
-<script src="../lib/fullcalendar/index.global.min.js"></script>
+<title>实验室 343 EEG 预约</title>
+
+<!-- FullCalendar 6.x 本地 JS 已包含样式，无需单独 CSS -->
+<script src="lib/fullcalendar/index.global.min.js"></script>
+
 <style>
 body{font-family:"Microsoft YaHei",sans-serif;margin:20px;}
 .top-bar{max-width:1100px;margin:0 auto 15px;display:flex;justify-content:space-between;align-items:center;}
@@ -15,12 +16,13 @@ a{text-decoration:none;color:#2c7be5;}
 .modal-content{background:white;max-width:400px;margin:120px auto;padding:20px;border-radius:8px;}
 .modal-content input{width:100%;margin-bottom:10px;}
 .modal-actions{text-align:right;}
+.fc-event{cursor:pointer;}
 </style>
 </head>
 <body>
 
 <div class="top-bar">
-  <h2>Room 343 - EEG</h2>
+  <h2>Room 343 - EEG 预约</h2>
   <a href="/index.html">← 返回主页</a>
 </div>
 
@@ -39,12 +41,7 @@ a{text-decoration:none;color:#2c7be5;}
     </div>
   </div>
 </div>
-  
-<!-- ✅ 本地 JS -->
-<script src="lib/fullcalendar/core-main.js"></script>
-<script src="lib/fullcalendar/daygrid-main.js"></script>
-<script src="lib/fullcalendar/interaction-main.js"></script>
-  
+
 <script>
 // ------------------------- 配置 -------------------------
 const GITHUB_TOKEN = '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'; // 不安全
@@ -66,9 +63,13 @@ async function loadBookings(){
 // ------------------------- 渲染日历 -------------------------
 function renderCalendar(){
   calendar = new FullCalendar.Calendar(document.getElementById('calendar'),{
-    initialView:'timeGridWeek', locale:'zh-cn', nowIndicator:true,
-    selectable:true, selectOverlap:false,
-    slotMinTime:'08:00:00', slotMaxTime:'22:00:00',
+    initialView:'timeGridWeek',
+    locale:'zh-cn',
+    nowIndicator:true,
+    selectable:true,
+    selectOverlap:false,
+    slotMinTime:'08:00:00',
+    slotMaxTime:'22:00:00',
     headerToolbar:{left:'prev,next today', center:'title', right:'timeGridWeek,timeGridDay'},
     events: bookings,
     dateClick: info => openModal(info.date),
@@ -101,7 +102,6 @@ function closeModal(){
 
 // ------------------------- 提交 GitHub API -------------------------
 async function submitBookingGitHub(name,start,end){
-  // 获取当前 JSON 文件信息
   const getRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}?ref=${BRANCH}`,{
     headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
   });
@@ -110,10 +110,8 @@ async function submitBookingGitHub(name,start,end){
   const currentContent = atob(fileData.content);
   const arr = JSON.parse(currentContent);
 
-  // 添加新预约
   arr.push({title:name,start:start,end:end,backgroundColor:'#ccc',borderColor:'#ccc'});
 
-  // 更新 JSON 文件
   const putRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`,{
     method:'PUT',
     headers: { 'Authorization': `token ${GITHUB_TOKEN}` },
@@ -138,7 +136,6 @@ async function submitBooking(){
 
   if(!name||!start||!end){ alert('请填写完整'); return; }
 
-  // 检查时间冲突
   for(let ev of bookings){
     if(!(new Date(end)<=new Date(ev.start)||new Date(start)>=new Date(ev.end))){
       alert('该时间段已被预约'); return;
