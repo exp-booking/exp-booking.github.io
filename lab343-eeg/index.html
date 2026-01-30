@@ -3,61 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <title>实验室 343 EEG 预约</title>
-
-  <!-- 本地 FullCalendar -->
   <link rel="stylesheet" href="../lib/fullcalendar/index.global.min.css">
   <script src="../lib/fullcalendar/index.global.min.js"></script>
-
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont,
-                   "PingFang SC", "Microsoft YaHei", sans-serif;
-      margin: 20px;
-    }
-
-    .top-bar {
-      max-width: 1100px;
-      margin: 0 auto 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    a {
-      text-decoration: none;
-      color: #2c7be5;
-    }
-
-    #calendar {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    /* 弹窗样式 */
-    #bookingModal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.4);
-      z-index: 1000;
-    }
-
-    .modal-content {
-      background: white;
-      max-width: 400px;
-      margin: 120px auto;
-      padding: 20px;
-      border-radius: 8px;
-    }
-
-    .modal-content input, .modal-content textarea {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-
-    .modal-actions {
-      text-align: right;
-    }
+    body { font-family: "Microsoft YaHei", sans-serif; margin: 20px; }
+    .top-bar { max-width:1100px; margin:0 auto 15px; display:flex; justify-content:space-between; align-items:center; }
+    a { text-decoration:none; color:#2c7be5; }
+    #calendar { max-width:1100px; margin:0 auto; }
+    #bookingModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1000; }
+    .modal-content { background:white; max-width:400px; margin:120px auto; padding:20px; border-radius:8px; }
+    .modal-content input { width:100%; margin-bottom:10px; }
+    .modal-actions { text-align:right; }
   </style>
 </head>
 <body>
@@ -69,31 +25,13 @@
 
 <div id="calendar"></div>
 
-<!-- 预约弹窗 -->
 <div id="bookingModal">
   <div class="modal-content">
     <h3>预约实验室 343 EEG</h3>
-
-    <label>
-      姓名：
-      <input id="nameInput" type="text">
-    </label>
-
-    <label>
-      用途：
-      <input id="purposeInput" type="text">
-    </label>
-
-    <label>
-      开始时间：
-      <input id="startInput" type="datetime-local">
-    </label>
-
-    <label>
-      结束时间：
-      <input id="endInput" type="datetime-local">
-    </label>
-
+    <label>姓名：<input id="nameInput" type="text"></label>
+    <label>用途：<input id="purposeInput" type="text"></label>
+    <label>开始时间：<input id="startInput" type="datetime-local"></label>
+    <label>结束时间：<input id="endInput" type="datetime-local"></label>
     <div class="modal-actions">
       <button onclick="closeModal()">取消</button>
       <button onclick="submitBooking()">提交预约</button>
@@ -103,128 +41,78 @@
 
 <script>
 let calendar;
-let bookings = []; // 已预约事件
-let clickedDate = null;
+let bookings = [];
 
-/* ==========================
-   localStorage 读取
-========================== */
-const saved = localStorage.getItem('lab343_eeg_bookings');
-if (saved) {
-  bookings = JSON.parse(saved);
+async function loadBookings() {
+  const res = await fetch('bookings.json');
+  bookings = await res.json();
 }
 
-/* ==========================
-   初始化日历
-========================== */
-document.addEventListener('DOMContentLoaded', function () {
-
+function renderCalendar() {
   calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-    initialView: 'timeGridWeek',
-    locale: 'zh-cn',
-    nowIndicator: true,
-    selectable: true,
-    selectOverlap: false,  // 防止和已预约重叠
-    slotMinTime: '08:00:00',
-    slotMaxTime: '22:00:00',
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'timeGridWeek,timeGridDay'
-    },
+    initialView:'timeGridWeek', locale:'zh-cn', nowIndicator:true,
+    selectable:true, selectOverlap:false,
+    slotMinTime:'08:00:00', slotMaxTime:'22:00:00',
+    headerToolbar:{left:'prev,next today', center:'title', right:'timeGridWeek,timeGridDay'},
     events: bookings,
-
-    // 点击空白时间格弹出预约表单
-    dateClick: function(info) {
-      clickedDate = info.date;
-      openModal(info.date);
-    },
-
-    // 点击已有事件（灰色）弹出删除确认
-    eventClick: function(info) {
-      const ev = info.event;
-
-      const confirmDelete = confirm(
-        `是否取消预约：\n${ev.title}\n` +
-        `${ev.start.toLocaleString()} → ${ev.end.toLocaleString()}`
-      );
-
-      if (confirmDelete) {
-        ev.remove(); // 从日历删除
-        bookings = bookings.filter(b =>
-          !(b.start === ev.start.toISOString() &&
-            b.end === ev.end.toISOString() &&
-            b.title === ev.title)
-        );
-        localStorage.setItem('lab343_eeg_bookings', JSON.stringify(bookings));
+    dateClick: function(info){ openModal(info.date); },
+    eventClick: function(info){
+      const ev=info.event;
+      const confirmDelete = confirm(`是否取消预约：\n${ev.title}\n${ev.start.toLocaleString()} → ${ev.end.toLocaleString()}`);
+      if(confirmDelete){ 
+        ev.remove(); 
+        bookings = bookings.filter(b => !(b.start===ev.start.toISOString()&&b.end===ev.end.toISOString()&&b.title===ev.title));
       }
     }
   });
-
   calendar.render();
-});
-
-/* ==========================
-   弹窗控制
-========================== */
-function openModal(date) {
-  const startISO = date.toISOString().slice(0,16);
-  document.getElementById('startInput').value = startISO;
-  document.getElementById('endInput').value = startISO;
-
-  document.getElementById('bookingModal').style.display = 'block';
 }
 
-function closeModal() {
-  document.getElementById('bookingModal').style.display = 'none';
-  document.getElementById('nameInput').value = '';
-  document.getElementById('purposeInput').value = '';
-  document.getElementById('startInput').value = '';
-  document.getElementById('endInput').value = '';
-  clickedDate = null;
+function openModal(date){
+  const startISO=date.toISOString().slice(0,16);
+  document.getElementById('startInput').value=startISO;
+  document.getElementById('endInput').value=startISO;
+  document.getElementById('bookingModal').style.display='block';
 }
 
-/* ==========================
-   提交预约
-========================== */
-function submitBooking() {
-  const name = document.getElementById('nameInput').value.trim();
-  const purpose = document.getElementById('purposeInput').value.trim();
-  const start = document.getElementById('startInput').value;
-  const end = document.getElementById('endInput').value;
+function closeModal(){
+  document.getElementById('bookingModal').style.display='none';
+  document.getElementById('nameInput').value='';
+  document.getElementById('purposeInput').value='';
+  document.getElementById('startInput').value='';
+  document.getElementById('endInput').value='';
+}
 
-  if (!name || !start || !end) {
-    alert('请完整填写姓名和时间');
-    return;
-  }
+function submitBooking(){
+  const name=document.getElementById('nameInput').value.trim();
+  const purpose=document.getElementById('purposeInput').value.trim();
+  const start=document.getElementById('startInput').value;
+  const end=document.getElementById('endInput').value;
 
-  if (new Date(start) >= new Date(end)) {
-    alert('结束时间必须晚于开始时间');
-    return;
-  }
-
-  // 检查冲突
-  for (let ev of bookings) {
-    if (!(new Date(end) <= new Date(ev.start) || new Date(start) >= new Date(ev.end))) {
-      alert('该时间段已被预约，请选择其他时间');
-      return;
+  if(!name||!start||!end){ alert('请完整填写'); return; }
+  if(new Date(start)>=new Date(end)){ alert('结束时间必须晚于开始时间'); return; }
+  
+  for(let ev of bookings){
+    if(!(new Date(end)<=new Date(ev.start)||new Date(start)>=new Date(ev.end))){
+      alert('该时间段已被预约，请选择其他时间'); return;
     }
   }
 
-  // 添加事件
-  const newBooking = {
-    title: name,
-    start: start,
-    end: end,
-    backgroundColor: '#cccccc',
-    borderColor: '#cccccc'
-  };
-
+  const newBooking={title:name,start:start,end:end,backgroundColor:'#ccc',borderColor:'#ccc'};
   bookings.push(newBooking);
-  localStorage.setItem('lab343_eeg_bookings', JSON.stringify(bookings));
   calendar.addEvent(newBooking);
   closeModal();
+
+  // 真实写入 JSON 由 GitHub Actions 处理
+  alert('预约提交成功！后台 Actions 会更新 bookings.json，请刷新页面查看最新数据');
 }
+
+async function init(){
+  await loadBookings();
+  renderCalendar();
+}
+
+init();
 </script>
 
 </body>
