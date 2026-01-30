@@ -63,6 +63,7 @@ async function loadBookings(){
 
   // 转成 FullCalendar 格式
   bookings = data.map(ev => ({
+    id: ev.id, // 数据库 id
     title: ev.name,
     start: new Date(ev.start).toISOString().slice(0,16),
     end: new Date(ev.end).toISOString().slice(0,16),
@@ -84,13 +85,20 @@ function renderCalendar(){
     headerToolbar: { left: "prev,next today", center: "title", right: "timeGridWeek,timeGridDay" },
     events: bookings,
     dateClick: info => openModal(info.date),
-    eventClick: info => {
+    eventClick: async info => {
       const ev = info.event;
       if(confirm(`是否取消预约：\n${ev.title}\n${ev.start.toLocaleString()} → ${ev.end.toLocaleString()}`)){
+        
+        // 删除前端日历事件
         ev.remove();
-        // 前端数组里删除
-        bookings = bookings.filter(b => !(b.start === ev.start.toISOString().slice(0,16) && b.end === ev.end.toISOString().slice(0,16) && b.title === ev.title));
-        alert("已从日历移除，刷新后数据库仍有记录");
+        bookings = bookings.filter(b => b.id !== ev.id);
+
+        // 删除数据库事件
+        if(ev.id){
+          const { error } = await sb.from(TABLE_NAME).delete().eq('id', ev.id);
+          if(error) alert("删除数据库失败: " + error.message);
+          else alert("预约已删除");
+        }
       }
     }
   });
@@ -130,17 +138,25 @@ async function submitBooking(){
   }
 
   // 插入数据库
-  const { data, error } = await sb.from(TABLE_NAME).insert([{
-    name, purpose, start, end
-  }]);
+  const { data, error } = await sb.from(TABLE_NAME).insert([{ name, purpose, start, end }]).select();
   if(error){ alert("提交失败: " + error.message); return; }
 
-  // 添加到日历
+  // data[0] 是数据库返回的新增行，包含 id
+  const newEv = data[0];
   calendar.addEvent({
-    title: name,
-    start, end,
+    id: newEv.id,
+    title: newEv.name,
+    start: new Date(newEv.start).toISOString().slice(0,16),
+    end: new Date(newEv.end).toISOString().slice(0,16),
     backgroundColor: "#ccc",
     borderColor: "#ccc"
+  });
+
+  bookings.push({
+    id: newEv.id,
+    title: newEv.name,
+    start: new Date(newEv.start).toISOString().slice(0,16),
+    end: new Date(newEv.end).toISOString().slice(0,16)
   });
 
   closeModal();
