@@ -40,6 +40,12 @@ a{text-decoration:none;color:#2c7be5;}
 </div>
 
 <script>
+const GITHUB_TOKEN = '你的GitHub个人Token'; // ⚠️ 不安全，仅测试用
+const OWNER = '你的用户名';
+const REPO = 'exp-booking.github.io';
+const FILE_PATH = 'lab343-eeg/bookings.json';
+const BRANCH = 'main';
+
 let calendar;
 let bookings=[];
 
@@ -61,6 +67,8 @@ function renderCalendar(){
       if(confirm(`是否取消预约：\n${ev.title}\n${ev.start.toLocaleString()} → ${ev.end.toLocaleString()}`)){
         ev.remove();
         bookings = bookings.filter(b => !(b.start===ev.start.toISOString()&&b.end===ev.end.toISOString()&&b.title===ev.title));
+        // 取消提交到 GitHub
+        alert('已从本地移除，刷新页面后仍会显示在 GitHub，正式多人共享需要重新提交');
       }
     }
   });
@@ -82,45 +90,8 @@ function closeModal(){
   document.getElementById('endInput').value='';
 }
 
-async function submitBooking(){
-  const name=document.getElementById('nameInput').value.trim();
-  const purpose=document.getElementById('purposeInput').value.trim();
-  const start=document.getElementById('startInput').value;
-  const end=document.getElementById('endInput').value;
-
-  if(!name||!start||!end){ alert('请填写完整'); return; }
-  for(let ev of bookings){
-    if(!(new Date(end)<=new Date(ev.start)||new Date(start)>=new Date(ev.end))){
-      alert('该时间段已被预约'); return;
-    }
-  }
-
-  const newBooking={title:name,start:start,end:end,backgroundColor:'#ccc',borderColor:'#ccc'};
-  bookings.push(newBooking);
-  calendar.addEvent(newBooking);
-  closeModal();
-
-  // 调用国内云函数
-  try {
-    const res = await fetch('https://你的云函数域名/submitBooking', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({name, start, end})
-    });
-    const data = await res.json();
-    alert(data.message || '提交成功，刷新页面查看最新预约');
-  } catch(err){
-    console.error(err);
-    alert('提交失败，请稍后重试');
-  }
-}
-
-async function init(){
-  await loadBookings();
-  renderCalendar();
-}
-
-init();
-</script>
-</body>
-</html>
+// GitHub API 提交 JSON
+async function submitBookingGitHub(name,start,end){
+  // 1. 读取当前 JSON
+  const getRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}?ref=${BRANCH}`,{
+    heade
