@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>实验室预约日历</title>
+
+  <!-- FullCalendar -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont;
+      margin: 20px;
+    }
+    #calendar {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+<h2>实验室预约日历</h2>
+<div id="calendar"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const calendarEl = document.getElementById('calendar');
+
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'timeGridWeek',
+    selectable: true,
+    slotMinTime: '08:00:00',
+    slotMaxTime: '22:00:00',
+    nowIndicator: true,
+    select: function(info) {
+      alert(
+        `选择时间段：\n` +
+        `${info.startStr} → ${info.endStr}\n\n` +
+        `下一步我们接预约表单`
+      );
+    }
+  });
+
+  calendar.render();
+});
+</script>
+
+</body>
+</html>
