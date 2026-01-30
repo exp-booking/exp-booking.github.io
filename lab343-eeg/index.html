@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>EEG lab 预约</title>
+  <title>实验室一预约</title>
 
   <!-- 本地 FullCalendar -->
   <link rel="stylesheet" href="../lib/fullcalendar/index.global.min.css">
@@ -63,7 +63,7 @@
 <body>
 
 <div class="top-bar">
-  <h2>EEG lab 预约</h2>
+  <h2>实验室一预约日历</h2>
   <a href="../">← 返回主页</a>
 </div>
 
@@ -72,7 +72,7 @@
 <!-- 预约弹窗 -->
 <div id="bookingModal">
   <div class="modal-content">
-    <h3>预约EEG lab</h3>
+    <h3>预约实验室一</h3>
 
     <label>
       姓名：
@@ -105,6 +105,14 @@
 let calendar;
 let bookings = []; // 已预约事件
 let clickedDate = null;
+
+/* ==========================
+   localStorage 读取
+========================== */
+const saved = localStorage.getItem('lab1_bookings');
+if (saved) {
+  bookings = JSON.parse(saved);
+}
 
 /* ==========================
    初始化日历
@@ -143,8 +151,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (confirmDelete) {
         ev.remove(); // 从日历删除
-        // 同步更新 bookings 数组
-        bookings = bookings.filter(b => !(b.start === ev.start.toISOString() && b.end === ev.end.toISOString() && b.title === ev.title));
+        bookings = bookings.filter(b =>
+          !(b.start === ev.start.toISOString() &&
+            b.end === ev.end.toISOString() &&
+            b.title === ev.title)
+        );
+        localStorage.setItem('lab1_bookings', JSON.stringify(bookings));
       }
     }
   });
@@ -209,6 +221,7 @@ function submitBooking() {
   };
 
   bookings.push(newBooking);
+  localStorage.setItem('lab1_bookings', JSON.stringify(bookings));
   calendar.addEvent(newBooking);
   closeModal();
 }
