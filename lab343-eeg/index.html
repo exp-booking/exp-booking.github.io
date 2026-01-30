@@ -40,20 +40,24 @@ a{text-decoration:none;color:#2c7be5;}
 </div>
 
 <script>
-const GITHUB_TOKEN = '你的GitHub个人Token'; // 不安全
-const OWNER = '你的用户名';
+// ------------------------- 配置 -------------------------
+const GITHUB_TOKEN = '你的GitHubToken'; // ⚠️ 不安全，放前端
+const OWNER = '你的GitHub用户名';
 const REPO = 'exp-booking.github.io';
 const FILE_PATH = 'lab343-eeg/bookings.json';
 const BRANCH = 'main';
 
+// ------------------------- 变量 -------------------------
 let calendar;
 let bookings=[];
 
+// ------------------------- 加载已有预约 -------------------------
 async function loadBookings(){
   const res = await fetch('bookings.json');
   bookings = await res.json();
 }
 
+// ------------------------- 渲染日历 -------------------------
 function renderCalendar(){
   calendar = new FullCalendar.Calendar(document.getElementById('calendar'),{
     initialView:'timeGridWeek', locale:'zh-cn', nowIndicator:true,
@@ -66,22 +70,21 @@ function renderCalendar(){
       const ev = info.event;
       if(confirm(`是否取消预约：\n${ev.title}\n${ev.start.toLocaleString()} → ${ev.end.toLocaleString()}`)){
         ev.remove();
-        bookings = bookings.filter(b => !(b.start===ev.start.toISOString()&&b.end===ev.end.toISOString()&&b.title===ev.title));
-        // 取消提交到 GitHub
-        alert('已从本地移除，刷新页面后仍会显示在 GitHub，正式多人共享需要重新提交');
+        bookings = bookings.filter(b => !(b.start===ev.start.toISOString() && b.end===ev.end.toISOString() && b.title===ev.title));
+        alert('已从本地移除，刷新页面仍会显示在 GitHub');
       }
     }
   });
   calendar.render();
 }
 
+// ------------------------- 弹窗 -------------------------
 function openModal(date){
   const startISO = date.toISOString().slice(0,16);
   document.getElementById('startInput').value = startISO;
   document.getElementById('endInput').value = startISO;
   document.getElementById('bookingModal').style.display='block';
 }
-
 function closeModal(){
   document.getElementById('bookingModal').style.display='none';
   document.getElementById('nameInput').value='';
@@ -90,8 +93,67 @@ function closeModal(){
   document.getElementById('endInput').value='';
 }
 
-// GitHub API 提交 JSON
+// ------------------------- 提交 GitHub API -------------------------
 async function submitBookingGitHub(name,start,end){
-  // 1. 读取当前 JSON
+  // 获取当前 JSON 文件信息
   const getRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}?ref=${BRANCH}`,{
-    heade
+    headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+  });
+  const fileData = await getRes.json();
+  const sha = fileData.sha;
+  const currentContent = atob(fileData.content);
+  const arr = JSON.parse(currentContent);
+
+  // 添加新预约
+  arr.push({title:name,start:start,end:end,backgroundColor:'#ccc',borderColor:'#ccc'});
+
+  // 更新 JSON 文件
+  const putRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`,{
+    method:'PUT',
+    headers: { 'Authorization': `token ${GITHUB_TOKEN}` },
+    body: JSON.stringify({
+      message:`Add booking by ${name}`,
+      content:btoa(JSON.stringify(arr,null,2)),
+      sha: sha,
+      branch: BRANCH
+    })
+  });
+
+  const result = await putRes.json();
+  console.log(result);
+  alert('提交成功，刷新页面即可看到最新预约');
+}
+
+// ------------------------- 提交预约 -------------------------
+async function submitBooking(){
+  const name=document.getElementById('nameInput').value.trim();
+  const start=document.getElementById('startInput').value;
+  const end=document.getElementById('endInput').value;
+
+  if(!name||!start||!end){ alert('请填写完整'); return; }
+
+  // 检查时间冲突
+  for(let ev of bookings){
+    if(!(new Date(end)<=new Date(ev.start)||new Date(start)>=new Date(ev.end))){
+      alert('该时间段已被预约'); return;
+    }
+  }
+
+  const newBooking={title:name,start:start,end:end,backgroundColor:'#ccc',borderColor:'#ccc'};
+  bookings.push(newBooking);
+  calendar.addEvent(newBooking);
+  closeModal();
+
+  await submitBookingGitHub(name,start,end);
+}
+
+// ------------------------- 初始化 -------------------------
+async function init(){
+  await loadBookings();
+  renderCalendar();
+}
+init();
+</script>
+
+</body>
+</html>
