@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>实验室 343 EEG 预约</title>
-<link rel="stylesheet" href="../lib/fullcalendar/index.global.min.css">
+<link rel="stylesheet" href="lib/fullcalendar/core-main.css">
+<link rel="stylesheet" href="lib/fullcalendar/daygrid-main.css">
 <script src="../lib/fullcalendar/index.global.min.js"></script>
 <style>
 body{font-family:"Microsoft YaHei",sans-serif;margin:20px;}
@@ -38,7 +39,12 @@ a{text-decoration:none;color:#2c7be5;}
     </div>
   </div>
 </div>
-
+  
+<!-- ✅ 本地 JS -->
+<script src="lib/fullcalendar/core-main.js"></script>
+<script src="lib/fullcalendar/daygrid-main.js"></script>
+<script src="lib/fullcalendar/interaction-main.js"></script>
+  
 <script>
 // ------------------------- 配置 -------------------------
 const GITHUB_TOKEN = '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'; // 不安全
