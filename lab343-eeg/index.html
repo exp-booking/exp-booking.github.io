@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>EEG 预约</title>
+  <title>实验室一预约</title>
 
   <!-- 本地 FullCalendar -->
   <link rel="stylesheet" href="../lib/fullcalendar/index.global.min.css">
@@ -32,40 +32,162 @@
       max-width: 1100px;
       margin: 0 auto;
     }
+
+    /* 弹窗样式 */
+    #bookingModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      max-width: 400px;
+      margin: 120px auto;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .modal-content input {
+      width: 100%;
+      margin-top: 5px;
+      margin-bottom: 15px;
+    }
+
+    .modal-actions {
+      text-align: right;
+    }
   </style>
 </head>
 <body>
 
 <div class="top-bar">
-  <h2>EEG 预约日历</h2>
+  <h2>实验室一预约日历</h2>
   <a href="../">← 返回主页</a>
 </div>
 
 <div id="calendar"></div>
 
+<!-- 预约弹窗 -->
+<div id="bookingModal">
+  <div class="modal-content">
+    <h3>预约实验室一</h3>
+
+    <p id="timeRange"></p>
+
+    <label>
+      姓名：
+      <input id="nameInput" type="text">
+    </label>
+
+    <label>
+      用途：
+      <input id="purposeInput" type="text">
+    </label>
+
+    <div class="modal-actions">
+      <button onclick="closeModal()">取消</button>
+      <button onclick="submitBooking()">提交预约</button>
+    </div>
+  </div>
+</div>
+
 <script>
+/* ==========================
+   全局变量
+========================== */
+let calendar;
+let selectedInfo = null;
+
+/* ==========================
+   示例：已预约时间（灰色）
+   后续可从后端加载
+========================== */
+const bookings = [
+  {
+    title: '已预约',
+    start: '2026-01-30T10:00:00',
+    end:   '2026-01-30T12:00:00',
+    backgroundColor: '#cccccc',
+    borderColor: '#cccccc'
+  }
+];
+
+/* ==========================
+   初始化日历
+========================== */
 document.addEventListener('DOMContentLoaded', function () {
-  const calendarEl = document.getElementById('calendar');
 
-  const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'timeGridWeek',
-    locale: 'zh-cn',
-    selectable: true,
-    nowIndicator: true,
+  calendar = new FullCalendar.Calendar(
+    document.getElementById('calendar'),
+    {
+      initialView: 'timeGridWeek',
+      locale: 'zh-cn',
+      selectable: true,
+      selectOverlap: false,   // 已预约时间不可选
+      nowIndicator: true,
 
-    slotMinTime: '08:00:00',
-    slotMaxTime: '22:00:00',
+      slotMinTime: '08:00:00',
+      slotMaxTime: '22:00:00',
 
-    select: function(info) {
-      alert(
-        '【EEG】\n\n' +
-        info.startStr + ' → ' + info.endStr
-      );
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'timeGridWeek,timeGridDay'
+      },
+
+      events: bookings,
+
+      select: function(info) {
+        selectedInfo = info;
+        openModal(info);
+      }
     }
-  });
+  );
 
   calendar.render();
 });
+
+/* ==========================
+   弹窗控制
+========================== */
+function openModal(info) {
+  document.getElementById('timeRange').innerText =
+    info.startStr + ' → ' + info.endStr;
+  document.getElementById('bookingModal').style.display = 'block';
+}
+
+function closeModal() {
+  document.getElementById('bookingModal').style.display = 'none';
+  document.getElementById('nameInput').value = '';
+  document.getElementById('purposeInput').value = '';
+  selectedInfo = null;
+}
+
+/* ==========================
+   提交预约
+========================== */
+function submitBooking() {
+  const name = document.getElementById('nameInput').value.trim();
+  const purpose = document.getElementById('purposeInput').value.trim();
+
+  if (!name) {
+    alert('请填写姓名');
+    return;
+  }
+
+  calendar.addEvent({
+    title: name,
+    start: selectedInfo.start,
+    end: selectedInfo.end,
+    backgroundColor: '#cccccc',
+    borderColor: '#cccccc'
+  });
+
+  closeModal();
+}
 </script>
 
 </body>
