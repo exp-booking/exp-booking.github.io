@@ -8,7 +8,7 @@
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
-<!-- Supabase（浏览器版，非 module） -->
+<!-- Supabase 浏览器版 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -20,6 +20,7 @@ body { font-family: "Microsoft YaHei", sans-serif; margin: 20px; }
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.4);
+  z-index: 999;
 }
 #modalBox {
   background: #fff;
@@ -29,6 +30,7 @@ body { font-family: "Microsoft YaHei", sans-serif; margin: 20px; }
   border-radius: 8px;
 }
 #modalBox input { width: 100%; margin-bottom: 10px; }
+#modalBox button { margin-left: 10px; }
 </style>
 </head>
 
@@ -56,18 +58,16 @@ body { font-family: "Microsoft YaHei", sans-serif; margin: 20px; }
 const SUPABASE_URL = "https://ipqvhykwlvzagbffhdzp.supabase.co";
 const SUPABASE_KEY = "sb_publishable_Nv9QOCAV0sD-sTgYeCFKfQ_QOCMXmrM";
 
-const supabase = supabasejs.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+// ⚠️ 用 sb 代替 supabase，避免 CDN 自带全局冲突
+const sb = supabasejs.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /* ===== 全局变量 ===== */
 let calendar;
 let bookings = [];
 
-/* ===== 读预约 ===== */
+/* ===== 读取预约 ===== */
 async function loadBookings() {
-  const { data, error } = await supabase
+  const { data, error } = await sb
     .from("bookingsys")
     .select("*");
 
@@ -85,7 +85,7 @@ async function loadBookings() {
   }));
 }
 
-/* ===== 日历 ===== */
+/* ===== 渲染日历 ===== */
 function renderCalendar() {
   calendar = new FullCalendar.Calendar(
     document.getElementById("calendar"),
@@ -120,7 +120,7 @@ function closeModal() {
   modal.style.display = "none";
 }
 
-/* ===== 提交 ===== */
+/* ===== 提交预约 ===== */
 async function submitBooking() {
   const name = nameInput.value.trim();
   const purpose = purposeInput.value.trim();
@@ -132,7 +132,7 @@ async function submitBooking() {
     return;
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await sb
     .from("bookingsys")
     .insert([{ name, purpose, start, end }])
     .select();
@@ -153,7 +153,7 @@ async function submitBooking() {
   closeModal();
 }
 
-/* ===== 启动 ===== */
+/* ===== 初始化 ===== */
 window.onload = async function () {
   await loadBookings();
   renderCalendar();
