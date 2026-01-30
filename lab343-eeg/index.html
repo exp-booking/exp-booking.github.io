@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>EEG lab 预约</title>
+  <title>实验室一预约</title>
 
   <!-- 本地 FullCalendar -->
   <link rel="stylesheet" href="../lib/fullcalendar/index.global.min.css">
@@ -63,7 +63,7 @@
 <body>
 
 <div class="top-bar">
-  <h2>EEG lab 预约</h2>
+  <h2>实验室一预约日历</h2>
   <a href="../">← 返回主页</a>
 </div>
 
@@ -106,6 +106,9 @@ let calendar;
 let bookings = []; // 已预约事件
 let clickedDate = null;
 
+/* ==========================
+   初始化日历
+========================== */
 document.addEventListener('DOMContentLoaded', function () {
 
   calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
@@ -123,17 +126,35 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     events: bookings,
 
+    // 点击空白时间格弹出预约表单
     dateClick: function(info) {
-      // 点击某一天格子
       clickedDate = info.date;
       openModal(info.date);
+    },
+
+    // 点击已有事件（灰色）弹出删除确认
+    eventClick: function(info) {
+      const ev = info.event;
+
+      const confirmDelete = confirm(
+        `是否取消预约：\n${ev.title}\n` +
+        `${ev.start.toLocaleString()} → ${ev.end.toLocaleString()}`
+      );
+
+      if (confirmDelete) {
+        ev.remove(); // 从日历删除
+        // 同步更新 bookings 数组
+        bookings = bookings.filter(b => !(b.start === ev.start.toISOString() && b.end === ev.end.toISOString() && b.title === ev.title));
+      }
     }
   });
 
   calendar.render();
 });
 
-/* 打开弹窗 */
+/* ==========================
+   弹窗控制
+========================== */
 function openModal(date) {
   const startISO = date.toISOString().slice(0,16);
   document.getElementById('startInput').value = startISO;
@@ -142,7 +163,6 @@ function openModal(date) {
   document.getElementById('bookingModal').style.display = 'block';
 }
 
-/* 关闭弹窗 */
 function closeModal() {
   document.getElementById('bookingModal').style.display = 'none';
   document.getElementById('nameInput').value = '';
@@ -152,7 +172,9 @@ function closeModal() {
   clickedDate = null;
 }
 
-/* 提交预约 */
+/* ==========================
+   提交预约
+========================== */
 function submitBooking() {
   const name = document.getElementById('nameInput').value.trim();
   const purpose = document.getElementById('purposeInput').value.trim();
