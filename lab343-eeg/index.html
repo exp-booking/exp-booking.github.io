@@ -4,10 +4,12 @@
 <meta charset="UTF-8">
 <title>Rm.343 EEG Booking</title>
 
-<!-- FullCalendar 6.1.8 核心 JS -->
-<script src="lib/fullcalendar-6.1.8/index.global.min.js"></script>
+<!-- FullCalendar 6.1.8 官方 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 
-<!-- 基础样式，保证日历显示 -->
+<!-- FullCalendar 6.1.8 核心 JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
 <style>
 body{font-family:"Microsoft YaHei",sans-serif;margin:20px;}
 .top-bar{max-width:1100px;margin:0 auto 15px;display:flex;justify-content:space-between;align-items:center;}
@@ -17,16 +19,12 @@ a{text-decoration:none;color:#2c7be5;}
 .modal-content{background:white;max-width:400px;margin:120px auto;padding:20px;border-radius:8px;}
 .modal-content input{width:100%;margin-bottom:10px;}
 .modal-actions{text-align:right;}
-/* FullCalendar 简易样式 */
-.fc {max-width: 1100px;margin:0 auto;}
-.fc .fc-toolbar {display:flex;justify-content:space-between;margin-bottom:10px;}
-.fc .fc-event {background-color:#2c7be5;color:white;border-radius:4px;padding:2px 4px;}
 </style>
 </head>
 <body>
 
 <div class="top-bar">
-  <h2>Rm.343-EEG 预约</h2>
+  <h2>Rm.343-EEG</h2>
   <a href="/index.html">← 返回主页</a>
 </div>
 
@@ -34,7 +32,7 @@ a{text-decoration:none;color:#2c7be5;}
 
 <div id="bookingModal">
   <div class="modal-content">
-    <h3>预约343-EEG</h3>
+    <h3>Rm.343-EEG</h3>
     <label>姓名：<input id="nameInput" type="text"></label>
     <label>用途：<input id="purposeInput" type="text"></label>
     <label>开始时间：<input id="startInput" type="datetime-local"></label>
@@ -47,9 +45,9 @@ a{text-decoration:none;color:#2c7be5;}
 </div>
 
 <script type="module">
-// ------------------------- Supabase 配置 -------------------------
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
+// ------------------------- 配置 Supabase -------------------------
 const SUPABASE_URL = 'https://ipqvhykwlvzagbffhdzp.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Nv9QOCAV0sD-sTgYeCFKfQ_QOCMXmrM';
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -112,10 +110,8 @@ function closeModal(){
 
 // ------------------------- 删除事件 -------------------------
 async function deleteEvent(ev){
-  // 从日历和本地数组删除
   calendar.getEventById(ev.id)?.remove();
   bookings = bookings.filter(b => b.id!==ev.id);
-  // 从 Supabase 删除
   const { error } = await supabase.from('bookingsys').delete().eq('id', ev.id);
   if(error) console.error(error);
 }
