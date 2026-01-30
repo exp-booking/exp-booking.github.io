@@ -2,27 +2,25 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>实验室 343 EEG 预约</title>
-
-<!-- FullCalendar 6.x 本地 JS 已包含样式，无需单独 CSS -->
-<script src="lib/fullcalendar/index.global.min.js"></script>
-
+<title>Lab 343 EEG 预约</title>
+<link rel="stylesheet" href="lib/fullcalendar-4.4.2/core/main.min.css">
+<link rel="stylesheet" href="lib/fullcalendar-4.4.2/daygrid/main.min.css">
+<link rel="stylesheet" href="lib/fullcalendar-4.4.2/timegrid/main.min.css">
 <style>
-body{font-family:"Microsoft YaHei",sans-serif;margin:20px;}
-.top-bar{max-width:1100px;margin:0 auto 15px;display:flex;justify-content:space-between;align-items:center;}
-a{text-decoration:none;color:#2c7be5;}
-#calendar{max-width:1100px;margin:0 auto;}
-#bookingModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;}
-.modal-content{background:white;max-width:400px;margin:120px auto;padding:20px;border-radius:8px;}
-.modal-content input{width:100%;margin-bottom:10px;}
-.modal-actions{text-align:right;}
-.fc-event{cursor:pointer;}
+body { font-family:"Microsoft YaHei",sans-serif; margin:20px; }
+.top-bar { max-width:1100px; margin:0 auto 15px; display:flex; justify-content:space-between; align-items:center; }
+a { text-decoration:none; color:#2c7be5; }
+#calendar { max-width:1100px; margin:0 auto; }
+#bookingModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1000; }
+.modal-content { background:white; max-width:400px; margin:120px auto; padding:20px; border-radius:8px; }
+.modal-content input { width:100%; margin-bottom:10px; }
+.modal-actions { text-align:right; }
 </style>
 </head>
 <body>
 
 <div class="top-bar">
-  <h2>Room 343 - EEG 预约</h2>
+  <h2>Lab 343 EEG 预约</h2>
   <a href="/index.html">← 返回主页</a>
 </div>
 
@@ -30,7 +28,7 @@ a{text-decoration:none;color:#2c7be5;}
 
 <div id="bookingModal">
   <div class="modal-content">
-    <h3>预约343-EEG</h3>
+    <h3>预约 Lab 343 EEG</h3>
     <label>姓名：<input id="nameInput" type="text"></label>
     <label>用途：<input id="purposeInput" type="text"></label>
     <label>开始时间：<input id="startInput" type="datetime-local"></label>
@@ -42,50 +40,62 @@ a{text-decoration:none;color:#2c7be5;}
   </div>
 </div>
 
-<script>
-// ------------------------- 配置 -------------------------
-const GITHUB_TOKEN = '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'; // 不安全
-const OWNER = 'exp-booking';
-const REPO = 'exp-booking.github.io';
-const FILE_PATH = 'lab343-eeg/bookings.json';
-const BRANCH = 'main';
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import { Calendar } from 'https://cdn.jsdelivr.net/npm/@fullcalendar/core/+esm';
+import dayGridPlugin from 'https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid/+esm';
+import timeGridPlugin from 'https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid/+esm';
+import interactionPlugin from 'https://cdn.jsdelivr.net/npm/@fullcalendar/interaction/+esm';
 
-// ------------------------- 变量 -------------------------
+// ---------- 替换为你的 Supabase 信息 ----------
+const SUPABASE_URL = 'https://ipqvhykwlvzagbffhdzp.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Nv9QOCAV0sD-sTgYeCFKfQ_QOCMXmrM';
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const TABLE_NAME = 'bookingsys';
+
+// ---------- 全局变量 ----------
 let calendar;
-let bookings=[];
+let bookings = [];
 
-// ------------------------- 加载已有预约 -------------------------
-async function loadBookings(){
-  const res = await fetch('bookings.json');
-  bookings = await res.json();
+// ---------- 加载预约 ----------
+async function loadBookings() {
+  const { data, error } = await supabase.from(TABLE_NAME).select('*');
+  if (error) { console.error(error); return; }
+  bookings = data.map(b => ({
+    id: b.id,
+    title: b.name,
+    start: b.start,
+    end: b.end,
+    backgroundColor:'#ccc',
+    borderColor:'#ccc'
+  }));
 }
 
-// ------------------------- 渲染日历 -------------------------
-function renderCalendar(){
-  calendar = new FullCalendar.Calendar(document.getElementById('calendar'),{
-    initialView:'timeGridWeek',
-    locale:'zh-cn',
-    nowIndicator:true,
-    selectable:true,
-    selectOverlap:false,
-    slotMinTime:'08:00:00',
-    slotMaxTime:'22:00:00',
-    headerToolbar:{left:'prev,next today', center:'title', right:'timeGridWeek,timeGridDay'},
+// ---------- 渲染日历 ----------
+function renderCalendar() {
+  calendar = new Calendar(document.getElementById('calendar'), {
+    plugins: [ dayGridPlugin, timeGridPlugin, interactionPlugin ],
+    initialView: 'timeGridWeek',
+    locale: 'zh-cn',
+    nowIndicator: true,
+    selectable: true,
+    selectOverlap: false,
+    slotMinTime: '08:00:00',
+    slotMaxTime: '22:00:00',
+    header: { left:'prev,next today', center:'title', right:'timeGridWeek,timeGridDay' },
     events: bookings,
     dateClick: info => openModal(info.date),
     eventClick: info => {
       const ev = info.event;
       if(confirm(`是否取消预约：\n${ev.title}\n${ev.start.toLocaleString()} → ${ev.end.toLocaleString()}`)){
-        ev.remove();
-        bookings = bookings.filter(b => !(b.start===ev.start.toISOString() && b.end===ev.end.toISOString() && b.title===ev.title));
-        alert('已从本地移除，刷新页面仍会显示在 GitHub');
+        deleteBooking(ev.id);
       }
     }
   });
   calendar.render();
 }
 
-// ------------------------- 弹窗 -------------------------
+// ---------- 弹窗 ----------
 function openModal(date){
   const startISO = date.toISOString().slice(0,16);
   document.getElementById('startInput').value = startISO;
@@ -100,63 +110,59 @@ function closeModal(){
   document.getElementById('endInput').value='';
 }
 
-// ------------------------- 提交 GitHub API -------------------------
-async function submitBookingGitHub(name,start,end){
-  const getRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}?ref=${BRANCH}`,{
-    headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
-  });
-  const fileData = await getRes.json();
-  const sha = fileData.sha;
-  const currentContent = atob(fileData.content);
-  const arr = JSON.parse(currentContent);
-
-  arr.push({title:name,start:start,end:end,backgroundColor:'#ccc',borderColor:'#ccc'});
-
-  const putRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`,{
-    method:'PUT',
-    headers: { 'Authorization': `token ${GITHUB_TOKEN}` },
-    body: JSON.stringify({
-      message:`Add booking by ${name}`,
-      content:btoa(JSON.stringify(arr,null,2)),
-      sha: sha,
-      branch: BRANCH
-    })
-  });
-
-  const result = await putRes.json();
-  console.log(result);
-  alert('提交成功，刷新页面即可看到最新预约');
-}
-
-// ------------------------- 提交预约 -------------------------
+// ---------- 提交预约 ----------
 async function submitBooking(){
-  const name=document.getElementById('nameInput').value.trim();
-  const start=document.getElementById('startInput').value;
-  const end=document.getElementById('endInput').value;
+  const name = document.getElementById('nameInput').value.trim();
+  const purpose = document.getElementById('purposeInput').value.trim();
+  const start = document.getElementById('startInput').value;
+  const end = document.getElementById('endInput').value;
 
-  if(!name||!start||!end){ alert('请填写完整'); return; }
+  if(!name || !purpose || !start || !end){ alert('请填写完整'); return; }
 
+  // 检查时间冲突
   for(let ev of bookings){
-    if(!(new Date(end)<=new Date(ev.start)||new Date(start)>=new Date(ev.end))){
+    if(!(new Date(end)<=new Date(ev.start) || new Date(start)>=new Date(ev.end))){
       alert('该时间段已被预约'); return;
     }
   }
 
-  const newBooking={title:name,start:start,end:end,backgroundColor:'#ccc',borderColor:'#ccc'};
+  // 插入 Supabase
+  const { data, error } = await supabase.from(TABLE_NAME)
+    .insert([{ name, purpose, start, end }])
+    .select();
+  if(error){ console.error(error); alert('提交失败'); return; }
+
+  const newBooking = {
+    id: data[0].id,
+    title: data[0].name,
+    start: data[0].start,
+    end: data[0].end,
+    backgroundColor:'#ccc',
+    borderColor:'#ccc'
+  };
   bookings.push(newBooking);
   calendar.addEvent(newBooking);
   closeModal();
-
-  await submitBookingGitHub(name,start,end);
+  alert('提交成功！');
 }
 
-// ------------------------- 初始化 -------------------------
+// ---------- 删除预约 ----------
+async function deleteBooking(id){
+  const { error } = await supabase.from(TABLE_NAME).delete().eq('id', id);
+  if(error){ console.error(error); alert('删除失败'); return; }
+  const ev = calendar.getEventById(id);
+  if(ev) ev.remove();
+  bookings = bookings.filter(b => b.id !== id);
+  alert('已取消预约');
+}
+
+// ---------- 初始化 ----------
 async function init(){
   await loadBookings();
   renderCalendar();
 }
 init();
-</script>
 
+</script>
 </body>
 </html>
