@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>实验室 343 EEG 预约</title>
-  <link rel="stylesheet" href="../lib/fullcalendar/index.global.min.css">
-  <script src="../lib/fullcalendar/index.global.min.js"></script>
-  <style>
-    body { font-family: "Microsoft YaHei", sans-serif; margin: 20px; }
-    .top-bar { max-width:1100px; margin:0 auto 15px; display:flex; justify-content:space-between; align-items:center; }
-    a { text-decoration:none; color:#2c7be5; }
-    #calendar { max-width:1100px; margin:0 auto; }
-    #bookingModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1000; }
-    .modal-content { background:white; max-width:400px; margin:120px auto; padding:20px; border-radius:8px; }
-    .modal-content input { width:100%; margin-bottom:10px; }
-    .modal-actions { text-align:right; }
-  </style>
+<meta charset="UTF-8">
+<title>实验室 343 EEG 预约</title>
+<link rel="stylesheet" href="../lib/fullcalendar/index.global.min.css">
+<script src="../lib/fullcalendar/index.global.min.js"></script>
+<style>
+body{font-family:"Microsoft YaHei",sans-serif;margin:20px;}
+.top-bar{max-width:1100px;margin:0 auto 15px;display:flex;justify-content:space-between;align-items:center;}
+a{text-decoration:none;color:#2c7be5;}
+#calendar{max-width:1100px;margin:0 auto;}
+#bookingModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;}
+.modal-content{background:white;max-width:400px;margin:120px auto;padding:20px;border-radius:8px;}
+.modal-content input{width:100%;margin-bottom:10px;}
+.modal-actions{text-align:right;}
+</style>
 </head>
 <body>
 
@@ -41,26 +41,25 @@
 
 <script>
 let calendar;
-let bookings = [];
+let bookings=[];
 
-async function loadBookings() {
+async function loadBookings(){
   const res = await fetch('bookings.json');
   bookings = await res.json();
 }
 
-function renderCalendar() {
-  calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+function renderCalendar(){
+  calendar = new FullCalendar.Calendar(document.getElementById('calendar'),{
     initialView:'timeGridWeek', locale:'zh-cn', nowIndicator:true,
     selectable:true, selectOverlap:false,
     slotMinTime:'08:00:00', slotMaxTime:'22:00:00',
     headerToolbar:{left:'prev,next today', center:'title', right:'timeGridWeek,timeGridDay'},
     events: bookings,
-    dateClick: function(info){ openModal(info.date); },
-    eventClick: function(info){
-      const ev=info.event;
-      const confirmDelete = confirm(`是否取消预约：\n${ev.title}\n${ev.start.toLocaleString()} → ${ev.end.toLocaleString()}`);
-      if(confirmDelete){ 
-        ev.remove(); 
+    dateClick: info => openModal(info.date),
+    eventClick: info => {
+      const ev = info.event;
+      if(confirm(`是否取消预约：\n${ev.title}\n${ev.start.toLocaleString()} → ${ev.end.toLocaleString()}`)){
+        ev.remove();
         bookings = bookings.filter(b => !(b.start===ev.start.toISOString()&&b.end===ev.end.toISOString()&&b.title===ev.title));
       }
     }
@@ -69,9 +68,9 @@ function renderCalendar() {
 }
 
 function openModal(date){
-  const startISO=date.toISOString().slice(0,16);
-  document.getElementById('startInput').value=startISO;
-  document.getElementById('endInput').value=startISO;
+  const startISO = date.toISOString().slice(0,16);
+  document.getElementById('startInput').value = startISO;
+  document.getElementById('endInput').value = startISO;
   document.getElementById('bookingModal').style.display='block';
 }
 
@@ -83,18 +82,16 @@ function closeModal(){
   document.getElementById('endInput').value='';
 }
 
-function submitBooking(){
+async function submitBooking(){
   const name=document.getElementById('nameInput').value.trim();
   const purpose=document.getElementById('purposeInput').value.trim();
   const start=document.getElementById('startInput').value;
   const end=document.getElementById('endInput').value;
 
-  if(!name||!start||!end){ alert('请完整填写'); return; }
-  if(new Date(start)>=new Date(end)){ alert('结束时间必须晚于开始时间'); return; }
-  
+  if(!name||!start||!end){ alert('请填写完整'); return; }
   for(let ev of bookings){
     if(!(new Date(end)<=new Date(ev.start)||new Date(start)>=new Date(ev.end))){
-      alert('该时间段已被预约，请选择其他时间'); return;
+      alert('该时间段已被预约'); return;
     }
   }
 
@@ -103,8 +100,19 @@ function submitBooking(){
   calendar.addEvent(newBooking);
   closeModal();
 
-  // 真实写入 JSON 由 GitHub Actions 处理
-  alert('预约提交成功！后台 Actions 会更新 bookings.json，请刷新页面查看最新数据');
+  // 调用国内云函数
+  try {
+    const res = await fetch('https://你的云函数域名/submitBooking', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({name, start, end})
+    });
+    const data = await res.json();
+    alert(data.message || '提交成功，刷新页面查看最新预约');
+  } catch(err){
+    console.error(err);
+    alert('提交失败，请稍后重试');
+  }
 }
 
 async function init(){
@@ -114,6 +122,5 @@ async function init(){
 
 init();
 </script>
-
 </body>
 </html>
