@@ -50,10 +50,9 @@
       border-radius: 8px;
     }
 
-    .modal-content input {
+    .modal-content input, .modal-content textarea {
       width: 100%;
-      margin-top: 5px;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
 
     .modal-actions {
@@ -64,7 +63,7 @@
 <body>
 
 <div class="top-bar">
-  <h2>实验室一预约日历</h2>
+  <h2>EEG lab 预约</h2>
   <a href="../">← 返回主页</a>
 </div>
 
@@ -74,8 +73,6 @@
 <div id="bookingModal">
   <div class="modal-content">
     <h3>预约实验室一</h3>
-
-    <p id="timeRange"></p>
 
     <label>
       姓名：
@@ -87,6 +84,16 @@
       <input id="purposeInput" type="text">
     </label>
 
+    <label>
+      开始时间：
+      <input id="startInput" type="datetime-local">
+    </label>
+
+    <label>
+      结束时间：
+      <input id="endInput" type="datetime-local">
+    </label>
+
     <div class="modal-actions">
       <button onclick="closeModal()">取消</button>
       <button onclick="submitBooking()">提交预约</button>
@@ -95,97 +102,92 @@
 </div>
 
 <script>
-/* ==========================
-   全局变量
-========================== */
 let calendar;
-let selectedInfo = null;
+let bookings = []; // 已预约事件
+let clickedDate = null;
 
-/* ==========================
-   示例：已预约时间（灰色）
-   后续可从后端加载
-========================== */
-const bookings = [
-  {
-    title: '已预约',
-    start: '2026-01-30T10:00:00',
-    end:   '2026-01-30T12:00:00',
-    backgroundColor: '#cccccc',
-    borderColor: '#cccccc'
-  }
-];
-
-/* ==========================
-   初始化日历
-========================== */
 document.addEventListener('DOMContentLoaded', function () {
 
-  calendar = new FullCalendar.Calendar(
-    document.getElementById('calendar'),
-    {
-      initialView: 'timeGridWeek',
-      locale: 'zh-cn',
-      selectable: true,
-      selectOverlap: false,   // 已预约时间不可选
-      nowIndicator: true,
+  calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+    initialView: 'timeGridWeek',
+    locale: 'zh-cn',
+    nowIndicator: true,
+    selectable: true,
+    selectOverlap: false,  // 防止和已预约重叠
+    slotMinTime: '08:00:00',
+    slotMaxTime: '22:00:00',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'timeGridWeek,timeGridDay'
+    },
+    events: bookings,
 
-      slotMinTime: '08:00:00',
-      slotMaxTime: '22:00:00',
-
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'timeGridWeek,timeGridDay'
-      },
-
-      events: bookings,
-
-      select: function(info) {
-        selectedInfo = info;
-        openModal(info);
-      }
+    dateClick: function(info) {
+      // 点击某一天格子
+      clickedDate = info.date;
+      openModal(info.date);
     }
-  );
+  });
 
   calendar.render();
 });
 
-/* ==========================
-   弹窗控制
-========================== */
-function openModal(info) {
-  document.getElementById('timeRange').innerText =
-    info.startStr + ' → ' + info.endStr;
+/* 打开弹窗 */
+function openModal(date) {
+  const startISO = date.toISOString().slice(0,16);
+  document.getElementById('startInput').value = startISO;
+  document.getElementById('endInput').value = startISO;
+
   document.getElementById('bookingModal').style.display = 'block';
 }
 
+/* 关闭弹窗 */
 function closeModal() {
   document.getElementById('bookingModal').style.display = 'none';
   document.getElementById('nameInput').value = '';
   document.getElementById('purposeInput').value = '';
-  selectedInfo = null;
+  document.getElementById('startInput').value = '';
+  document.getElementById('endInput').value = '';
+  clickedDate = null;
 }
 
-/* ==========================
-   提交预约
-========================== */
+/* 提交预约 */
 function submitBooking() {
   const name = document.getElementById('nameInput').value.trim();
   const purpose = document.getElementById('purposeInput').value.trim();
+  const start = document.getElementById('startInput').value;
+  const end = document.getElementById('endInput').value;
 
-  if (!name) {
-    alert('请填写姓名');
+  if (!name || !start || !end) {
+    alert('请完整填写姓名和时间');
     return;
   }
 
-  calendar.addEvent({
+  if (new Date(start) >= new Date(end)) {
+    alert('结束时间必须晚于开始时间');
+    return;
+  }
+
+  // 检查冲突
+  for (let ev of bookings) {
+    if (!(new Date(end) <= new Date(ev.start) || new Date(start) >= new Date(ev.end))) {
+      alert('该时间段已被预约，请选择其他时间');
+      return;
+    }
+  }
+
+  // 添加事件
+  const newBooking = {
     title: name,
-    start: selectedInfo.start,
-    end: selectedInfo.end,
+    start: start,
+    end: end,
     backgroundColor: '#cccccc',
     borderColor: '#cccccc'
-  });
+  };
 
+  bookings.push(newBooking);
+  calendar.addEvent(newBooking);
   closeModal();
 }
 </script>
