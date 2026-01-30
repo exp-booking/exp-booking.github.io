@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>EEG Lab 预约</title>
+  <title>实验室 343 EEG 预约</title>
 
   <!-- 本地 FullCalendar -->
   <link rel="stylesheet" href="../lib/fullcalendar/index.global.min.css">
@@ -63,8 +63,8 @@
 <body>
 
 <div class="top-bar">
-  <h2>EEG Lab 预约</h2>
-  <a href="../">← 返回主页</a>
+  <h2>实验室 343 EEG 预约</h2>
+  <a href="/index.html">← 返回主页</a>
 </div>
 
 <div id="calendar"></div>
@@ -72,7 +72,7 @@
 <!-- 预约弹窗 -->
 <div id="bookingModal">
   <div class="modal-content">
-    <h3>预约EEG Lab</h3>
+    <h3>预约实验室 343 EEG</h3>
 
     <label>
       姓名：
@@ -109,7 +109,7 @@ let clickedDate = null;
 /* ==========================
    localStorage 读取
 ========================== */
-const saved = localStorage.getItem('lab1_bookings');
+const saved = localStorage.getItem('lab343_eeg_bookings');
 if (saved) {
   bookings = JSON.parse(saved);
 }
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
             b.end === ev.end.toISOString() &&
             b.title === ev.title)
         );
-        localStorage.setItem('lab1_bookings', JSON.stringify(bookings));
+        localStorage.setItem('lab343_eeg_bookings', JSON.stringify(bookings));
       }
     }
   });
@@ -221,7 +221,7 @@ function submitBooking() {
   };
 
   bookings.push(newBooking);
-  localStorage.setItem('lab1_bookings', JSON.stringify(bookings));
+  localStorage.setItem('lab343_eeg_bookings', JSON.stringify(bookings));
   calendar.addEvent(newBooking);
   closeModal();
 }
