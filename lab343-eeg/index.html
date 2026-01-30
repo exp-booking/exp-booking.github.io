@@ -57,7 +57,7 @@ let calendar;
 let bookings = [];
 
 // ------------------------- 加载已有预约 -------------------------
-async function loadBookings(){
+window.submitBooking = async function loadBookings(){
   const { data, error } = await supabase.from('bookingsys').select('*');
   if(error){ console.error(error); alert('加载预约失败'); return; }
   bookings = data.map(b => ({
