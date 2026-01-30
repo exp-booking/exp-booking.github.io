@@ -67,7 +67,7 @@ let bookings = [];
 /* ===== 读取预约 ===== */
 async function loadBookings() {
   const { data, error } = await sb
-    .from("bookingsys")
+    .from("booking-343-eeg")
     .select("*");
 
   if (error) {
@@ -132,7 +132,7 @@ async function submitBooking() {
   }
 
   const { data, error } = await sb
-    .from("bookingsys")
+    .from("booking-343-eeg")
     .insert([{ name, purpose, start, end }])
     .select();
 
