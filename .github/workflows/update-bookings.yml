@@ -4,10 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       name:
+        description: '姓名'
         required: true
       start:
+        description: '开始时间'
         required: true
       end:
+        description: '结束时间'
         required: true
 
 jobs:
