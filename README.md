@@ -1,4 +1,4 @@
-# exp-booking.github.io
+#exp-booking.github.io
 
 ## 辽宁大学心理测试与行为分析重点实验室预约系统
 
