@@ -8,7 +8,7 @@
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
-<!-- Supabase v2 -->
+<!-- Supabase v2 (CDN exposes global `supabase`) -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
@@ -59,14 +59,19 @@ let bookings = [];
 // ------------------------- 加载已有预约 -------------------------
 async function loadBookings(){
   const { data, error } = await sb.from(TABLE_NAME).select("*");
-  if(error){ console.error(error); return; }
+  if(error){
+    console.error(error);
+    alert("加载预约失败: " + error.message);
+    return;
+  }
 
-  // 转成 FullCalendar 格式
-  bookings = data.map(ev => ({
-    id: ev.id, // 数据库 id
-    title: ev.name,
-    start: new Date(ev.start).toISOString().slice(0,16),
-    end: new Date(ev.end).toISOString().slice(0,16),
+  // 不要 toISOString()，直接用 Supabase 返回的时间字符串
+  // id 用 String，删除时再 Number
+  bookings = (data || []).map(row => ({
+    id: String(row.id),
+    title: row.name ?? "(no name)",
+    start: row.start,
+    end: row.end,
     backgroundColor: "#ccc",
     borderColor: "#ccc"
   }));
@@ -82,36 +87,66 @@ function renderCalendar(){
     selectOverlap: false,
     slotMinTime: "08:00:00",
     slotMaxTime: "22:00:00",
-    headerToolbar: { left: "prev,next today", center: "title", right: "timeGridWeek,timeGridDay" },
+    headerToolbar: {
+      left: "prev,next today",
+      center: "title",
+      right: "timeGridWeek,timeGridDay"
+    },
     events: bookings,
-    dateClick: info => openModal(info.date),
-    eventClick: async info => {
-      const ev = info.event;
-      if(confirm(`是否取消预约：\n${ev.title}\n${ev.start.toLocaleString()} → ${ev.end.toLocaleString()}`)){
-        
-        // 删除前端日历事件
-        ev.remove();
-        bookings = bookings.filter(b => b.id !== ev.id);
 
-        // 删除数据库事件
-        if(ev.id){
-          const { error } = await sb.from(TABLE_NAME).delete().eq('id', ev.id);
-          if(error) alert("删除数据库失败: " + error.message);
-          else alert("预约已删除");
-        }
+    // 点击空白时间格 -> 弹窗（默认 30 分钟）
+    dateClick: info => openModal(info.date),
+
+    // 点击事件 -> 删除（先删数据库，成功再删前端）
+    eventClick: async (info) => {
+      const ev = info.event;
+
+      if (!ev.id) {
+        alert("这个预约没有id，无法删除。请刷新后再试。");
+        return;
       }
+
+      if (!confirm(`是否取消预约：\n${ev.title}\n${ev.start.toLocaleString()} → ${ev.end?.toLocaleString()}`)) {
+        return;
+      }
+
+      const dbId = Number(ev.id);
+      const { error } = await sb.from(TABLE_NAME).delete().eq("id", dbId);
+
+      if (error) {
+        alert("删除数据库失败: " + error.message);
+        console.error(error);
+        return;
+      }
+
+      // 数据库删成功后，再删前端
+      ev.remove();
+      bookings = bookings.filter(b => Number(b.id) !== dbId);
+      alert("预约已删除");
     }
   });
+
   calendar.render();
 }
 
 // ------------------------- 弹窗 -------------------------
 function openModal(date){
-  const startISO = date.toISOString().slice(0,16);
-  document.getElementById("startInput").value = startISO;
-  document.getElementById("endInput").value = startISO;
+  // datetime-local 需要本地时间格式：YYYY-MM-DDTHH:mm
+  const pad = (n) => String(n).padStart(2, "0");
+  const d = new Date(date);
+  const startLocal =
+    `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+
+  // 默认 30 分钟
+  const d2 = new Date(d.getTime() + 30 * 60000);
+  const endLocal =
+    `${d2.getFullYear()}-${pad(d2.getMonth()+1)}-${pad(d2.getDate())}T${pad(d2.getHours())}:${pad(d2.getMinutes())}`;
+
+  document.getElementById("startInput").value = startLocal;
+  document.getElementById("endInput").value = endLocal;
   document.getElementById("bookingModal").style.display = "block";
 }
+
 function closeModal(){
   document.getElementById("bookingModal").style.display = "none";
   document.getElementById("nameInput").value = "";
@@ -124,39 +159,52 @@ function closeModal(){
 async function submitBooking(){
   const name = document.getElementById("nameInput").value.trim();
   const purpose = document.getElementById("purposeInput").value.trim();
-  const start = document.getElementById("startInput").value;
+  const start = document.getElementById("startInput").value; // 本地时间字符串
   const end = document.getElementById("endInput").value;
 
-  if(!name || !purpose || !start || !end){ alert("请填写完整"); return; }
+  if(!name || !purpose || !start || !end){
+    alert("请填写完整");
+    return;
+  }
 
-  // 检查时间冲突
-  for(let ev of bookings){
+  // 冲突检测：用 Date 比较（本地时间）
+  for (const ev of bookings){
     if(!(new Date(end) <= new Date(ev.start) || new Date(start) >= new Date(ev.end))){
-      alert("该时间段已被预约"); 
+      alert("该时间段已被预约");
       return;
     }
   }
 
-  // 插入数据库
-  const { data, error } = await sb.from(TABLE_NAME).insert([{ name, purpose, start, end }]).select();
-  if(error){ alert("提交失败: " + error.message); return; }
+  // 写入数据库（RLS 关闭时可直接写）
+  // ✅ 必须 select() 拿回 id，供删除用
+  const { data, error } = await sb
+    .from(TABLE_NAME)
+    .insert([{ name, purpose, start, end }])
+    .select();
 
-  // data[0] 是数据库返回的新增行，包含 id
-  const newEv = data[0];
+  if(error){
+    alert("提交失败: " + error.message);
+    console.error(error);
+    return;
+  }
+
+  const newRow = data[0];
+
+  // 立刻显示到日历：同样直接用数据库返回的 start/end
   calendar.addEvent({
-    id: newEv.id,
-    title: newEv.name,
-    start: new Date(newEv.start).toISOString().slice(0,16),
-    end: new Date(newEv.end).toISOString().slice(0,16),
+    id: String(newRow.id),
+    title: newRow.name,
+    start: newRow.start,
+    end: newRow.end,
     backgroundColor: "#ccc",
     borderColor: "#ccc"
   });
 
   bookings.push({
-    id: newEv.id,
-    title: newEv.name,
-    start: new Date(newEv.start).toISOString().slice(0,16),
-    end: new Date(newEv.end).toISOString().slice(0,16)
+    id: String(newRow.id),
+    title: newRow.name,
+    start: newRow.start,
+    end: newRow.end
   });
 
   closeModal();
