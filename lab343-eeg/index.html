@@ -38,6 +38,8 @@ a{text-decoration:none;color:#2c7be5;}
     <label>用途：<input id="purposeInput" type="text"></label>
     <label>开始时间：<input id="startInput" type="datetime-local"></label>
     <label>结束时间：<input id="endInput" type="datetime-local"></label>
+    <label>房间号：<input id="roomInput" type="number"></label>
+    <label>实验间：<input id="labInput" type="text"></label>
     <div class="modal-actions">
       <button onclick="closeModal()">取消</button>
       <button onclick="submitBooking()">提交预约</button>
@@ -161,6 +163,8 @@ async function submitBooking(){
   const purpose = document.getElementById("purposeInput").value.trim();
   const start = document.getElementById("startInput").value; // 本地时间字符串
   const end = document.getElementById("endInput").value;
+  const room = document.getElementById("roomInput").value;
+  const lab = document.getElementById("labInput").value;
 
   if(!name || !purpose || !start || !end){
     alert("请填写完整");
@@ -176,10 +180,10 @@ async function submitBooking(){
   }
 
   // 写入数据库（RLS 关闭时可直接写）
-  // ✅ 必须 select() 拿回 id，供删除用
+  // 必须 select() 拿回 id，供删除用
   const { data, error } = await sb
     .from(TABLE_NAME)
-    .insert([{ name, purpose, start, end }])
+    .insert([{ name, purpose, start, end, room, lab }])
     .select();
 
   if(error){
