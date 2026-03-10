@@ -1,0 +1,16 @@
+name: Keep Supabase Awake
+
+on:
+  schedule:
+    - cron: '0 2 */3 * *'   # 每3天 UTC 02:00 运行一次
+  workflow_dispatch:        # 允许手动运行
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Curl Supabase REST endpoint
+        run: |
+          curl -X GET "https://ipqvhykwlvzagbffhdzp.supabase.co/rest/v1/booking-343-eeg?select=id&limit=1" \
+          -H "apikey: ${{ secrets.SUPABASE_KEY }}" \
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_KEY }}"
