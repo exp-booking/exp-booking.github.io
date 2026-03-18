@@ -1,95 +1,200 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>被试预约</title>
+<title>被试专用预约</title>
 
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
-#calendar { max-width: 1000px; margin: 40px auto; }
+body{font-family:Arial;margin:20px;}
+#calendar{max-width:1100px;margin:auto;}
+#modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.4);
+}
+.box{
+  background:white;
+  width:420px;
+  margin:80px auto;
+  padding:20px;
+  border-radius:8px;
+}
+.box input, .box select{
+  width:100%;
+  margin-bottom:10px;
+}
 </style>
 </head>
 
 <body>
 
+<h2>被试专用预约</h2>
 <div id="calendar"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<div id="modal">
+  <div class="box">
+    <h3>填写预约信息</h3>
+
+    姓名<input id="name">
+    学号<input id="studentId">
+    性别
+    <select id="gender">
+      <option value="">请选择</option>
+      <option>男</option>
+      <option>女</option>
+    </select>
+    年龄<input id="age" type="number">
+
+    开始时间<input id="start" type="datetime-local">
+    结束时间<input id="end" type="datetime-local">
+
+    <button onclick="submitBooking()">确认预约</button>
+    <button onclick="closeModal()">取消</button>
+  </div>
+</div>
 
 <script>
-const SUPABASE_URL = "https://ipqvhykwlvzagbffhdzp.supabase.co";
-const SUPABASE_KEY = "sb_publishable_Nv9QOCAV0sD-sTgYeCFKfQ_QOCMXmrM";
-const TABLE_NAME = "booking-simple";
 
-const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+// ===== Supabase =====
+const sb = supabase.createClient(
+  "https://ipqvhykwlvzagbffhdzp.supabase.co",
+  "sb_publishable_Nv9QOCAV0sD-sTgYeCFKfQ_QOCMXmrM"
+);
 
-  initialView: 'timeGridWeek',
-  editable: true,
-  selectable: true,
-  nowIndicator: true,
+const TABLE = "booking-simple";
 
-  eventStartEditable: true,
-  eventDurationEditable: true,
+let calendar;
+let events = [];
 
-  async events(fetchInfo, success) {
+// ===== 加载已有预约 =====
+async function load(){
+  const { data } = await sb.from(TABLE).select("*");
 
-    const res = await fetch(SUPABASE_URL + "/rest/v1/" + TABLE_NAME, {
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: "Bearer " + SUPABASE_KEY
-      }
-    });
+  events = (data || []).map(r => ({
+    id:String(r.id),
+    title:r.name,
+    start:r.start,
+    end:r.end,
+    editable:false
+  }));
+}
 
-    const data = await res.json();
+// ===== 初始化日历 =====
+function initCalendar(){
+  calendar = new FullCalendar.Calendar(
+    document.getElementById("calendar"),
+    {
+      initialView:"timeGridWeek",
+      selectable:true,
+      editable:false,          // 禁止修改
+      nowIndicator:true,
 
-    console.log("数据库数据👇", data); // 🔥关键：打开F12看
+      headerToolbar:{
+        left:"prev,next today",
+        center:"title",
+        right:"timeGridWeek,timeGridDay"
+      },
 
-    success(data.map(d => ({
-      id: String(d.id),   // ❗强制转字符串（关键修复）
-      title: d.name || "预约",
-      start: d.start_time,
-      end: d.end_time,
-      editable: true
-    })));
+      events:events,
 
-  },
+      dateClick:(info)=>openModal(info.date)
+    }
+  );
 
-  eventDrop(info) {
-    console.log("拖动触发", info.event.id);
+  calendar.render();
+}
 
-    updateEvent(info.event);
-  },
+// ===== 打开弹窗 =====
+function openModal(date){
 
-  eventResize(info) {
-    console.log("拉伸触发", info.event.id);
+  const d = new Date(date);
+  const pad=n=>String(n).padStart(2,"0");
 
-    updateEvent(info.event);
+  start.value =
+    `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+
+  const d2 = new Date(d.getTime()+30*60000);
+  end.value =
+    `${d2.getFullYear()}-${pad(d2.getMonth()+1)}-${pad(d2.getDate())}T${pad(d2.getHours())}:${pad(d2.getMinutes())}`;
+
+  modal.style.display="block";
+}
+
+function closeModal(){
+  modal.style.display="none";
+}
+
+// ===== 提交预约 =====
+async function submitBooking(){
+
+  const name = name.value.trim();
+  const studentId = studentId.value.trim();
+  const gender = gender.value;
+  const age = age.value.trim();
+  const startTime = start.value;
+  const endTime = end.value;
+
+  // 必填检查
+  if(!name || !studentId || !gender || !age || !startTime || !endTime){
+    alert("所有信息必须填写");
+    return;
   }
 
-});
+  if(new Date(endTime) <= new Date(startTime)){
+    alert("结束时间必须晚于开始时间");
+    return;
+  }
 
-calendar.render();
+  // 冲突检测
+  for(const ev of events){
+    if(!(new Date(endTime) <= new Date(ev.start) ||
+         new Date(startTime) >= new Date(ev.end))){
+      alert("时间冲突，无法预约");
+      return;
+    }
+  }
 
-async function updateEvent(event) {
+  const { data, error } = await sb
+    .from(TABLE)
+    .insert([{
+      name,
+      studentId,
+      gender,
+      age,
+      start:startTime,
+      end:endTime
+    }])
+    .select();
 
-  console.log("正在更新", event.id);
+  if(error){
+    alert(error.message);
+    return;
+  }
 
-  await fetch(SUPABASE_URL + "/rest/v1/" + TABLE_NAME + "?id=eq." + event.id, {
-    method: "PATCH",
-    headers: {
-      apikey: SUPABASE_KEY,
-      Authorization: "Bearer " + SUPABASE_KEY,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      start_time: event.start.toISOString(),
-      end_time: event.end.toISOString()
-    })
+  const row = data[0];
+
+  calendar.addEvent({
+    id:String(row.id),
+    title:row.name,
+    start:row.start,
+    end:row.end,
+    editable:false
   });
 
+  closeModal();
 }
-</script>
 
+// ===== 启动 =====
+(async()=>{
+  await load();
+  initCalendar();
+})();
+
+</script>
 </body>
 </html>
