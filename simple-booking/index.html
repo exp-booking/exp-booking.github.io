@@ -18,7 +18,7 @@ body {
   margin: 40px auto;
 }
 
-/* 弹窗（关键：解决点不到问题） */
+/* 弹窗 */
 .modal {
   position: fixed;
   top: 0;
@@ -31,16 +31,17 @@ body {
 
 .modal-content {
   background: white;
-  width: 400px;
+  width: 420px;
   margin: 100px auto;
   padding: 20px;
   border-radius: 10px;
-  z-index: 10000;
   position: relative;
+  z-index: 10000;
+  text-align: left;
 }
 
 input, select {
-  width: 90%;
+  width: 95%;
   padding: 8px;
   margin-top: 8px;
 }
@@ -54,7 +55,7 @@ button {
 
 <body>
 
-<h2>实验地点为蒲河校区纪检大楼343；预约无法取消，请谨慎填写。</h2>
+<h2>被试预约</h2>
 
 <div id="calendar"></div>
 
@@ -63,16 +64,23 @@ button {
   <div class="modal-content">
     <h3>填写被试信息</h3>
 
-    <input id="studentId" placeholder="学号"><br>
-    <input id="name" placeholder="姓名"><br>
+    <!-- 时间显示 -->
+    <div style="margin-bottom:12px; font-size:14px;">
+      <div>开始时间：<span id="startTimeText"></span></div>
+      <div>结束时间：<span id="endTimeText"></span></div>
+    </div>
+
+    <input id="studentId" placeholder="学号">
+    <input id="name" placeholder="姓名">
+
     <select id="gender">
       <option value="">性别</option>
       <option value="男">男</option>
       <option value="女">女</option>
-    </select><br>
+    </select>
 
-    <input id="age" type="number" placeholder="年龄（周岁）"><br>
-    <input id="phone" placeholder="电话"><br>
+    <input id="age" type="number" placeholder="年龄（周岁）">
+    <input id="phone" placeholder="电话">
 
     <button onclick="submitBooking()">提交预约</button>
     <button onclick="closeModal()">关闭</button>
@@ -89,7 +97,12 @@ const TABLE_NAME = "booking-simple";
 let selectedStart = null;
 let selectedEnd = null;
 
-//
+// 时间格式优化
+function formatTime(t) {
+  return new Date(t).toLocaleString();
+}
+
+// 初始化日历
 const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
   initialView: 'timeGridWeek',
   selectable: true,
@@ -103,17 +116,20 @@ const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), 
 
 calendar.render();
 
-// 
+// 打开弹窗
 function openModal() {
+  document.getElementById("startTimeText").innerText = formatTime(selectedStart);
+  document.getElementById("endTimeText").innerText = formatTime(selectedEnd);
+
   document.getElementById("bookingModal").style.display = "block";
 }
 
-//
+// 关闭弹窗
 function closeModal() {
   document.getElementById("bookingModal").style.display = "none";
 }
 
-//
+// 提交预约
 async function submitBooking() {
   const studentId = document.getElementById("studentId").value.trim();
   const name = document.getElementById("name").value.trim();
@@ -121,7 +137,7 @@ async function submitBooking() {
   const age = document.getElementById("age").value;
   const phone = document.getElementById("phone").value.trim();
 
-  //
+  // 必填校验
   if (!studentId || !name || !gender || !age || !phone) {
     alert("请填写完整信息");
     return;
