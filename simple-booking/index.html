@@ -92,12 +92,12 @@ const TABLE_NAME = "booking-simple";
 
 let selectedEvent = null;
 
-// 时间格式
+//
 function formatTime(t) {
   return new Date(t).toLocaleString();
 }
 
-// 初始化日历
+//
 const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
   initialView: 'timeGridWeek',
 
