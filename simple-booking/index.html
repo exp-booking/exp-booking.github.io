@@ -12,7 +12,6 @@ body {
   text-align: center;
 }
 
-/* 日历 */
 #calendar {
   max-width: 900px;
   margin: 40px auto;
@@ -20,23 +19,21 @@ body {
 
 /* 弹窗 */
 .modal {
+  display: none;
   position: fixed;
-  top: 0;
+  z-index: 9999;
   left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
-  display: none;
-  z-index: 9999;
 }
 
 .modal-content {
-  background: white;
-  width: 420px;
+  background: #fff;
   margin: 100px auto;
   padding: 20px;
+  width: 420px;
   border-radius: 10px;
-  position: relative;
-  z-index: 10000;
   text-align: left;
 }
 
@@ -55,19 +52,18 @@ button {
 
 <body>
 
-<h2>被试预约</h2>
+<h2>测试地点：蒲河纪检大楼343；请谨慎填写，预约无法取消。</h2>
 
 <div id="calendar"></div>
 
 <!-- 弹窗 -->
 <div id="bookingModal" class="modal">
   <div class="modal-content">
-    <h3>填写被试信息</h3>
+    <h3>填写信息</h3>
 
-    <!-- 时间显示 -->
-    <div style="margin-bottom:12px; font-size:14px;">
-      <div>开始时间：<span id="startTimeText"></span></div>
-      <div>结束时间：<span id="endTimeText"></span></div>
+    <div>
+      <div>开始时间：<span id="startTime"></span></div>
+      <div>结束时间：<span id="endTime"></span></div>
     </div>
 
     <input id="studentId" placeholder="学号">
@@ -94,10 +90,9 @@ const SUPABASE_URL = "https://ipqvhykwlvzagbffhdzp.supabase.co";
 const SUPABASE_KEY = "sb_publishable_Nv9QOCAV0sD-sTgYeCFKfQ_QOCMXmrM";
 const TABLE_NAME = "booking-simple";
 
-let selectedStart = null;
-let selectedEnd = null;
+let selectedEvent = null;
 
-// 时间格式优化
+// 时间格式
 function formatTime(t) {
   return new Date(t).toLocaleString();
 }
@@ -105,22 +100,55 @@ function formatTime(t) {
 // 初始化日历
 const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
   initialView: 'timeGridWeek',
+
   selectable: true,
+  editable: true,
 
   select: function(info) {
-    selectedStart = info.startStr;
-    selectedEnd = info.endStr;
+    selectedEvent = {
+      start: info.startStr,
+      end: info.endStr
+    };
+
     openModal();
+  },
+
+  eventDrop: function(info) {
+    updateEvent(info.event);
+  },
+
+  eventResize: function(info) {
+    updateEvent(info.event);
+  },
+
+  events: async function(fetchInfo, successCallback) {
+    const res = await fetch(SUPABASE_URL + "/rest/v1/" + TABLE_NAME, {
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": "Bearer " + SUPABASE_KEY
+      }
+    });
+
+    const data = await res.json();
+
+    const events = data.map(item => ({
+      id: item.id,
+      title: item.name,
+      start: item.start_time,
+      end: item.end_time
+    }));
+
+    successCallback(events);
   }
+
 });
 
 calendar.render();
 
 // 打开弹窗
 function openModal() {
-  document.getElementById("startTimeText").innerText = formatTime(selectedStart);
-  document.getElementById("endTimeText").innerText = formatTime(selectedEnd);
-
+  document.getElementById("startTime").innerText = formatTime(selectedEvent.start);
+  document.getElementById("endTime").innerText = formatTime(selectedEvent.end);
   document.getElementById("bookingModal").style.display = "block";
 }
 
@@ -137,7 +165,7 @@ async function submitBooking() {
   const age = document.getElementById("age").value;
   const phone = document.getElementById("phone").value.trim();
 
-  // 必填校验
+  // 必填校验（你要求的）
   if (!studentId || !name || !gender || !age || !phone) {
     alert("请填写完整信息");
     return;
@@ -156,18 +184,34 @@ async function submitBooking() {
       gender: gender,
       age: age,
       phone: phone,
-      start_time: selectedStart,
-      end_time: selectedEnd
+      start_time: selectedEvent.start,
+      end_time: selectedEvent.end
     })
   });
 
   if (res.ok) {
     alert("预约成功");
     closeModal();
-    location.reload();
+    calendar.refetchEvents();
   } else {
     alert("预约失败");
   }
+}
+
+// 更新时间（拖动/拉伸）
+async function updateEvent(event) {
+  await fetch(SUPABASE_URL + "/rest/v1/" + TABLE_NAME + "?id=eq." + event.id, {
+    method: "PATCH",
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": "Bearer " + SUPABASE_KEY,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      start_time: event.start.toISOString(),
+      end_time: event.end.toISOString()
+    })
+  });
 }
 </script>
 
