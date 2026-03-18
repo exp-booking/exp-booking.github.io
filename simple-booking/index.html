@@ -7,29 +7,21 @@
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 
 <style>
-body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-}
+body { font-family: Arial; text-align: center; }
+#calendar { max-width: 1000px; margin: 40px auto; }
 
-#calendar {
-  max-width: 1000px;
-  margin: 40px auto;
-}
-
-/* 弹窗 */
 .modal {
   display: none;
   position: fixed;
   z-index: 9999;
-  left: 0;
-  top: 0;
   width: 100%;
   height: 100%;
+  left: 0;
+  top: 0;
 }
 
 .modal-content {
-  background: #fff;
+  background: white;
   margin: 80px auto;
   padding: 20px;
   width: 420px;
@@ -37,48 +29,35 @@ body {
   text-align: left;
 }
 
-input, select {
-  width: 95%;
-  padding: 8px;
-  margin-top: 8px;
-}
-
-button {
-  margin-top: 10px;
-  padding: 8px 15px;
-}
+input, select { width: 95%; margin-top: 8px; padding: 6px; }
+button { margin-top: 10px; }
 </style>
 </head>
 
 <body>
 
 <h2>被试预约</h2>
-
 <div id="calendar"></div>
 
-<!-- 弹窗 -->
 <div id="bookingModal" class="modal">
   <div class="modal-content">
-    <h3>填写被试信息</h3>
 
-    <div style="margin-bottom:10px;">
-      <div>开始时间：<span id="startTime"></span></div>
-      <div>结束时间：<span id="endTime"></span></div>
-    </div>
+    <div>开始：<span id="startTime"></span></div>
+    <div>结束：<span id="endTime"></span></div>
 
     <input id="studentId" placeholder="学号">
     <input id="name" placeholder="姓名">
 
     <select id="gender">
       <option value="">性别</option>
-      <option value="男">男</option>
-      <option value="女">女</option>
+      <option>男</option>
+      <option>女</option>
     </select>
 
-    <input id="age" type="number" placeholder="年龄（周岁）">
+    <input id="age" type="number" placeholder="年龄">
     <input id="phone" placeholder="电话">
 
-    <button onclick="submitBooking()">提交预约</button>
+    <button onclick="submitBooking()">提交</button>
     <button onclick="closeModal()">关闭</button>
   </div>
 </div>
@@ -90,88 +69,77 @@ const SUPABASE_URL = "https://ipqvhykwlvzagbffhdzp.supabase.co";
 const SUPABASE_KEY = "sb_publishable_Nv9QOCAV0sD-sTgYeCFKfQ_QOCMXmrM";
 const TABLE_NAME = "booking-simple";
 
-let selectedEvent = null;
+let selected = null;
 
-// 时间格式
-function formatTime(t) {
+function format(t){
   return new Date(t).toLocaleString();
 }
 
-// 初始化日历（EEG同款核心）
 const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
 
   initialView: 'timeGridWeek',
 
-  headerToolbar: {
-    left: 'prev,next today',
-    center: 'title',
-    right: 'timeGridWeek,timeGridDay'
+  headerToolbar:{
+    left:'prev,next today',
+    center:'title',
+    right:'timeGridWeek,timeGridDay'
   },
 
-  selectable: true,
-  editable: true,
-  nowIndicator: true,
+  selectable:true,
+  editable:true,
+  nowIndicator:true,
 
-  slotDuration: '00:30:00',
-  slotMinTime: '08:00:00',
-  slotMaxTime: '22:00:00',
+  slotDuration:'00:30:00',
+  slotMinTime:'08:00:00',
+  slotMaxTime:'22:00:00',
 
-  select: function(info) {
-    selectedEvent = {
-      start: info.startStr,
-      end: info.endStr
-    };
-    openModal();
+  // ✅ 关键：强制所有事件可编辑
+  eventStartEditable: true,
+  eventDurationEditable: true,
+
+  select(info){
+    selected = info;
+    document.getElementById("startTime").innerText = format(info.start);
+    document.getElementById("endTime").innerText = format(info.end);
+    document.getElementById("bookingModal").style.display = "block";
   },
 
-  eventDrop: function(info) {
-    updateEvent(info.event);
-  },
-
-  eventResize: function(info) {
-    updateEvent(info.event);
-  },
-
-  // ❌ 不写 eventClick = 禁止取消
-
-  events: async function(fetchInfo, successCallback) {
-    const res = await fetch(SUPABASE_URL + "/rest/v1/" + TABLE_NAME, {
-      headers: {
-        "apikey": SUPABASE_KEY,
-        "Authorization": "Bearer " + SUPABASE_KEY
+  async events(fetchInfo, success){
+    const res = await fetch(SUPABASE_URL + "/rest/v1/" + TABLE_NAME,{
+      headers:{
+        apikey:SUPABASE_KEY,
+        Authorization:"Bearer "+SUPABASE_KEY
       }
     });
 
     const data = await res.json();
 
-    const events = data.map(item => ({
-      id: item.id,
-      title: item.name,
-      start: item.start_time,
-      end: item.end_time
-    }));
+    success(data.map(d=>({
+      id: d.id,                 // ❗必须有
+      title: d.name,
+      start: d.start_time,
+      end: d.end_time,
+      editable: true           // ❗关键修复点
+    })));
+  },
 
-    successCallback(events);
+  async eventDrop(info){
+    await update(info.event);
+  },
+
+  async eventResize(info){
+    await update(info.event);
   }
 
 });
 
 calendar.render();
 
-// 打开弹窗
-function openModal() {
-  document.getElementById("startTime").innerText = formatTime(selectedEvent.start);
-  document.getElementById("endTime").innerText = formatTime(selectedEvent.end);
-  document.getElementById("bookingModal").style.display = "block";
+function closeModal(){
+  document.getElementById("bookingModal").style.display="none";
 }
 
-// 关闭弹窗
-function closeModal() {
-  document.getElementById("bookingModal").style.display = "none";
-}
-
-// 提交预约
-async function submitBooking() {
+async function submitBooking(){
 
   const studentId = document.getElementById("studentId").value.trim();
   const name = document.getElementById("name").value.trim();
@@ -179,51 +147,47 @@ async function submitBooking() {
   const age = document.getElementById("age").value;
   const phone = document.getElementById("phone").value.trim();
 
-  // ✅ 必填校验
-  if (!studentId || !name || !gender || !age || !phone) {
+  if(!studentId||!name||!gender||!age||!phone){
     alert("请填写完整信息");
     return;
   }
 
-  const res = await fetch(SUPABASE_URL + "/rest/v1/" + TABLE_NAME, {
-    method: "POST",
-    headers: {
-      "apikey": SUPABASE_KEY,
-      "Authorization": "Bearer " + SUPABASE_KEY,
-      "Content-Type": "application/json"
+  const res = await fetch(SUPABASE_URL+"/rest/v1/"+TABLE_NAME,{
+    method:"POST",
+    headers:{
+      apikey:SUPABASE_KEY,
+      Authorization:"Bearer "+SUPABASE_KEY,
+      "Content-Type":"application/json"
     },
-    body: JSON.stringify({
-      student_id: studentId,
-      name: name,
-      gender: gender,
-      age: age,
-      phone: phone,
-      start_time: selectedEvent.start,
-      end_time: selectedEvent.end
+    body:JSON.stringify({
+      student_id:studentId,
+      name:name,
+      gender:gender,
+      age:age,
+      phone:phone,
+      start_time:selected.startStr,
+      end_time:selected.endStr
     })
   });
 
-  if (res.ok) {
-    alert("预约成功");
+  if(res.ok){
+    alert("成功");
     closeModal();
     calendar.refetchEvents();
-  } else {
-    alert("预约失败");
   }
 }
 
-// 拖动 / 拉伸更新时间
-async function updateEvent(event) {
-  await fetch(SUPABASE_URL + "/rest/v1/" + TABLE_NAME + "?id=eq." + event.id, {
-    method: "PATCH",
-    headers: {
-      "apikey": SUPABASE_KEY,
-      "Authorization": "Bearer " + SUPABASE_KEY,
-      "Content-Type": "application/json"
+async function update(event){
+  await fetch(SUPABASE_URL+"/rest/v1/"+TABLE_NAME+"?id=eq."+event.id,{
+    method:"PATCH",
+    headers:{
+      apikey:SUPABASE_KEY,
+      Authorization:"Bearer "+SUPABASE_KEY,
+      "Content-Type":"application/json"
     },
-    body: JSON.stringify({
-      start_time: event.start.toISOString(),
-      end_time: event.end.toISOString()
+    body:JSON.stringify({
+      start_time:event.start.toISOString(),
+      end_time:event.end.toISOString()
     })
   });
 }
