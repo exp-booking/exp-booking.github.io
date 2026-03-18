@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>booking-simple</title>
+<title>被试专用预约</title>
 
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
@@ -10,162 +10,182 @@
 
 <style>
 body{font-family:"Microsoft YaHei",sans-serif;margin:20px;}
-.top-bar{max-width:1100px;margin:0 auto 15px;display:flex;justify-content:space-between;align-items:center;}
 #calendar{max-width:1100px;margin:0 auto;}
-#bookingModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;}
-.modal-content{background:white;max-width:420px;margin:120px auto;padding:20px;border-radius:8px;}
-.modal-content input, .modal-content select{width:100%;margin-bottom:10px;}
+#bookingModal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.4);
+  z-index:9999;
+}
+.modal-content{
+  background:white;
+  max-width:420px;
+  margin:120px auto;
+  padding:20px;
+  border-radius:8px;
+}
+.modal-content input,
+.modal-content select{
+  width:100%;
+  margin-bottom:10px;
+}
 .modal-actions{text-align:right;}
 </style>
 </head>
 
 <body>
 
-<div class="top-bar">
-  <h2>booking-simple</h2>
-</div>
+<h2>测试地点见各组招募广告；为确保测试正常进行，系统仅受理提前一天以上（含）的预约；预约无法取消，请谨慎填写。</h2>
 
 <div id="calendar"></div>
 
 <div id="bookingModal">
   <div class="modal-content">
-    <h3>被试预约</h3>
+    <h3>预约无法取消，请谨慎填写</h3>
 
-    <label>姓名：<input id="nameInput" type="text"></label>
-    <label>学号：<input id="studentIdInput" type="text"></label>
-    <label>性别：
+    <form name="booking-simple">
+
+      姓名：
+      <input id="nameInput" type="text">
+
+      学号：
+      <input id="studentIdInput" type="text">
+
+      电话：
+      <input id="phoneInput" type="text">
+
+      性别：
       <select id="genderInput">
         <option value="">请选择</option>
         <option value="男">男</option>
         <option value="女">女</option>
       </select>
-    </label>
-    <label>年龄：<input id="ageInput" type="number"></label>
 
-    <label>开始时间：<input id="startInput" type="datetime-local"></label>
-    <label>结束时间：<input id="endInput" type="datetime-local"></label>
+      课题组：
+      <select id="groupInput">
+        <option value="">请选择</option>
+        <option value="何云凤">何云凤</option>
+        <option value="周星辰">周星辰</option>
+        <option value="于溢洋">于溢洋</option>
+        <option value="尚林霖">尚林霖</option>
+      </select>
 
-    <div class="modal-actions">
-      <button onclick="closeModal()">关闭</button>
-      <button onclick="submitBooking()">提交预约</button>
-    </div>
+      年龄：
+      <input id="ageInput" type="number">
+
+      开始时间：
+      <input id="startInput" type="datetime-local">
+
+      结束时间：
+      <input id="endInput" type="datetime-local">
+
+      <div class="modal-actions">
+        <button type="button" onclick="closeModal()">关闭</button>
+        <button type="button" onclick="submitBooking()">提交预约</button>
+      </div>
+
+    </form>
   </div>
 </div>
 
 <script>
 
-// ================= Supabase =================
-const SUPABASE_URL = "https://ipqvhykwlvzagbffhdzp.supabase.co";
-const SUPABASE_KEY = "sb_publishable_Nv9QOCAV0sD-sTgYeCFKfQ_QOCMXmrM";
+const SUPABASE_URL = "你的URL";
+const SUPABASE_KEY = "你的KEY";
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-const TABLE_NAME = "booking-simple";
+const TABLE_NAME = "booking-sheet";
 
 let calendar;
 let bookings = [];
 
-// ================= 加载数据 =================
 async function loadBookings(){
-  const { data, error } = await sb.from(TABLE_NAME).select("*");
-  if(error){
-    alert("加载失败: " + error.message);
-    return;
-  }
-
+  const { data } = await sb.from(TABLE_NAME).select("*");
   bookings = (data || []).map(row => ({
-    id: String(row.id),
-    title: row.name,
-    start: row.start,
-    end: row.end
+    id:String(row.id),
+    title:row.name,
+    start:row.start,
+    end:row.end
   }));
 }
 
-// ================= 日历 =================
 function renderCalendar(){
-  calendar = new FullCalendar.Calendar(document.getElementById("calendar"), {
-
-    initialView:"timeGridWeek",
-    locale:"zh-cn",
-    nowIndicator:true,
-    selectable:true,
-    editable:false,   //  不允许修改
-    slotMinTime:"08:00:00",
-    slotMaxTime:"22:00:00",
-
-    headerToolbar:{
-      left:"prev,next today",
-      center:"title",
-      right:"timeGridWeek,timeGridDay"
-    },
-
-    events:bookings,
-
-    dateClick:(info)=>openModal(info.date)
-  });
-
+  calendar = new FullCalendar.Calendar(
+    document.getElementById("calendar"),
+    {
+      initialView:"timeGridWeek",
+      locale:"zh-cn",
+      nowIndicator:true,
+      selectable:true,
+      editable:false,
+      headerToolbar:{
+        left:"prev,next today",
+        center:"title",
+        right:"timeGridWeek,timeGridDay"
+      },
+      events:bookings,
+      dateClick:(info)=>openModal(info.date)
+    }
+  );
   calendar.render();
 }
 
-// ================= 弹窗 =================
 function openModal(date){
+  const pad=n=>String(n).padStart(2,"0");
+  const d=new Date(date);
 
-  const pad = n => String(n).padStart(2,"0");
-  const d = new Date(date);
-
-  const startLocal =
+  startInput.value=
     `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 
-  const d2 = new Date(d.getTime()+30*60000);
-  const endLocal =
+  const d2=new Date(d.getTime()+30*60000);
+  endInput.value=
     `${d2.getFullYear()}-${pad(d2.getMonth()+1)}-${pad(d2.getDate())}T${pad(d2.getHours())}:${pad(d2.getMinutes())}`;
-
-  startInput.value = startLocal;
-  endInput.value = endLocal;
 
   bookingModal.style.display="block";
 }
 
 function closeModal(){
   bookingModal.style.display="none";
-  document.querySelectorAll("#bookingModal input, #bookingModal select")
-    .forEach(el=>el.value="");
 }
 
-// ================= 提交 =================
 async function submitBooking(){
 
-  const name = nameInput.value.trim();
-  const studentId = studentIdInput.value.trim();
-  const gender = genderInput.value;
-  const age = ageInput.value.trim();
-  const start = startInput.value;
-  const end = endInput.value;
+  const name=nameInput.value.trim();
+  const studentId=studentIdInput.value.trim();
+  const phone=phoneInput.value.trim();
+  const gender=genderInput.value;
+  const group=groupInput.value;
+  const age=ageInput.value.trim();
+  const start=startInput.value;
+  const end=endInput.value;
 
-  // 必填检查
-  if(!name || !studentId || !gender || !age || !start || !end){
+  // 必填检查（加入 phone）
+  if(!name||!studentId||!phone||!gender||!group||!age||!start||!end){
     alert("所有字段必须填写");
     return;
   }
 
-  if(new Date(end) <= new Date(start)){
+  if(new Date(end)<=new Date(start)){
     alert("结束时间必须晚于开始时间");
     return;
   }
 
-  // 冲突检测
   for(const ev of bookings){
-    if(!(new Date(end) <= new Date(ev.start) ||
-         new Date(start) >= new Date(ev.end))){
-      alert("该时间段已被预约");
+    if(!(new Date(end)<=new Date(ev.start)||
+         new Date(start)>=new Date(ev.end))){
+      alert("时间冲突");
       return;
     }
   }
 
-  const { data, error } = await sb
+  const { data,error } = await sb
     .from(TABLE_NAME)
     .insert([{
       name,
       studentId,
+      phone,
       gender,
+      group,
       age,
       start,
       end
@@ -173,11 +193,11 @@ async function submitBooking(){
     .select();
 
   if(error){
-    alert("提交失败: " + error.message);
+    alert(error.message);
     return;
   }
 
-  const row = data[0];
+  const row=data[0];
 
   calendar.addEvent({
     id:String(row.id),
@@ -195,6 +215,11 @@ async function submitBooking(){
   closeModal();
 }
 
-// ================= 启动 =================
 (async()=>{
- 
+  await loadBookings();
+  renderCalendar();
+})();
+</script>
+
+</body>
+</html>
