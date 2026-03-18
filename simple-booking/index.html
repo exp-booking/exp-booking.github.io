@@ -13,7 +13,7 @@ body {
 }
 
 #calendar {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 40px auto;
 }
 
@@ -30,7 +30,7 @@ body {
 
 .modal-content {
   background: #fff;
-  margin: 100px auto;
+  margin: 80px auto;
   padding: 20px;
   width: 420px;
   border-radius: 10px;
@@ -52,16 +52,16 @@ button {
 
 <body>
 
-<h2>测试地点：蒲河纪检大楼343；请谨慎填写，预约无法取消。</h2>
+<h2>被试预约</h2>
 
 <div id="calendar"></div>
 
 <!-- 弹窗 -->
 <div id="bookingModal" class="modal">
   <div class="modal-content">
-    <h3>填写信息</h3>
+    <h3>填写被试信息</h3>
 
-    <div>
+    <div style="margin-bottom:10px;">
       <div>开始时间：<span id="startTime"></span></div>
       <div>结束时间：<span id="endTime"></span></div>
     </div>
@@ -92,24 +92,35 @@ const TABLE_NAME = "booking-simple";
 
 let selectedEvent = null;
 
-//
+// 时间格式
 function formatTime(t) {
   return new Date(t).toLocaleString();
 }
 
-//
+// 初始化日历（EEG同款核心）
 const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+
   initialView: 'timeGridWeek',
+
+  headerToolbar: {
+    left: 'prev,next today',
+    center: 'title',
+    right: 'timeGridWeek,timeGridDay'
+  },
 
   selectable: true,
   editable: true,
+  nowIndicator: true,
+
+  slotDuration: '00:30:00',
+  slotMinTime: '08:00:00',
+  slotMaxTime: '22:00:00',
 
   select: function(info) {
     selectedEvent = {
       start: info.startStr,
       end: info.endStr
     };
-
     openModal();
   },
 
@@ -120,6 +131,8 @@ const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), 
   eventResize: function(info) {
     updateEvent(info.event);
   },
+
+  // ❌ 不写 eventClick = 禁止取消
 
   events: async function(fetchInfo, successCallback) {
     const res = await fetch(SUPABASE_URL + "/rest/v1/" + TABLE_NAME, {
@@ -159,13 +172,14 @@ function closeModal() {
 
 // 提交预约
 async function submitBooking() {
+
   const studentId = document.getElementById("studentId").value.trim();
   const name = document.getElementById("name").value.trim();
   const gender = document.getElementById("gender").value;
   const age = document.getElementById("age").value;
   const phone = document.getElementById("phone").value.trim();
 
-  // 必填校验（你要求的）
+  // ✅ 必填校验
   if (!studentId || !name || !gender || !age || !phone) {
     alert("请填写完整信息");
     return;
@@ -198,7 +212,7 @@ async function submitBooking() {
   }
 }
 
-// 更新时间（拖动/拉伸）
+// 拖动 / 拉伸更新时间
 async function updateEvent(event) {
   await fetch(SUPABASE_URL + "/rest/v1/" + TABLE_NAME + "?id=eq." + event.id, {
     method: "PATCH",
