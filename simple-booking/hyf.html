@@ -36,7 +36,7 @@ body{font-family:"Microsoft YaHei",sans-serif;margin:20px;}
 
 <body>
 
-<h2>【何云凤课题组专用】测试地点见各组招募广告；为确保测试正常进行，系统仅受理提前一天以上（含）的预约；预约无法取消，请谨慎填写。</h2>
+<h2>【周星辰课题组专用】测试地点见各组招募广告；为确保测试正常进行，系统仅受理提前一天以上（含）的预约；预约无法取消，请谨慎填写。</h2>
 
 <div id="calendar"></div>
 
@@ -44,7 +44,7 @@ body{font-family:"Microsoft YaHei",sans-serif;margin:20px;}
   <div class="modal-content">
     <h3>预约无法取消，请谨慎填写</h3>
 
-    <form name="booking-heyf">
+    <form name="booking-hyf">
 
       姓名：
       <input id="nameInput" type="text">
@@ -90,7 +90,7 @@ body{font-family:"Microsoft YaHei",sans-serif;margin:20px;}
 const SUPABASE_URL = "https://ipqvhykwlvzagbffhdzp.supabase.co";
 const SUPABASE_KEY = "sb_publishable_Nv9QOCAV0sD-sTgYeCFKfQ_QOCMXmrM";
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-const TABLE_NAME = "booking-heyf";
+const TABLE_NAME = "booking-hyf";
 
 let calendar;
 let bookings = [];
@@ -175,9 +175,9 @@ async function submitBooking(){
   }
 
   const { data,error } = await sb
-    .from(TABLE_)
+    .from(TABLE_NAME)
     .insert([{
-      ,
+      name,
       studentId,
       phone,
       gender,
@@ -197,7 +197,7 @@ async function submitBooking(){
 
   calendar.addEvent({
     id:String(row.id),
-    title:row.,
+    title:row.name,
     start:row.start,
     end:row.end
   });
