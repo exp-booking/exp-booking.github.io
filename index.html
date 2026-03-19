@@ -59,26 +59,6 @@
     .section h2 {
       margin-top: 0;
     }
-
-    .section-news-row {
-      display: flex;
-      gap: 20px;
-      max-width: 900px;
-      margin: 20px auto;
-      color: white;
-      background: #2c7be5;
-      box-sizing: border-box;
-    }
-    .section-news-left,
-    .section-news-right {
-      box-sizing: border-box;
-    }
-    .section-news-left {
-      flex: 1;
-    }
-    .section-news-right {
-      flex: 4;
-    }
     
     .section-row {
       display: flex;
@@ -100,7 +80,25 @@
     .section-right {
       flex: 2;
     }
-    
+
+    .blue-section {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 25px;
+      background: #e6f0ff;
+      border-radius: 10px;
+    }
+    .split-row {
+      display: flex;
+      gap: 20px;
+    }
+    .left-box {
+      flex: 1;
+    }
+    .right-box {
+      flex: 4;
+    }
+
     .btn-orange {
       background-color: #f08c2e;
     }
@@ -129,19 +127,17 @@
 
 <h1>辽宁大学心理测试与行为分析实验室预约登记系统</h1>
 
-
-<div class="section-news">
-  <!-- 左 1/6 -->
-  <section class="section-news section-news-left">
-    <h2>News</h2>
-  </section>
-  <!-- 右 5/6 -->
-  <section class="section-mews section-news-right">
-    <p>2026.03.19 22:13 《预约系统使用手册》更新至ver 2.4。</p>
-    <p>2026.03.19 22:00 预约系统测试完成，已正式投入使用。</p>
-  </section>
-
-</div>
+<section class="blue-section">
+  <div class="split-row">
+    <div class="left-box">
+      <h2>News</h2>
+    </div>
+    <div class="right-box">
+      <p>2026.03.19 22:13 《预约系统使用手册》更新至ver 2.4。</p>
+      <p>2026.03.19 22:00 预约系统测试完成，已正式投入使用。</p>
+    </div>
+  </div>
+</section>
 
 
 <section class="section">
