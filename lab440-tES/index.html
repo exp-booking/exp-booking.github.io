@@ -38,8 +38,8 @@ a{text-decoration:none;color:#2c7be5;}
     <label>用途：<input id="purposeInput" type="text"></label>
     <label>开始时间：<input id="startInput" type="datetime-local"></label>
     <label>结束时间：<input id="endInput" type="datetime-local"></label>
-    <label>房间号：<input id="roomInput" type="number"></label>
-    <label>实验间：<input id="labInput" type="text"></label>
+    <label>房间号：<input id="roomInput" type="text" value="440" readonly></label>
+    <label>实验间：<input id="labInput" type="text" value="tES" readonly></label>
     <div class="modal-actions">
       <button onclick="closeModal()">取消</button>
       <button onclick="submitBooking()">提交预约</button>
@@ -52,7 +52,7 @@ a{text-decoration:none;color:#2c7be5;}
 const SUPABASE_URL = "https://ipqvhykwlvzagbffhdzp.supabase.co";
 const SUPABASE_KEY = "sb_publishable_Nv9QOCAV0sD-sTgYeCFKfQ_QOCMXmrM";
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-const TABLE_NAME = "booking-sheet";
+const TABLE_NAME = "booking-440-tES";
 
 // ------------------------- 变量 -------------------------
 let calendar;
