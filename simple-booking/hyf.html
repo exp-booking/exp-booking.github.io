@@ -90,7 +90,7 @@ body{font-family:"Microsoft YaHei",sans-serif;margin:20px;}
 const SUPABASE_URL = "https://ipqvhykwlvzagbffhdzp.supabase.co";
 const SUPABASE_KEY = "sb_publishable_Nv9QOCAV0sD-sTgYeCFKfQ_QOCMXmrM";
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-const TABLE_NAME = "booking-simple";
+const TABLE_NAME = "booking-hyf";
 
 let calendar;
 let bookings = [];
@@ -175,9 +175,9 @@ async function submitBooking(){
   }
 
   const { data,error } = await sb
-    .from(TABLE_NAME)
+    .from(TABLE_)
     .insert([{
-      name,
+      ,
       studentId,
       phone,
       gender,
@@ -197,7 +197,7 @@ async function submitBooking(){
 
   calendar.addEvent({
     id:String(row.id),
-    title:row.name,
+    title:row.,
     start:row.start,
     end:row.end
   });
