@@ -60,13 +60,24 @@
       margin-top: 0;
     }
 
-    .section-news {
-      max-width: 900px;
-      margin: 20px 0; 
-      padding: 25px;
+    .section-row {
+      display: flex;
+      gap: 20px;
+      max-width: auto;
+      margin: 20px auto;
       color: white;
       background: #2c7be5;
-      border-radius: 10px;
+      box-sizing: border-box;
+    }
+    .section-news-left,
+    .section-news-right {
+      box-sizing: border-box;
+    }
+    .section-news-left {
+      flex: 1;
+    }
+    .section-news-right {
+      flex: 5;
     }
     
     .section-row {
@@ -119,11 +130,19 @@
 <h1>辽宁大学心理测试与行为分析实验室预约登记系统</h1>
 
 
-<section class="section-news">
-<h2>News</h2>
-  <p>2026.03.19 22:13，《预约系统使用手册》更新至ver 2.4。</p>
-  <p>2026.03.19 22:00 预约系统测试完成，已正式投入使用。</p>
-</section>
+<div class="section-news">
+  <!-- 左 1/6 -->
+  <section class="section section-news-left">
+    <h2>News</h2>
+  </section>
+  <!-- 右 5/6 -->
+  <section class="section section-news-right">
+    <p>2026.03.19 22:13 《预约系统使用手册》更新至ver 2.4。</p>
+    <p>2026.03.19 22:00 预约系统测试完成，已正式投入使用。</p>
+  </section>
+
+</div>
+
 
 <section class="section">
 
