@@ -152,13 +152,8 @@ async function submitBooking(){
   const gender=genderInput.value;
   const group=groupInput.value;
   const age=ageInput.value.trim();
-  function toLocalISOString(datetimeLocalValue){
-    const d = new Date(datetimeLocalValue);
-    const tzOffset = d.getTimezoneOffset() * 60000;
-    return new Date(d - tzOffset).toISOString();
-  }
-  const start = toLocalISOString(startInput.value);
-  const end = toLocalISOString(endInput.value);
+  const start = startInput.value;
+  const end = endInput.value;
 
   // 必填检查（加入 phone）
   if(!name||!studentId||!phone||!gender||!group||!age||!start||!end){
