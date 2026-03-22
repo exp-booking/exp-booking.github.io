@@ -9,6 +9,118 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont,
+               "PingFang SC", "Microsoft YaHei", sans-serif;
+  text-align: center;
+  margin: 10px;
+}
+
+h1 {
+  margin-bottom: 40px;
+}
+
+.btn {
+  display: inline-block;
+  margin: 15px;
+  padding: 18px 36px;
+  font-size: 18px;
+  text-decoration: none;
+  color: white;
+  background-color: #2c7be5;
+  border-radius: 8px;
+}
+
+.btn:hover {
+  background-color: #1a68d1;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 25px 0;
+}
+.header-divider {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 0;
+}
+
+.section {
+  max-width: 900px;
+  margin: 20px auto; 
+  padding: 25px; 
+  background: #faf8f2;
+  border-radius: 10px;
+}
+
+.section h2 {
+  margin-top: 0;
+}
+
+.section-row {
+  display: flex;
+  gap: 20px;
+  max-width: 900px;
+  margin: 20px auto;
+  box-sizing: border-box;
+}
+
+.section-left,
+.section-right {
+  box-sizing: border-box;
+}
+
+.section-left {
+  flex: 1;
+}
+
+.section-right {
+  flex: 1;
+}
+
+.blue-section-full {
+  width: 100%;
+  background: #2c7be5;
+  color: white;
+  padding: 9px 0;
+}
+
+.blue-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 9px;
+}
+
+.split-row {
+  display: flex;
+  gap: 20px;
+}
+
+.left-box {
+  flex: 1;
+}
+
+.right-box {
+  flex: 6;
+}
+
+.btn-orange {
+  background-color: #f08c2e;
+}
+
+.btn-orange:hover {
+  background-color: #d9761f;
+}
+
+.warning-text {
+  color: #d32f2f;
+}
+
 body{font-family:"Microsoft YaHei",sans-serif;margin:20px;}
 #calendar{max-width:1100px;margin:0 auto;}
 #bookingModal{
@@ -37,11 +149,12 @@ body{font-family:"Microsoft YaHei",sans-serif;margin:20px;}
 <body>
 
 <h2 style="text-align:center;">【尚林霖课题组公告栏：】</h2>
-
-<p>1月份参加视觉快速辨认实验的三位同学（20255701323、20255701122、20245701219）请更新财务信息后联系我！！！你们的被试费无法报销！！！</p>
-<p>测试或实验地点请见招募广告。</p>
-<p>测试版和正式实验劳务费不同，测试科研劳务会高于正式实验的被试费。</p>
-<p>课题组每天16:00准时处理预约，16:00后请从第三天开始预约。</p>
+<div class="blue-inner">
+  <p>1月份参加视觉快速辨认实验的三位同学（20255701323、20255701122、20245701219）请更新财务信息后联系我！！！你们的被试费无法报销！！！</p>
+  <p>测试或实验地点请见招募广告。</p>
+  <p>测试版和正式实验劳务费不同，测试科研劳务会高于正式实验的被试费。</p>
+  <p>课题组每天16:00准时处理预约，16:00后请从第三天开始预约。</p>
+</div>
 
 
 <div id="calendar"></div>
