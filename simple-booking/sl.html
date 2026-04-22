@@ -157,6 +157,7 @@ body{font-family:"Microsoft YaHei",sans-serif;margin:20px;}
   <div class="blue-inner" style="text-align:left">
     <h2 class="warning-text">请确保已认真阅读过《知情同意》中的实验前准备，并按照主页预约规则操作。</h2>
     <p>- 测试或实验地点请见招募广告，实验时间为（开始时间-结束时间）8:30-19:30，节假日9:00开始。</p>
+    <p>- 同一时段最多可预约2人；递交预约后系统报错，表示该时段已满额。</p>
     <p>- 不要重复递交预约，没反应大概率是网慢，建议使用校网。</p>
     <p>-----------------------------------------------------</p>
     <p>- 测试版和正式实验劳务费不同，测试科研劳务会高于正式实验的被试费。</p>
@@ -297,12 +298,17 @@ async function submitBooking(){
     return;
   }
 
-  for(const ev of bookings){
-    if(!(new Date(end)<=new Date(ev.start)||
-         new Date(start)>=new Date(ev.end))){
-      alert("时间冲突");
-      return;
+  let overlapCount = 0;
+  for (const ev of bookings) {
+    const isOverlap = !(new Date(end) <= new Date(ev.start) ||
+                        new Date(start) >= new Date(ev.end));
+    if (isOverlap) {
+      overlapCount++;
     }
+  }
+  if (overlapCount >= 2) {
+    alert("该时间段人数已满（最多允许2人同时预约）");
+    return;
   }
 
   const { data,error } = await sb
