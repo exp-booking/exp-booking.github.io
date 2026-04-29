@@ -167,24 +167,32 @@ async function submitBooking(){
     return;
   }
   // 黑名单检查：姓名+手机号 / 姓名+学号 / 学号+手机号 任一组合匹配即禁止
+  const cleanName = name.trim();
+  const cleanStudentId = studentId.trim();
+  const cleanPhone = phone.trim();
   const { data: blacklistData, error: blacklistError } = await sb
     .from("blacklist")
-    .select("*")
-    .or(
-      `and(name.eq.${name},phone.eq.${phone}),` +
-      `and(name.eq.${name},studentId.eq.${studentId}),` +
-      `and(studentId.eq.${studentId},phone.eq.${phone})`
-    );
+    .select("name, studentId, phone");
   if (blacklistError) {
     alert("黑名单检查失败，请稍后再试");
     console.error(blacklistError);
     return;
   }
-  if (blacklistData && blacklistData.length > 0) {
+  const isBlacklisted = (blacklistData || []).some(item => {
+    const bName = (item.name || "").trim();
+    const bStudentId = (item.studentId || "").trim();
+    const bPhone = (item.phone || "").trim();
+    return (
+      (bName === cleanName && bPhone === cleanPhone) ||
+      (bName === cleanName && bStudentId === cleanStudentId) ||
+      (bStudentId === cleanStudentId && bPhone === cleanPhone)
+    );
+  });
+  if (isBlacklisted) {
     alert("禁止预约：该信息与黑名单记录匹配");
     return;
   }
-
+  
   if(new Date(end)<=new Date(start)){
     alert("结束时间必须晚于开始时间");
     return;
