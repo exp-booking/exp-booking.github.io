@@ -231,7 +231,7 @@ async function loadBookings(){
   const { data } = await sb.from(TABLE_NAME).select("*");
   bookings = (data || []).map(row => ({
     id:String(row.id),
-    title:row.name,
+    title:`${row.group}｜${row.name}`,
     start:row.start,
     end:row.end
   }));
@@ -365,7 +365,7 @@ async function submitBooking(){
 
   calendar.addEvent({
     id:String(row.id),
-    title:row.name,
+    title:`${row.group}｜${row.name}`,
     start:row.start,
     end:row.end
   });
