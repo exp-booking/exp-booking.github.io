@@ -1,18 +1,186 @@
+!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>实验室预约登记系统</title>
 
-行为学实验（Behavioural）信息说明与研究知情同意书
-（完全民事行为能力人版 ≥16周岁）
+  <link rel="icon" type="image/png" href="../images/lab_logo.png">
 
-一、一般信息
-在您作出参与本研究的知情决定前，您应理解本研究的可能风险与获益。这一过程称为知情同意。辽宁大学心理测试与行为分析实验室伦理审查委员会（下称委员会）已批准本同意书中的信息，并批准实验人员进行本研究。委员会是由一组独立的专家和非专业人士组成的独立委员会，旨在帮助保护研究受试者的权利。这并不表示委员会已批准您参与本研究，也并不表示本研究没有风险。本同意书可能包含您不理解的词语。请让实验人员解释您无法清楚理解的任何词语或信息。如果您决定参与本研究，将要求您阅读并于线下签署本同意书，以确认您已经获得关于本研究的说明且您已同意参与。已签署的同意书由本研究项目负责人存档保留。当您阅读本同意书时，请注意：文中的“您”和“您的”是指受试者本人，而不是可能代表受试者签署本同意书的父母/监护人或合法授权代表。
-您被邀请参加这项研究因为您具备本研究的入组条件。本研究的实验人员会为您充分解释知情同意书的内容，请仔细阅读本知情同意书后慎重做出是否参加研究的决定。若您正在参加别的研究，请告知实验人员。
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont,
+                   "PingFang SC", "Microsoft YaHei", sans-serif;
+      text-align: center;
+      margin: 10px;
+    }
+
+    h1 {
+      margin-bottom: 40px;
+    }
+
+    .btn {
+      display: inline-block;
+      margin: 15px;
+      padding: 18px 36px;
+      font-size: 18px;
+      text-decoration: none;
+      color: white;
+      background-color: #2c7be5;
+      border-radius: 8px;
+    }
+
+    .btn:hover {
+      background-color: #1a68d1;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #ddd;
+      margin: 25px 0;
+    }
+    .header-divider {
+      border: none;
+      border-top: 1px solid #ddd;
+      margin: 0;
+    }
+
+    .section {
+      max-width: 900px;
+      margin: 20px auto; 
+      padding: 25px; 
+      background: #faf8f2;
+      border-radius: 10px;
+    }
+
+    .section h2 {
+      margin-top: 0;
+    }
+    
+    .section-row {
+      display: flex;
+      gap: 20px;
+      max-width: 900px;
+      margin: 20px auto;
+      box-sizing: border-box;
+    }
+    
+    .section-left,
+    .section-right {
+      box-sizing: border-box;
+    }
+    
+    .section-left {
+      flex: 1;
+    }
+    
+    .section-right {
+      flex: 1;
+    }
+
+    .blue-section-full {
+      width: 100%;
+      background: #2c7be5;
+      color: white;
+      padding: 9px 0;
+    }
+    
+    .blue-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 9px;
+    }
+    
+    .split-row {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .left-box {
+      flex: 1;
+    }
+    
+    .right-box {
+      flex: 6;
+    }
+    
+    .btn-orange {
+      background-color: #f08c2e;
+    }
+    
+    .btn-orange:hover {
+      background-color: #d9761f;
+    }
+
+    .warning-text {
+      color: #d32f2f;
+      font-size: 27px;
+    }
+  </style>
+</head>
+<body>
+
+<header style="display:flex; align-items:center; padding:10px 40px;">
+  <img src="images/lnu_logo.png" alt="辽宁大学" style="height:70px; margin-right:50px;">
+  <div style="margin-left:auto; text-align:right;">
+    <div style="font-size:22px; font-weight:600;">
+      辽宁大学心理测试与行为分析实验室受试者知情同意书；2026年3月，2.0版
+    </div>
+    <div style="font-size:14px; color:#666;">
+      Study-Specific Informed Consent Form, Mar.-2026, ver 2.0
+    </div>
+  </div>
+</header>
+<hr class="header-divider">
+
+
+<h1>行为学实验（Behavioural）信息说明与研究知情同意书</h1>
+<h3>（完全民事行为能力人版 ≥16周岁）</h3>
+
+<section class="section">
+  <h2> 一、一般信息</h2>
+  <p>在您作出参与本研究的知情决定前，您应理解本研究的可能风险与获益。这一过程称为知情同意。辽宁大学心理测试与行为分析实验室伦理审查委员会（下称委员会）已批准本同意书中的信息，并批准实验人员进行本研究。委员会是由一组独立的专家和非专业人士组成的独立委员会，旨在帮助保护研究受试者的权利。这并不表示委员会已批准您参与本研究，也并不表示本研究没有风险。本同意书可能包含您不理解的词语。请让实验人员解释您无法清楚理解的任何词语或信息。如果您决定参与本研究，将要求您阅读并于线下签署本同意书，以确认您已经获得关于本研究的说明且您已同意参与。已签署的同意书由本研究项目负责人存档保留。当您阅读本同意书时，请注意：文中的“您”和“您的”是指受试者本人，而不是可能代表受试者签署本同意书的父母/监护人或合法授权代表。<br>
+    您被邀请参加这项研究因为您具备本研究的入组条件。本研究的实验人员会为您充分解释知情同意书的内容，请仔细阅读本知情同意书后慎重做出是否参加研究的决定。若您正在参加别的研究，请告知实验人员。</p>
+</section>
+
+<div class="section-row">
+  <section class="section section-right">
+    <h2>请按预约规则预约，乱填后台直接删除并计入黑名单</h2>
+    <a class="btn" href="sharing-sheet.html">点击进入预约页面，请选择正确的课题组和时段</a>
+  </section>
+</div>
+
+
+<footer style="display:flex; align-items:center; justify-content:space-between; padding:18px 40px; font-size:14px; color:#666; background:#f2f2f2; border-top:1px solid #ddd;">
+  <div style="display:flex; align-items:center; text-align:left;">
+    <img src="images/lab_logo.png" alt="实验室logo" style="height:36px; margin-right:12px;">
+    <div style="line-height:1.3;">
+      <div style="font-weight:600;">心理测试与行为分析重点实验室 | 辽宁大学</div>
+      <div style="font-size:12px; color:#888;">
+        Key Laboratory of Psychological Testing and Behavioural Analysis
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:right;">
+    <div>© 2022–2026 实验室预约系统</div>
+    <div style="font-size:12px;">Contact: shanglinlin@lnu.edu.cn</div>
+  </div>
+</footer>
+  
+</body>
+</html>
+
+
+
 
 二、实验前在家准备
 近视者请务必携带（阅读）眼镜，即便您平时佩戴隐形眼镜，也请带上眼镜。
 保证充足睡眠（7-9小时），睡眠不足会显著影响注意力、反应速度和情绪。在实验前一天尽量保持规律作息，避免熬夜。不要在过度疲劳时参加实验，疲劳会导致数据偏差。实验前一小时不要剧烈运动，以免心率、激活水平异常。
-实验前 2-3 小时避免胀腹、过饥或过饱。避免咖啡、浓茶、能量饮料，
-——  请翻页 ——
-
-会影响心率、兴奋水平，从而改变实验表现。
+实验前 2-3 小时避免胀腹、过饥或过饱。避免咖啡、浓茶、能量饮料，会影响心率、兴奋水平，从而改变实验表现。
 如需长期服药（如抗抑郁、安眠药等），按医嘱正常服用，但提前告知实验人员。当天避免首次服用新药（包括感冒药），因为可能影响认知表现。
 尽量保持平稳情绪：情绪激动、压力过大会影响感知、判断与反应。
 若有其他补充要求，请以实验人员的邮件通知为准，并按通知内容进行准备。
@@ -29,8 +197,6 @@
 五、附加信息（风险与禁止参加的情况）
 参与本实验的风险可视为极低且负担最小。不涉及任何侵入性程序。若下列任一项适用于您，则不能参加实验：
 1)患有或曾患有其他神经及精神疾病；
-——  请翻页 ——
-
 2)患有幽闭恐惧症（claustrophobia）；
 3)已怀孕或怀疑自己怀孕；
 4)年龄小于 16 岁；
@@ -61,7 +227,6 @@
 - 为研究目的可能会对实验进行音、视频记录。 
 - 在本研究外，我的匿名化实验数据将被与其他研究者或研究组共享。
 - 为核查研究合规性，少数项目相关人员可能接触我的（个人）数据；这些人员（本研究的项目负责人、本研究的实验人员、本研究的课题组成员、财务，及校伦理审查委员会）已由实验人员经书面与口头方式告知，我对此表示同意。
-——  请翻页 ——
 
 
 —— 行为学实验（Behavioural）筛查表 ——
@@ -71,8 +236,8 @@
 ☑ 我同意为了研究目的收集关于我健康状况、背景或偏好等敏感的个人数据（匿名，不可直接识别身份）。		
 ☑ 出于审查目的，我同意特定机构可以查看我的全部数据（这些机构已在信息表中列明）。  		
 ☑ 我同意收集并保存不可直接识别我本人的实验数据。		
-☑ 我同意我本人的不可直接识别身份的实验数据可被公开（例如，共享给感兴趣的人员以进行验证、再利用或重复研究）。		
+☑ 我同意我本人的不可直接识别身份的匿名实验数据可被公开（例如，共享给感兴趣的人员以进行验证、再利用或重复研究）。		
 *若以上任意问题选择 “否”，您将无法参加本实验。
 
-
-*注：本表适用于健康、具有完全民事行为能力的青少年/成年人（≥16 岁）；受试者须亲自确认。
+<p>*注：本表适用于健康、具有完全民事行为能力的青少年/成年人（≥16 岁）；受试者须亲自确认。
+  <br>* 如有问题，请联系实验所属课题组，或于工作时间拨打电话 024-67988402。</p>
