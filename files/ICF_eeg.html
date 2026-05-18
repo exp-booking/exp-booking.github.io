@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>实验室预约登记系统</title>
+
+  <link rel="icon" type="image/png" href="../images/lab_logo.png">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont,
+                   "PingFang SC", "Microsoft YaHei", sans-serif;
+      text-align: center;
+      margin: 10px;
+    }
+
+    h1 {
+      margin-bottom: 40px;
+    }
+
+    .btn {
+      display: inline-block;
+      margin: 15px;
+      padding: 18px 36px;
+      font-size: 18px;
+      text-decoration: none;
+      color: white;
+      background-color: #2c7be5;
+      border-radius: 8px;
+    }
+
+    .btn:hover {
+      background-color: #1a68d1;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #ddd;
+      margin: 25px 0;
+    }
+    .header-divider {
+      border: none;
+      border-top: 1px solid #ddd;
+      margin: 0;
+    }
+
+    .section {
+      max-width: 900px;
+      margin: 20px auto; 
+      padding: 25px; 
+      background: #faf8f2;
+      border-radius: 10px;
+    }
+
+    .section h2 {
+      margin-top: 0;
+    }
+    
+    .section-row {
+      display: flex;
+      gap: 20px;
+      max-width: 900px;
+      margin: 20px auto;
+      box-sizing: border-box;
+    }
+    
+    .section-left,
+    .section-right {
+      box-sizing: border-box;
+    }
+    
+    .section-left {
+      flex: 1;
+    }
+    
+    .section-right {
+      flex: 1;
+    }
+
+    .blue-section-full {
+      width: 100%;
+      background: #2c7be5;
+      color: white;
+      padding: 9px 0;
+    }
+    
+    .blue-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 9px;
+    }
+    
+    .split-row {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .left-box {
+      flex: 1;
+    }
+    
+    .right-box {
+      flex: 6;
+    }
+    
+    .btn-orange {
+      background-color: #f08c2e;
+    }
+    
+    .btn-orange:hover {
+      background-color: #d9761f;
+    }
+
+    .warning-text {
+      color: #d32f2f;
+      font-size: 27px;
+    }
+  </style>
+</head>
+<body>
+
+<header style="display:flex; align-items:center; padding:10px 40px;">
+  <img src="../images/lnu_logo.png" alt="辽宁大学" style="height:70px; margin-right:50px;">
+  <div style="margin-left:auto; text-align:right;">
+    <div style="font-size:22px; font-weight:600;">
+      辽宁大学心理测试与行为分析实验室受试者知情同意书，2026年3月-2.0版
+    </div>
+    <div style="font-size:14px; color:#666;">
+      Study-Specific Informed Consent Form, Mar. 2026, ver 2.0
+    </div>
+  </div>
+</header>
+<hr class="header-divider">
+
+
+<h2>脑电（EEG）信息说明与研究知情同意书</h2>
+<h3>（完全民事行为能力人版 ≥16周岁）</h3>
+
+<section class="section">
+  <div style="text-align:left;">
+    <h2> 一、一般信息</h2>
+    <p>中枢神经系统的信息处理部分通过神经细胞的电活动实现。脑自身产生的这种最低限度、持续性的电活动可以通过电极测量并记录。这样的测量结果称为脑电图（Electroencephalogram，EEG）。由于所测信号非常微弱，必须防止环境干扰信号影响脑电信号。因此 EEG 测量通常在专门的屏蔽室内进行。根据研究目标不同，记录 EEG 的时间长度一般在约 30 分钟至 2 小时之间。<br>
+      在您作出参与本研究的知情决定前，您应理解本研究的可能风险与获益。这一过程称为知情同意。辽宁大学心理测试与行为分析实验室伦理审查委员会（下称委员会）已批准本同意书中的信息，并批准实验人员进行本研究。委员会是由一组独立的专家和非专业人士组成的独立委员会，旨在帮助保护研究受试者的权利。这并不表示委员会已批准您参与本研究，也并不表示本研究没有风险。本同意书可能包含您不理解的词语。请让实验人员解释您无法清楚理解的任何词语或信息。如果您决定参与本研究，将要求您阅读并签署本同意书，以确认您已经获得关于本研究的说明且您已同意参与。已签署的同意书由本研究项目负责人存档保留。当您阅读本同意书时，请注意：文中的“您”和“您的”是指受试者本人，而不是可能代表受试者签署本同意书的父母/监护人或合法授权代表。<br>
+      您被邀请参加这项研究因为您具备本研究的入组条件。本研究的实验人员会为您充分解释知情同意书的内容，请仔细阅读本知情同意书后慎重做出是否参加研究的决定。若您正在参加别的研究，请告知实验人员。</p>
+    <h2>二、实验前在家准备</h2>
+    <p>为使 EEG 测量更顺利，请在来参加实验前（当天）注意以下事项：<br>
+      - 事先洗净并吹干头发；<br>
+      - 不要使用啫喱、发胶、定型喷雾等产品；<br>
+      - 不要使用面霜或化妆品；<br>
+      - 如需要可自带梳子或发刷；<br>
+      - 请务必携带（阅读）眼镜，即便您平时佩戴隐形眼镜也请带上眼镜。<br>
+      此外，亦请遵守其他行为实验的相关注意事项：<br>
+      保证充足睡眠（7-9小时），睡眠不足会显著影响注意力、反应速度和情绪。在实验前一天尽量保持规律作息，避免熬夜。不要在过度疲劳时参加实验，疲劳会导致数据偏差。实验前一小时不要剧烈运动，以免心率、激活水平异常。<br>
+      实验前 2-3 小时避免胀腹、过饥或过饱。避免咖啡、浓茶、能量饮料：会影响心率、兴奋水平，从而改变实验表现。<br>
+      如需长期服药（如抗抑郁、安眠药等），按医嘱正常服用，但提前告知实验人员。当天避免首次服用新药（包括感冒药），因为可能影响认知表现。<br>
+      尽量保持平稳情绪：情绪激动、压力过大会影响感知、判断与反应。<br>
+      若有其他补充要求，请以实验人员的邮件通知为准，并按通知内容进行准备。</p>
+  
+    <h2>三、到达实验室后的准备</h2>
+    <p>实验人员会为您戴上一顶类似泳帽的帽子（脑电帽），帽子上会固定大量测量电极。此外，眼周和耳后会用小贴片固定少量电极。您的眼睛、鼻子、嘴及面部下侧不会被覆盖。<br>
+      为了取得良好的信号，皮肤与电极之间的电阻不应过高。如有需要，实验人员会使用酒精和导电胶使电阻降到所需值。</p>
+    
+    <h2>四、实验过程</h2>
+    <p>在完成上述准备后，您将进入屏蔽室。实验人员会向您说明实验中需要您完成的任务。可能的任务包括：注视电脑屏幕、听取声音（可能通过耳机）、完成反应时任务、执行特定动作，或仅仅坐着放松。<br>
+      在测量过程中，屏蔽室的门会关闭但不会上锁。实验人员可通过摄像装置看见您，并可通过对讲机与您交流。<br>
+      有时实验过程会为了严格的科学目的同时进行视频和/或音频记录，实验前会及时告知您。测量过程本身不会对您造成不适或感知到明显的影响。当获取到足够的数据后测量即可结束，实验人员会再次进入房间并取下脑电帽。如您愿意可以洗头、用毛巾擦干，实验室会提供洗发液与毛巾。为卫生起见，建议您自带梳子。</p>
+    
+    <h2>五、附加信息（风险与禁止参加的情况）</h2>
+    <p>参与本实验的风险可视为极低且负担最小。不涉及任何侵入性程序。若下列任一项适用于您，则不能参加 EEG 实验：<br>
+      1)曾进行过头部/脑部手术；<br>
+      2)患有或曾患有癫痫（epilepsy）；<br>
+      3)患有或曾患有其他神经及精神疾病；<br>
+      4)患有幽闭恐惧症（claustrophobia）；<br>
+      5)已怀孕或怀疑自己怀孕；<br>
+      6)年龄小于 16 岁<br>
+      7)不符合所参加的实验要求。<br>
+    * 若上述任一项适用于您，请在实验前（至少）一天联系实验人员。</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>——  研究知情同意书（Study-specific informed consent form）——</h2>
+  <h3>研究/实验类型（请在适用者前打勾）</h3>
+  <h3>☑ EEG  □ NIRS  □ tES  ☑ 行为学</h3>
+  
+  <div style="text-align:left;">
+    <p>我确认：<br>
+      - 我已通过首页一般信息表及研究特定资料（书面与口头）充分了解到本研究。<br>
+      - 我有机会提出关于本研究的问题，且这些问题已得到满意回答。<br>
+      - 我有足够的时间认真考虑并决定是否参加研究。<br>
+      - 我是自愿参加本研究。<br>
+      - 我有权在任何时间退出实验而无需说明理由。<br>
+      - 我有权在数据收集结束 1 个月内请求删除任何可能识别出本人的研究数据。<br>
+      - 我的数据将依据适用的中国大陆隐私法律得到保护。<br>
+      - 为避免实验结果受到影响，我会对实验内容保密，不向其他潜在参与者或外界人员透露任何实验细节。<br>
+      - 每次参加新实验时将再次征求我的知情同意。<br>
+      我同意：<br>
+      - 研究人员收集并使用我的研究数据（不含个人信息实验数据），保存期限至少为 10 年。<br>
+      - 我的数据/生物材料将被收集并用于研究中所述的目的。<br>
+      - 若出现与我有关的医疗重要新信息，将由我的参保医院告知。<br> 
+      - 为研究目的可能会对实验进行音、视频记录。<br>
+      - 在本研究外，我的匿名化实验数据将被与其他研究者或研究组共享。<br>
+      - 为核查研究合规性，少数项目相关人员可能接触我的（个人）数据；这些人员（本研究的项目负责人、本研究的实验人员、本研究的课题组成员、财务，及校伦理审查委员会）已由实验人员经书面与口头方式告知，我对此表示同意。</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>—— EEG 筛查表 ——</h2>
+  <h3>被试需在预约前确认该表</h3>
+    <div style="text-align:left;">
+      <p>请回答以下问题：<br>
+        □ 您头部是否曾做过手术（如，开颅手术等）？
+        □ 您是否患有或曾患有癫痫？
+        □ 您是否患有或曾患有其他神经及精神疾病？
+        □ 您是否患有幽闭恐惧？
+        □ 您是否怀孕或怀疑怀孕？
+        □ 您是否未满 16 岁？
+        □ 如果您对以上任一问题回答 “是”，您将不能参加本实验。
+    </div>
+</section>
+  <p>*注：本表适用于健康、具有完全民事行为能力的青少年/成年人（≥16 岁）；受试者须亲自确认。
+  <br>* 如有问题，请联系实验所属课题组，或于工作时间拨打电话 024-67988402。</p>
+<a class="btn" href="../sharing-sheet.html">我同意以上全部内容，并确认自己符合实验条件。</a>
+<a class="btn" href="../index.html">我不同意</a>
+
+<footer style="display:flex; align-items:center; justify-content:space-between; padding:18px 40px; font-size:14px; color:#666; background:#f2f2f2; border-top:1px solid #ddd;">
+  <div style="display:flex; align-items:center; text-align:left;">
+    <img src="../images/lab_logo.png" alt="实验室logo" style="height:36px; margin-right:12px;">
+    <div style="line-height:1.3;">
+      <div style="font-weight:600;">心理测试与行为分析重点实验室 | 辽宁大学</div>
+      <div style="font-size:12px; color:#888;">
+        Key Laboratory of Psychological Testing and Behavioral Analysis
+      </div>
+    </div>
+  </div>
+  <div style="text-align:right;">
+    <div>© 2022–2026 实验室预约系统</div>
+    <div style="font-size:12px;">Contact: shanglinlin@lnu.edu.cn</div>
+  </div>
+</footer>
+  
+</body>
+</html>
