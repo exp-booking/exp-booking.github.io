@@ -1,6 +1,6 @@
-# Intelligent Perception and Integration Conference Website
+# 首届心理学与纪检监察学跨学科会议——暨中国社会心理学会廉政心理研究专委会2026年学术会议
 
-This folder contains a static GitHub Pages website for the Intelligent Perception and Integration Conference.
+This folder contains a static GitHub Pages website for ... Conference.
 
 ## Files
 
@@ -13,27 +13,27 @@ This folder contains a static GitHub Pages website for the Intelligent Perceptio
 If the PI's GitHub Pages repository is:
 
 ```text
-professorname.github.io
+exp-booking.github.io
 ```
 
 create a folder inside that repository:
 
 ```text
-ipic-2026/
+psych-intg-2026/
 ```
 
 Then place these files inside the folder:
 
 ```text
-ipic-2026/index.html
-ipic-2026/style.css
-ipic-2026/script.js
+psych-intg-2026/index.html
+psych-intg-2026/style.css
+psych-intg-2026/script.js
 ```
 
 The page should usually be available at:
 
 ```text
-https://professorname.github.io/ipic-2026/
+https://exp-booking.github.io/psych-intg-2026/
 ```
 
 ## Items to update later
