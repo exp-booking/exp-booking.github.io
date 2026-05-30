@@ -156,15 +156,25 @@
 
     h1 {
       max-width: 820px;
-      margin-bottom: 18px;
+      margin-bottom: 10px;
       font-size: clamp(36px, 6vw, 62px);
       line-height: 1.04;
       letter-spacing: -0.055em;
     }
 
+    .hero-title-en {
+      max-width: 760px;
+      margin: 0 0 30px;
+      color: #2c3f5f;
+      font-size: clamp(17px, 2vw, 22px);
+      line-height: 1.45;
+      font-weight: 650;
+      letter-spacing: -0.015em;
+    }
+
     .hero-lead {
       max-width: 780px;
-      margin-bottom: 30px;
+      margin-bottom: 34px;
       color: #46556c;
       font-size: clamp(18px, 2vw, 23px);
       line-height: 1.55;
@@ -341,22 +351,12 @@
       font-weight: 900;
     }
     .recruitment-section {
-      padding: 54px 0 18px;
+      padding: 58px 0 22px;
       background: var(--surface);
     }
 
     .recruitment-card {
-      display: grid;
-      grid-template-columns: minmax(0, 0.85fr) minmax(280px, 1.15fr);
-      gap: 24px;
-      align-items: stretch;
-      padding: 28px;
-      border: 1px solid rgba(44, 123, 229, 0.20);
-      border-radius: var(--radius);
-      background:
-        radial-gradient(circle at 90% 10%, rgba(44, 123, 229, 0.12), transparent 26%),
-        linear-gradient(135deg, #ffffff 0%, #f4f8ff 100%);
-      box-shadow: 0 14px 40px rgba(17, 24, 39, 0.07);
+      padding: 0;
     }
 
     .recruitment-label {
@@ -378,22 +378,22 @@
       letter-spacing: -0.04em;
     }
 
-    .recruitment-card p {
-      margin-bottom: 0;
+    .recruitment-intro {
+      max-width: 820px;
+      margin-bottom: 28px;
       color: #475467;
       font-size: 17px;
     }
 
     .ad-list {
-      display: grid;
-      gap: 14px;
+      display: block;
+      border-top: 1px solid var(--line);
     }
 
     .ad-item {
-      padding: 20px;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.82);
+      padding: 24px 0;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
     }
 
     .ad-item h3 {
@@ -402,8 +402,8 @@
       line-height: 1.25;
       letter-spacing: -0.03em;
     }
-
     .ad-item p {
+      max-width: 860px;
       margin-bottom: 14px;
       color: var(--muted);
       font-size: 15px;
@@ -523,19 +523,17 @@
     .pending-card .consent-link {
       color: var(--muted);
     }
-
-    .site-footer {
-      padding: 22px 0;
-      color: #667085;
-      background: #f0f2f6;
-     
     .site-footer {
       padding: 24px 0;
       color: #667085;
       background: #eef1f6;
       border-top: 1px solid var(--line);
     }
-between;
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 24px;
     }
 
@@ -573,8 +571,7 @@ between;
     }
     @media (max-width: 980px) {
       .hero-inner,
-      .rules-head,
-      .recruitment-card {
+      .rules-head {
         grid-template-columns: 1fr;
       }
 
@@ -648,6 +645,7 @@ between;
         <div>
           <p class="eyebrow">Self-service booking system</p>
           <h1>辽宁大学心理测试与行为分析实验室自助预约登记系统</h1>
+          <p class="hero-title-en">Self-service Booking System for the Laboratory of Psychological Testing and Behavioural Analysis, Liaoning University</p>
           <p class="hero-lead">
             请在预约实验前阅读相应实验类型的知情同意书，并按照预约规则填写预约信息。
             本系统为自助服务，提交后不会自动发送实验前准备通知。
@@ -726,13 +724,11 @@ between;
     <section class="recruitment-section" aria-label="被试招募公告">
       <div class="container">
         <div class="recruitment-card">
-          <div>
-            <span class="recruitment-label">Participant recruitment</span>
-            <h2>被试招募公告</h2>
-            <p>
-              本区域用于投放各课题组正在进行的实验招募信息。请根据招募要求联系相应课题组或扫描招募二维码报名。
-            </p>
-          </div>
+          <span class="recruitment-label">Participant recruitment</span>
+          <h2>被试招募公告</h2>
+          <p class="recruitment-intro">
+            本区域用于投放各课题组正在进行的实验招募信息。请根据招募要求联系相应课题组或扫描招募二维码报名。
+          </p>
 
           <div class="ad-list">
             <article class="ad-item">
@@ -743,11 +739,23 @@ between;
                 <span>报名方式待补充</span>
               </div>
               <p>
-                请注意预约规则喔！
+                要注意预约规则喔！谢谢~
+                <img class="lnu-logo" src="images/vrc_recruit.png" alt="VRC_ad" />
               </p>
               <a class="ad-link" href="https://shangll.github.io/lab/">查看招募信息 →</a>
             </article>
-            
+
+            <article class="ad-item">
+              <h3>其他课题组招募信息</h3>
+              <div class="ad-meta">
+                <span>预留位置</span>
+                <span>可添加二维码或链接</span>
+              </div>
+              <p>
+                后续可在此添加其他课题组的被试招募广告、问卷链接或实验报名二维码。
+              </p>
+              <a class="ad-link" href="#">链接待补充 →</a>
+            </article>
           </div>
         </div>
       </div>
