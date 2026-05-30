@@ -170,46 +170,6 @@
       line-height: 1.55;
     }
 
-    .action-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 28px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 52px;
-      padding: 0 24px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      color: #fff;
-      background: var(--blue);
-      font-size: 17px;
-      font-weight: 750;
-      text-decoration: none;
-      box-shadow: 0 12px 28px rgba(44, 123, 229, 0.22);
-      transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .btn:hover {
-      background: var(--blue-dark);
-      transform: translateY(-1px);
-      box-shadow: 0 16px 34px rgba(44, 123, 229, 0.26);
-    }
-
-    .btn-orange {
-      background: var(--orange);
-      box-shadow: 0 12px 28px rgba(240, 140, 46, 0.22);
-    }
-
-    .btn-orange:hover {
-      background: var(--orange-dark);
-      box-shadow: 0 16px 34px rgba(240, 140, 46, 0.28);
-    }
-
     .hero-card {
       background: rgba(255, 255, 255, 0.86);
       border: 1px solid rgba(219, 227, 239, 0.95);
@@ -380,6 +340,104 @@
       color: #fff;
       font-weight: 900;
     }
+    .recruitment-section {
+      padding: 54px 0 18px;
+      background: var(--surface);
+    }
+
+    .recruitment-card {
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(280px, 1.15fr);
+      gap: 24px;
+      align-items: stretch;
+      padding: 28px;
+      border: 1px solid rgba(44, 123, 229, 0.20);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 90% 10%, rgba(44, 123, 229, 0.12), transparent 26%),
+        linear-gradient(135deg, #ffffff 0%, #f4f8ff 100%);
+      box-shadow: 0 14px 40px rgba(17, 24, 39, 0.07);
+    }
+
+    .recruitment-label {
+      display: inline-flex;
+      align-self: flex-start;
+      margin-bottom: 14px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      color: var(--blue-dark);
+      background: var(--blue-soft);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .recruitment-card h2 {
+      margin-bottom: 12px;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.12;
+      letter-spacing: -0.04em;
+    }
+
+    .recruitment-card p {
+      margin-bottom: 0;
+      color: #475467;
+      font-size: 17px;
+    }
+
+    .ad-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .ad-item {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.82);
+    }
+
+    .ad-item h3 {
+      margin-bottom: 8px;
+      font-size: 22px;
+      line-height: 1.25;
+      letter-spacing: -0.03em;
+    }
+
+    .ad-item p {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .ad-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .ad-meta span {
+      display: inline-flex;
+      padding: 5px 9px;
+      border-radius: 999px;
+      color: #475467;
+      background: #eef2f8;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .ad-link {
+      display: inline-flex;
+      align-items: center;
+      color: var(--blue);
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    .ad-link:hover {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
 
     .consent-section {
       padding: 54px 0 68px;
@@ -458,29 +516,26 @@
       color: var(--blue);
       font-weight: 850;
     }
-
-    .disabled-card {
-      opacity: 0.65;
-      cursor: not-allowed;
+    .pending-card {
+      border-style: dashed;
     }
 
-    .disabled-card:hover {
-      transform: none;
-      border-color: var(--line);
-      box-shadow: 0 12px 34px rgba(17, 24, 39, 0.06);
+    .pending-card .consent-link {
+      color: var(--muted);
     }
 
     .site-footer {
       padding: 22px 0;
       color: #667085;
       background: #f0f2f6;
+     
+    .site-footer {
+      padding: 24px 0;
+      color: #667085;
+      background: #eef1f6;
       border-top: 1px solid var(--line);
     }
-
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+between;
       gap: 24px;
     }
 
@@ -516,10 +571,10 @@
     .footer-meta p {
       margin: 0;
     }
-
     @media (max-width: 980px) {
       .hero-inner,
-      .rules-head {
+      .rules-head,
+      .recruitment-card {
         grid-template-columns: 1fr;
       }
 
@@ -597,11 +652,6 @@
             请在预约实验前阅读相应实验类型的知情同意书，并按照预约规则填写预约信息。
             本系统为自助服务，提交后不会自动发送实验前准备通知。
           </p>
-
-          <div class="action-row">
-            <a class="btn" href="files/ICF_behav.html">行为学实验知情同意</a>
-            <a class="btn btn-orange" href="files/ICF_eeg.html">EEG 实验知情同意</a>
-          </div>
         </div>
 
         <aside class="hero-card" aria-label="预约系统说明">
@@ -673,6 +723,46 @@
         </div>
       </div>
     </section>
+    <section class="recruitment-section" aria-label="被试招募公告">
+      <div class="container">
+        <div class="recruitment-card">
+          <div>
+            <span class="recruitment-label">Participant recruitment</span>
+            <h2>被试招募公告</h2>
+            <p>
+              本区域用于投放各课题组正在进行的实验招募信息。请根据招募要求联系相应课题组或扫描招募二维码报名。
+            </p>
+          </div>
+
+          <div class="ad-list">
+            <article class="ad-item">
+              <h3>于溢洋课题组实验招募</h3>
+              <div class="ad-meta">
+                <span>正在招募</span>
+                <span>实验信息待补充</span>
+                <span>报名方式待补充</span>
+              </div>
+              <p>
+                于溢洋课题组正在协助收集实验数据。具体实验内容、招募条件、实验地点、时长和报酬信息将随后更新。
+              </p>
+              <a class="ad-link" href="#">查看招募信息 →</a>
+            </article>
+
+            <article class="ad-item">
+              <h3>其他课题组招募信息</h3>
+              <div class="ad-meta">
+                <span>预留位置</span>
+                <span>可添加二维码或链接</span>
+              </div>
+              <p>
+                后续可在此添加其他课题组的被试招募广告、问卷链接或实验报名二维码。
+              </p>
+              <a class="ad-link" href="#">链接待补充 →</a>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section class="consent-section">
       <div class="container">
@@ -693,4 +783,34 @@
             <span class="consent-tag">EEG experiment</span>
             <h3>EEG 实验</h3>
             <p>适用于 EEG 实验预约。请重点阅读实验前准备、禁忌事项和注意事项。</p>
-            <span class="
+            <span class="consent-link">进入知情同意 →</span>
+          </a>
+          <a class="consent-card pending-card" href="#">
+            <span class="consent-tag">fNIRS experiment</span>
+            <h3>fNIRS 实验</h3>
+            <p>适用于 fNIRS 实验预约。知情同意书链接待补充，正式开放后将更新。</p>
+            <span class="consent-link">链接待补充 →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="images/lab_logo.png" alt="实验室 logo" />
+        <div>
+          <div class="footer-title">心理测试与行为分析实验室 | 辽宁大学</div>
+          <div class="footer-subtitle">Laboratory of Psychological Testing and Behavioural Analysis</div>
+        </div>
+      </div>
+
+      <div class="footer-meta">
+        <p>© 2022–2026 实验室预约系统</p>
+        <p class="footer-meta-small">Contact: shanglinlin@lnu.edu.cn</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
