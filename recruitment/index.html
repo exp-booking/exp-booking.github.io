@@ -225,27 +225,19 @@
     .study-nav {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin: 26px 0 22px;
-      padding: 18px;
-      border-radius: 22px;
-      background:
-        radial-gradient(circle at 85% 12%, rgba(255,255,255,0.22), transparent 26%),
-        linear-gradient(135deg, #245fac 0%, #2c7be5 100%);
-      box-shadow: 0 14px 36px rgba(44, 123, 229, 0.18);}
+      gap: 14px;
+      margin: 28px 0 22px;}
     .study-link {
       display: block;
       position: relative;
       overflow: hidden;
-      min-height: 106px;
+      min-height: 108px;
       padding: 18px;
-      border-radius: 18px;
-      color: #fff;
+      border-radius: 20px;
       text-decoration: none;
-      background: rgba(255,255,255,0.13);
-      border: 1px solid rgba(255,255,255,0.22);
-      backdrop-filter: blur(8px);
-      transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;}
+      border: 1px solid rgba(219, 227, 239, 0.95);
+      box-shadow: 0 12px 30px rgba(17, 24, 39, 0.07);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;}
     .study-link::before {
       content: "";
       position: absolute;
@@ -255,31 +247,44 @@
       height: 100%;}
     .study-link:hover {
       transform: translateY(-2px);
-      background: rgba(255,255,255,0.20);
-      box-shadow: 0 12px 28px rgba(17, 24, 39, 0.14);}
+      box-shadow: 0 18px 42px rgba(17, 24, 39, 0.10);}
     .study-link span {
       display: block;
       margin-bottom: 8px;
-      color: rgba(255,255,255,0.82);
+      color: #475467;
       font-size: 13px;
       font-weight: 850;}
     .study-link strong {
       display: block;
-      color: #fff;
       font-size: 17px;
       line-height: 1.35;}
+    .study-link-blue {
+      background:
+        radial-gradient(circle at 90% 10%, rgba(44,123,229,0.12), transparent 26%),
+        linear-gradient(135deg, #ffffff 0%, #f4f8ff 100%);
+      color: var(--blue-dark);}
+    .study-link-green {
+      background:
+        radial-gradient(circle at 90% 10%, rgba(23,143,104,0.12), transparent 26%),
+        linear-gradient(135deg, #ffffff 0%, #f1fbf7 100%);
+      color: var(--green);}
+    .study-link-orange {
+      background:
+        radial-gradient(circle at 90% 10%, rgba(240,140,46,0.14), transparent 26%),
+        linear-gradient(135deg, #ffffff 0%, #fff7ed 100%);
+      color: #a95711;}
     .study-link-blue::before {
-      background: #dce7ff;}
+      background: #9fc5ff;}
     .study-link-green::before {
-      background: #bff3df;}
+      background: #7ed8b7;}
     .study-link-orange::before {
-      background: #ffd3a3;}
+      background: #ffc27a;}
     .study-link-blue strong {
-      color: #ffffff;}
+      color: var(--blue-dark);}
     .study-link-green strong {
-      color: #e7fff5;}
+      color: var(--green);}
     .study-link-orange strong {
-      color: #fff4e6;}
+      color: #a95711;}
     .group-list {
       border-top: none;}
     .group-item {
@@ -463,8 +468,7 @@
       .notice-card {
         grid-template-columns: 1fr;}
       .study-nav {
-        grid-template-columns: 1fr;
-        padding: 14px;}
+        grid-template-columns: 1fr;}
       .study-link {
         min-height: auto;}
       .group-item {
