@@ -17,7 +17,6 @@
       --text: #1f2937;
       --muted: #6b7280;
       --line: #e5e7eb;
-      --card: #ffffff;
       --page: #f6f8fb;
       --danger: #dc2626;
       --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
@@ -53,74 +52,54 @@
     }
 
     .site-header {
-      padding: 18px 0 14px;
-      border-bottom: 1px solid rgba(229, 231, 235, 0.85);
-      background: rgba(255, 255, 255, 0.82);
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(229, 231, 235, 0.95);
+      background: rgba(255, 255, 255, 0.88);
       backdrop-filter: blur(12px);
-      position: sticky;
-      top: 0;
-      z-index: 10;
     }
 
     .header-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
+      gap: 28px;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      text-align: left;
-      min-width: 0;
-    }
-
-    .brand img {
-      width: 72px;
-      height: 72px;
+    .header-logo {
+      width: 78px;
+      height: 78px;
       object-fit: contain;
       flex: 0 0 auto;
     }
 
-    .brand-title {
-      font-size: 21px;
-      font-weight: 800;
-      letter-spacing: 0.01em;
-      line-height: 1.25;
+    .header-text {
+      margin-left: auto;
+      text-align: right;
+      min-width: 0;
     }
 
-    .brand-subtitle {
+    .header-title {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.28;
+      letter-spacing: 0.01em;
+    }
+
+    .header-subtitle {
       margin-top: 5px;
-      font-size: 13px;
+      font-size: 14px;
       color: var(--muted);
       line-height: 1.35;
     }
 
-    .header-note {
-      flex: 0 0 auto;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 9px 14px;
-      border-radius: 999px;
-      background: #fff1f2;
-      color: #be123c;
-      font-size: 14px;
-      font-weight: 700;
-      border: 1px solid #fecdd3;
-      white-space: nowrap;
-    }
-
     .hero {
       margin: 28px 0 22px;
-      padding: 34px;
+      padding: 30px 34px;
       border-radius: 28px;
       color: #ffffff;
       background:
         linear-gradient(135deg, rgba(37, 99, 235, 0.98), rgba(30, 64, 175, 0.96)),
-        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.25), transparent 30%);
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.24), transparent 30%);
       box-shadow: var(--shadow);
       text-align: left;
       overflow: hidden;
@@ -141,7 +120,8 @@
     .hero-content {
       position: relative;
       z-index: 1;
-      max-width: 860px;
+      width: 100%;
+      max-width: none;
     }
 
     .hero-label {
@@ -153,62 +133,119 @@
       border: 1px solid rgba(255, 255, 255, 0.28);
       font-size: 13px;
       font-weight: 700;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(28px, 4.5vw, 46px);
-      line-height: 1.16;
-      letter-spacing: -0.03em;
+      font-size: clamp(24px, 3.2vw, 34px);
+      line-height: 1.22;
+      letter-spacing: -0.02em;
     }
 
     .hero p {
-      margin: 15px 0 0;
+      margin: 14px 0 0;
+      width: 100%;
+      max-width: none;
       font-size: 16px;
       line-height: 1.75;
-      color: rgba(255, 255, 255, 0.88);
-      max-width: 760px;
+      color: rgba(255, 255, 255, 0.90);
     }
 
-    .quick-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
-    .quick-link {
+    .hero-warning {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 44px;
-      padding: 0 16px;
+      margin-top: 20px;
+      padding: 10px 16px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.95);
-      color: #1d4ed8;
-      font-weight: 800;
-      font-size: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.55);
-      transition: transform 0.16s ease, box-shadow 0.16s ease;
-    }
-
-    .quick-link:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+      color: var(--danger);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1.25;
     }
 
     .section {
       margin: 22px 0;
     }
 
-    .section-head {
+    .news-card,
+    .room-section,
+    .info-card {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(229, 231, 235, 0.92);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .news-card {
+      padding: 22px 24px;
+      text-align: left;
+      overflow: hidden;
+    }
+
+    .news-head {
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       justify-content: space-between;
       gap: 16px;
-      margin-bottom: 14px;
+      padding-bottom: 14px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .news-title {
+      margin: 0;
+      color: var(--primary-dark);
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+
+    .news-note {
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .news-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0;
+    }
+
+    .news-list li {
+      display: grid;
+      grid-template-columns: 142px 1fr;
+      gap: 14px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .news-list li:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .news-date {
+      color: var(--primary-dark);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .room-section {
+      padding: 24px;
       text-align: left;
+    }
+
+    .section-head {
+      margin-bottom: 16px;
     }
 
     .section-title {
@@ -222,70 +259,6 @@
       color: var(--muted);
       font-size: 14px;
       line-height: 1.55;
-    }
-
-    .news-card,
-    .room-section,
-    .info-card {
-      background: rgba(255, 255, 255, 0.92);
-      border: 1px solid rgba(229, 231, 235, 0.92);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-
-    .news-card {
-      padding: 22px;
-      display: grid;
-      grid-template-columns: 150px 1fr;
-      gap: 22px;
-      text-align: left;
-      overflow: hidden;
-    }
-
-    .news-title {
-      min-height: 100%;
-      border-radius: 18px;
-      background: var(--primary-soft);
-      color: var(--primary-dark);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: 900;
-      letter-spacing: 0.02em;
-    }
-
-    .news-list {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 10px;
-    }
-
-    .news-list li {
-      display: grid;
-      grid-template-columns: 142px 1fr;
-      gap: 14px;
-      padding: 11px 0;
-      border-bottom: 1px solid var(--line);
-      line-height: 1.55;
-      font-size: 15px;
-    }
-
-    .news-list li:last-child {
-      border-bottom: none;
-    }
-
-    .news-date {
-      color: var(--primary-dark);
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .room-section {
-      padding: 24px;
-      text-align: left;
     }
 
     .room-grid {
@@ -302,8 +275,7 @@
       padding: 18px;
       border-radius: 20px;
       border: 1px solid #dbeafe;
-      background:
-        linear-gradient(180deg, #ffffff, #f8fbff);
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
       transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
     }
 
@@ -465,44 +437,21 @@
         width: min(100% - 24px, 1120px);
       }
 
-      .site-header {
-        position: static;
-      }
-
       .header-inner,
       .footer-inner {
         align-items: flex-start;
         flex-direction: column;
       }
 
-      .header-note {
-        align-self: flex-start;
+      .header-text {
+        margin-left: 0;
+        text-align: left;
       }
 
       .hero {
         padding: 26px 22px;
         border-radius: 24px;
         margin-top: 18px;
-      }
-
-      .quick-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .quick-link {
-        width: 100%;
-      }
-
-      .news-card {
-        grid-template-columns: 1fr;
-      }
-
-      .news-title {
-        min-height: auto;
-        justify-content: flex-start;
-        padding: 14px 16px;
-        font-size: 21px;
       }
 
       .room-grid,
@@ -520,33 +469,35 @@
     }
 
     @media (max-width: 560px) {
-      .brand {
+      .header-inner {
         gap: 12px;
       }
 
-      .brand img {
-        width: 54px;
-        height: 54px;
+      .header-logo {
+        width: 58px;
+        height: 58px;
       }
 
-      .brand-title {
+      .header-title {
         font-size: 17px;
       }
 
-      .brand-subtitle {
+      .header-subtitle {
         font-size: 12px;
+      }
+
+      h1 {
+        font-size: 23px;
       }
 
       .hero p {
         font-size: 15px;
       }
 
-      .quick-actions {
-        grid-template-columns: 1fr;
-      }
-
-      .section-head {
-        display: block;
+      .hero-warning {
+        width: 100%;
+        border-radius: 16px;
+        font-size: 18px;
       }
 
       .room-section,
@@ -554,6 +505,16 @@
       .info-card {
         padding: 18px;
         border-radius: 20px;
+      }
+
+      .news-head {
+        display: block;
+      }
+
+      .news-note {
+        display: block;
+        margin-top: 4px;
+        white-space: normal;
       }
 
       .news-list li {
@@ -571,14 +532,12 @@
 
 <header class="site-header">
   <div class="page header-inner">
-    <div class="brand">
-      <img src="../images/lnu_logo.png" alt="辽宁大学">
-      <div>
-        <div class="brand-title">辽宁省心理测试与行为分析重点实验室</div>
-        <div class="brand-subtitle">Liaoning Key Laboratory of Psychological Testing and Behavioral Analysis</div>
-      </div>
+    <img class="header-logo" src="../images/lnu_logo.png" alt="辽宁大学">
+
+    <div class="header-text">
+      <div class="header-title">辽宁省心理测试与行为分析重点实验室</div>
+      <div class="header-subtitle">Liaoning Key Laboratory of Psychological Testing and Behavioral Analysis</div>
     </div>
-    <div class="header-note">内部专用，请勿外传</div>
   </div>
 </header>
 
@@ -587,21 +546,17 @@
     <div class="hero-content">
       <div class="hero-label">Laboratory Booking System</div>
       <h1>辽宁大学心理测试与行为分析实验室预约登记系统</h1>
-      <p>请选择对应房间和实验设备进入预约页面。提交前请确认预约日期、开始时间、结束时间和个人信息；预约系统为内部使用，请勿转发给无关人员。</p>
-      <div class="quick-actions" aria-label="快捷入口">
-        <a class="quick-link" href="../lab343-eeg/">343 EEG</a>
-        <a class="quick-link" href="../lab343-eyetracking/">343 EyeTracking</a>
-        <a class="quick-link" href="../lab343-fnirs/">343 fNIRS</a>
-        <a class="quick-link" href="../lab440-tES/">440 tES</a>
-        <a class="quick-link" href="../lab440-eyetracking/">440 EyeTracking</a>
-        <a class="quick-link" href="../lab440-thermography/">440 热成像</a>
-      </div>
+      <p>请选择对应房间和实验设备进入预约页面。提交前请确认预约日期、开始时间、结束时间和个人信息。</p>
+      <div class="hero-warning">内部专用，请勿外传</div>
     </div>
   </section>
 
   <section class="section">
     <div class="news-card">
-      <div class="news-title">News</div>
+      <div class="news-head">
+        <h2 class="news-title">News</h2>
+        <span class="news-note">实验相关通知</span>
+      </div>
       <ul class="news-list">
         <li>
           <span class="news-date">2026.05.23 09:19</span>
@@ -621,10 +576,8 @@
 
   <section class="section room-section">
     <div class="section-head">
-      <div>
-        <h2 class="section-title">纪检大楼 343 预约</h2>
-        <p class="section-desc">选择对应实验间进入预约日历。</p>
-      </div>
+      <h2 class="section-title">纪检大楼 343 预约</h2>
+      <p class="section-desc">选择对应实验间进入预约日历。</p>
     </div>
 
     <div class="room-grid">
@@ -653,10 +606,8 @@
 
   <section class="section room-section">
     <div class="section-head">
-      <div>
-        <h2 class="section-title">纪检大楼 440 预约</h2>
-        <p class="section-desc">选择对应实验间进入预约日历。</p>
-      </div>
+      <h2 class="section-title">纪检大楼 440 预约</h2>
+      <p class="section-desc">选择对应实验间进入预约日历。</p>
     </div>
 
     <div class="room-grid">
