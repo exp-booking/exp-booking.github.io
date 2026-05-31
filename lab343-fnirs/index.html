@@ -2,47 +2,647 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>Rm.343-fNIRS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rm.343-fNIRS Booking</title>
 
-<!-- FullCalendar -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-
-<!-- Supabase v2 (CDN exposes global `supabase`) -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
-body{font-family:"Microsoft YaHei",sans-serif;margin:20px;}
-.top-bar{max-width:1100px;margin:0 auto 15px;display:flex;justify-content:space-between;align-items:center;}
-a{text-decoration:none;color:#2c7be5;}
-#calendar{max-width:1100px;margin:0 auto;}
-#bookingModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;}
-.modal-content{background:white;max-width:400px;margin:120px auto;padding:20px;border-radius:8px;}
-.modal-content input{width:100%;margin-bottom:10px;}
-.modal-actions{text-align:right;}
+:root {
+  --bg: #f4f7fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #64748b;
+  --line: #e5eaf2;
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-soft: #dbeafe;
+  --danger: #dc2626;
+  --shadow: 0 18px 45px rgba(15, 23, 42, 0.10);
+  --radius-lg: 22px;
+  --radius-md: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.12), transparent 32%),
+    linear-gradient(180deg, #f8fbff 0%, var(--bg) 48%, #eef3fa 100%);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page-shell {
+  width: min(1160px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 22px 0 34px;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: white;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.25);
+}
+
+.brand-title {
+  min-width: 0;
+}
+
+.brand-title h1 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.brand-title p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.home-link {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 9px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.74);
+  color: #2454b8;
+  font-size: 14px;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+}
+
+.home-link:hover {
+  border-color: #bfdbfe;
+  background: #ffffff;
+}
+
+.hero {
+  margin-bottom: 18px;
+  padding: 22px;
+  border-radius: var(--radius-lg);
+  color: white;
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 64, 175, 0.92)),
+    radial-gradient(circle at top right, rgba(34, 211, 238, 0.35), transparent 35%);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.hero-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 18px;
+}
+
+.hero h2 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  line-height: 1.18;
+}
+
+.hero p {
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.badge-row {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.13);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.notice-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 18px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.notice-card strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+
+.notice-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.notice-tip {
+  padding: 8px 11px;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: #1e40af;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.calendar-card {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow);
+}
+
+#calendar {
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* FullCalendar 美化 */
+.fc {
+  --fc-border-color: #e5eaf2;
+  --fc-neutral-bg-color: #f8fafc;
+  --fc-today-bg-color: rgba(37, 99, 235, 0.08);
+  --fc-now-indicator-color: #dc2626;
+  font-size: 14px;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 16px;
+  gap: 10px;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 20px;
+  font-weight: 750;
+  color: #172033;
+}
+
+.fc .fc-button {
+  border: none;
+  border-radius: 999px !important;
+  padding: 8px 12px;
+  background: #eef4ff;
+  color: #1e40af;
+  box-shadow: none !important;
+}
+
+.fc .fc-button:hover,
+.fc .fc-button:focus {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+  background: var(--primary);
+  color: white;
+}
+
+.fc .fc-col-header-cell-cushion,
+.fc .fc-timegrid-slot-label-cushion {
+  color: #475569;
+}
+
+.fc .fc-timegrid-slot {
+  height: 2.15em;
+}
+
+.fc-event {
+  border-radius: 10px !important;
+  border: none !important;
+  padding: 2px 4px;
+  box-shadow: 0 6px 12px rgba(37, 99, 235, 0.12);
+}
+
+.fc-timegrid-event .fc-event-main {
+  padding: 3px 5px;
+}
+
+.fc-event-title,
+.fc-event-time {
+  font-weight: 650;
+}
+
+/* 弹窗 */
+#bookingModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  padding: 22px;
+  background: rgba(15, 23, 42, 0.48);
+  backdrop-filter: blur(5px);
+  overflow-y: auto;
+}
+
+.modal-content {
+  width: min(460px, 100%);
+  margin: 64px auto;
+  padding: 22px;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.28);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.modal-header p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.icon-button {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #f8fafc;
+  color: #334155;
+  cursor: pointer;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.field input {
+  width: 100%;
+  height: 42px;
+  padding: 9px 11px;
+  border: 1px solid #d8e0ec;
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--text);
+  outline: none;
+}
+
+.field input:focus {
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.field input[readonly] {
+  color: #64748b;
+  background: #f8fafc;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.btn {
+  min-height: 42px;
+  padding: 9px 16px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 650;
+}
+
+.btn-secondary {
+  background: #eef2f7;
+  color: #334155;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn:disabled {
+  opacity: 0.62;
+  cursor: not-allowed;
+}
+
+@media (max-width: 760px) {
+  .page-shell {
+    width: min(100% - 20px, 1160px);
+    padding: 12px 0 18px;
+  }
+
+  .top-bar {
+    align-items: flex-start;
+  }
+
+  .brand-mark {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    font-size: 13px;
+  }
+
+  .brand-title h1 {
+    font-size: 19px;
+  }
+
+  .brand-title p {
+    font-size: 12px;
+  }
+
+  .home-link {
+    min-height: 36px;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .hero {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .hero-content {
+    display: block;
+  }
+
+  .hero h2 {
+    font-size: 22px;
+  }
+
+  .hero p {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .badge-row {
+    justify-content: flex-start;
+    margin-top: 14px;
+  }
+
+  .notice-card {
+    grid-template-columns: 1fr;
+    padding: 14px;
+  }
+
+  .notice-tip {
+    width: fit-content;
+  }
+
+  .calendar-card {
+    padding: 10px;
+    border-radius: 18px;
+  }
+
+  .fc .fc-toolbar.fc-header-toolbar {
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .fc .fc-toolbar-chunk {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .fc .fc-toolbar-title {
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  .fc .fc-button {
+    padding: 7px 9px;
+    font-size: 12px;
+  }
+
+  .fc {
+    font-size: 12px;
+  }
+
+  .fc .fc-timegrid-slot {
+    height: 2.5em;
+  }
+
+  #bookingModal {
+    display: none;
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    margin: 10vh 0 0;
+    padding: 18px;
+    border-radius: 22px 22px 0 0;
+  }
+
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-actions {
+    position: sticky;
+    bottom: -18px;
+    margin: 18px -18px -18px;
+    padding: 12px 18px 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.82), #ffffff 30%);
+  }
+
+  .modal-actions .btn {
+    flex: 1;
+  }
+}
 </style>
 </head>
 <body>
 
-<div class="top-bar">
-  <h2>Rm.343-fNIRS Booking</h2>
-  <a href="../intranet/index.html">← 返回主页</a>
+<div class="page-shell">
+  <div class="top-bar">
+    <div class="brand">
+      <div class="brand-mark">NIR</div>
+      <div class="brand-title">
+        <h1>Rm.343-fNIRS Booking</h1>
+        <p>实验室预约系统</p>
+      </div>
+    </div>
+    <a class="home-link" href="../intranet/index.html">← 返回主页</a>
+  </div>
+
+  <section class="hero">
+    <div class="hero-content">
+      <div>
+        <h2>343 fNIRS 实验间预约</h2>
+        <p>请在日历中选择空闲时段，并在提交前确认姓名、用途、开始时间和结束时间。手机端默认使用“日”视图，也可以切换到“周”视图。</p>
+      </div>
+      <div class="badge-row" aria-label="预约信息">
+        <span class="badge">房间 343</span>
+        <span class="badge">fNIRS</span>
+        <span class="badge">08:00–22:00</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="notice-card">
+    <div>
+      <strong>预约提示</strong>
+      <span>点击日历空白时间格即可新增预约；点击已有预约可取消。提交前请确认时间无误，避免占用他人实验时段。</span>
+    </div>
+    <div class="notice-tip">同一时段不可重复预约</div>
+  </section>
+
+  <main class="calendar-card">
+    <div id="calendar"></div>
+  </main>
 </div>
 
-<div id="calendar"></div>
+<div id="bookingModal" aria-hidden="true">
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-header">
+      <div>
+        <h3 id="modalTitle">新增预约</h3>
+        <p>请填写预约信息。开始时间和结束时间可以手动调整。</p>
+      </div>
+      <button class="icon-button" type="button" onclick="closeModal()" aria-label="关闭">×</button>
+    </div>
 
-<div id="bookingModal">
-  <div class="modal-content">
-    <h3>新增预约</h3>
-    <label>姓名：<input id="nameInput" type="text"></label>
-    <label>用途：<input id="purposeInput" type="text"></label>
-    <label>开始时间：<input id="startInput" type="datetime-local"></label>
-    <label>结束时间：<input id="endInput" type="datetime-local"></label>
-    <label>房间号：<input id="roomInput" type="text" value="343" readonly></label>
-    <label>实验间：<input id="labInput" type="text" value="fNIRS" readonly></label>
+    <div class="form-grid">
+      <div class="field">
+        <label for="nameInput">姓名</label>
+        <input id="nameInput" type="text" autocomplete="name" placeholder="请输入姓名">
+      </div>
+
+      <div class="field">
+        <label for="purposeInput">用途</label>
+        <input id="purposeInput" type="text" placeholder="例如：正式实验 / 预实验 / 设备调试">
+      </div>
+
+      <div class="field">
+        <label for="startInput">开始时间</label>
+        <input id="startInput" type="datetime-local">
+      </div>
+
+      <div class="field">
+        <label for="endInput">结束时间</label>
+        <input id="endInput" type="datetime-local">
+      </div>
+
+      <div class="two-col">
+        <div class="field">
+          <label for="roomInput">房间号</label>
+          <input id="roomInput" type="text" value="343" readonly>
+        </div>
+
+        <div class="field">
+          <label for="labInput">实验间</label>
+          <input id="labInput" type="text" value="fNIRS" readonly>
+        </div>
+      </div>
+    </div>
+
     <div class="modal-actions">
-      <button onclick="closeModal()">取消</button>
-      <button onclick="submitBooking()">提交预约</button>
+      <button class="btn btn-secondary" type="button" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" id="submitBtn" type="button" onclick="submitBooking()">提交预约</button>
     </div>
   </div>
 </div>
@@ -58,6 +658,22 @@ const TABLE_NAME = "booking-343-fnirs";
 let calendar;
 let bookings = [];
 
+function isMobileView(){
+  return window.matchMedia("(max-width: 760px)").matches;
+}
+
+function formatLocalDateTime(date){
+  const pad = n => String(n).padStart(2, "0");
+  const d = new Date(date);
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function setSubmitState(isSubmitting){
+  const btn = document.getElementById("submitBtn");
+  btn.disabled = isSubmitting;
+  btn.textContent = isSubmitting ? "提交中..." : "提交预约";
+}
+
 // ------------------------- 加载已有预约 -------------------------
 async function loadBookings(){
   const { data, error } = await sb.from(TABLE_NAME).select("*");
@@ -67,29 +683,55 @@ async function loadBookings(){
     return;
   }
 
-  // 不要 toISOString()，直接用 Supabase 返回的时间字符串
-  // id 用 String，删除时再 Number
   bookings = (data || []).map(row => ({
     id: String(row.id),
-    title: row.name ?? "(no name)",
+    title: row.purpose ? `${row.name ?? "(no name)"}｜${row.purpose}` : (row.name ?? "(no name)"),
     start: row.start,
     end: row.end,
-    backgroundColor: "#ccc",
-    borderColor: "#ccc"
+    backgroundColor: "#2563eb",
+    borderColor: "#2563eb"
   }));
+}
+
+function refreshCalendarEvents(){
+  if(!calendar) return;
+  calendar.removeAllEvents();
+  calendar.addEventSource(bookings);
 }
 
 // ------------------------- 渲染日历 -------------------------
 function renderCalendar(){
+  const mobile = isMobileView();
+
   calendar = new FullCalendar.Calendar(document.getElementById("calendar"), {
-    initialView: "timeGridWeek",
+    initialView: mobile ? "timeGridDay" : "timeGridWeek",
     locale: "zh-cn",
     firstDay: 1,
     nowIndicator: true,
     selectable: true,
     selectOverlap: false,
+    editable: false,
+    allDaySlot: false,
+    expandRows: true,
+    height: mobile ? "auto" : "calc(100vh - 310px)",
     slotMinTime: "08:00:00",
     slotMaxTime: "22:00:00",
+    slotDuration: "00:30:00",
+    slotLabelFormat: {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    },
+    eventTimeFormat: {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    },
+    buttonText: {
+      today: "今天",
+      week: "周",
+      day: "日"
+    },
     headerToolbar: {
       left: "prev,next today",
       center: "title",
@@ -109,7 +751,10 @@ function renderCalendar(){
         return;
       }
 
-      if (!confirm(`是否取消预约：\n${ev.title}\n${ev.start.toLocaleString()} → ${ev.end?.toLocaleString()}`)) {
+      const startText = ev.start ? ev.start.toLocaleString() : "";
+      const endText = ev.end ? ev.end.toLocaleString() : "";
+
+      if (!confirm(`是否取消预约：\n${ev.title}\n${startText} → ${endText}`)) {
         return;
       }
 
@@ -122,7 +767,6 @@ function renderCalendar(){
         return;
       }
 
-      // 数据库删成功后，再删前端
       ev.remove();
       bookings = bookings.filter(b => Number(b.id) !== dbId);
       alert("预约已删除");
@@ -134,35 +778,42 @@ function renderCalendar(){
 
 // ------------------------- 弹窗 -------------------------
 function openModal(date){
-  // datetime-local 需要本地时间格式：YYYY-MM-DDTHH:mm
-  const pad = (n) => String(n).padStart(2, "0");
   const d = new Date(date);
-  const startLocal =
-    `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-
-  // 默认 30 分钟
   const d2 = new Date(d.getTime() + 30 * 60000);
-  const endLocal =
-    `${d2.getFullYear()}-${pad(d2.getMonth()+1)}-${pad(d2.getDate())}T${pad(d2.getHours())}:${pad(d2.getMinutes())}`;
 
-  document.getElementById("startInput").value = startLocal;
-  document.getElementById("endInput").value = endLocal;
+  document.getElementById("startInput").value = formatLocalDateTime(d);
+  document.getElementById("endInput").value = formatLocalDateTime(d2);
   document.getElementById("bookingModal").style.display = "block";
+  document.getElementById("bookingModal").setAttribute("aria-hidden", "false");
+
+  setTimeout(() => document.getElementById("nameInput").focus(), 50);
 }
 
 function closeModal(){
   document.getElementById("bookingModal").style.display = "none";
+  document.getElementById("bookingModal").setAttribute("aria-hidden", "true");
   document.getElementById("nameInput").value = "";
   document.getElementById("purposeInput").value = "";
   document.getElementById("startInput").value = "";
   document.getElementById("endInput").value = "";
+  setSubmitState(false);
 }
+
+document.getElementById("bookingModal").addEventListener("click", (event) => {
+  if(event.target.id === "bookingModal") closeModal();
+});
+
+document.addEventListener("keydown", (event) => {
+  if(event.key === "Escape" && document.getElementById("bookingModal").style.display === "block") {
+    closeModal();
+  }
+});
 
 // ------------------------- 提交预约 -------------------------
 async function submitBooking(){
   const name = document.getElementById("nameInput").value.trim();
   const purpose = document.getElementById("purposeInput").value.trim();
-  const start = document.getElementById("startInput").value; // 本地时间字符串
+  const start = document.getElementById("startInput").value;
   const end = document.getElementById("endInput").value;
   const room = document.getElementById("roomInput").value;
   const lab = document.getElementById("labInput").value;
@@ -172,16 +823,25 @@ async function submitBooking(){
     return;
   }
 
-  // 冲突检测：用 Date 比较（本地时间）
+  if(new Date(end) <= new Date(start)){
+    alert("结束时间必须晚于开始时间");
+    return;
+  }
+
+  setSubmitState(true);
+
+  // 提交前重新读取一次，降低多人同时预约时的冲突风险
+  await loadBookings();
+  refreshCalendarEvents();
+
   for (const ev of bookings){
     if(!(new Date(end) <= new Date(ev.start) || new Date(start) >= new Date(ev.end))){
       alert("该时间段已被预约");
+      setSubmitState(false);
       return;
     }
   }
 
-  // 写入数据库（RLS 关闭时可直接写）
-  // 必须 select() 拿回 id，供删除用
   const { data, error } = await sb
     .from(TABLE_NAME)
     .insert([{ name, purpose, start, end, room, lab }])
@@ -190,28 +850,22 @@ async function submitBooking(){
   if(error){
     alert("提交失败: " + error.message);
     console.error(error);
+    setSubmitState(false);
     return;
   }
 
   const newRow = data[0];
-
-  // 立刻显示到日历：同样直接用数据库返回的 start/end
-  calendar.addEvent({
+  const newEvent = {
     id: String(newRow.id),
-    title: newRow.name,
+    title: newRow.purpose ? `${newRow.name}｜${newRow.purpose}` : newRow.name,
     start: newRow.start,
     end: newRow.end,
-    backgroundColor: "#ccc",
-    borderColor: "#ccc"
-  });
+    backgroundColor: "#2563eb",
+    borderColor: "#2563eb"
+  };
 
-  bookings.push({
-    id: String(newRow.id),
-    title: newRow.name,
-    start: newRow.start,
-    end: newRow.end
-  });
-
+  calendar.addEvent(newEvent);
+  bookings.push(newEvent);
   closeModal();
 }
 
