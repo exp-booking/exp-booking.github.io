@@ -2,195 +2,718 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>实验室预约登记系统</title>
 
   <link rel="icon" type="image/png" href="../images/lab_logo.png">
 
   <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --orange: #f08c2e;
+      --orange-dark: #d9761f;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --card: #ffffff;
+      --page: #f6f8fb;
+      --danger: #dc2626;
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+      --radius: 22px;
+    }
+
     * {
       box-sizing: border-box;
     }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont,
-                   "PingFang SC", "Microsoft YaHei", sans-serif;
-      text-align: center;
-      margin: 10px;
-    }
-    h1 {
-      margin-bottom: 40px;
-    }
-    .btn {
-      display: inline-block;
-      margin: 15px;
-      padding: 18px 36px;
-      font-size: 18px;
-      text-decoration: none;
-      color: white;
-      background-color: #2c7be5;
-      border-radius: 8px;
-    }
-    .btn:hover {
-      background-color: #1a68d1;
-    }
-    hr {
-      border: none;
-      border-top: 1px solid #ddd;
-      margin: 25px 0;
-    }
-    .header-divider {
-      border: none;
-      border-top: 1px solid #ddd;
       margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.10), transparent 32%),
+        linear-gradient(180deg, #ffffff 0%, var(--page) 42%, #eef2f7 100%);
+      min-height: 100vh;
     }
-    .section {
-      max-width: 900px;
-      margin: 20px auto; 
-      padding: 25px; 
-      background: #faf8f2;
-      border-radius: 10px;
+
+    a {
+      color: inherit;
+      text-decoration: none;
     }
-    .section h2 {
-      margin-top: 0;
-    }
-    .section-row {
-      display: flex;
-      gap: 20px;
-      max-width: 900px;
-      margin: 20px auto;
-      box-sizing: border-box;
-    }
-    .section-left,
-    .section-right {
-      box-sizing: border-box;
-    }
-    .section-left {
-      flex: 1;
-    }
-    .section-right {
-      flex: 2;
-    }
-    .blue-section-full {
-      width: 100%;
-      background: #2c7be5;
-      color: white;
-      padding: 9px 0;
-    }
-    .blue-inner {
-      max-width: 900px;
+
+    .page {
+      width: min(1120px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 0 9px;
     }
-    .split-row {
+
+    .site-header {
+      padding: 18px 0 14px;
+      border-bottom: 1px solid rgba(229, 231, 235, 0.85);
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-inner {
       display: flex;
-      gap: 20px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
     }
-    .left-box {
-      flex: 1;
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-align: left;
+      min-width: 0;
     }
-    .right-box {
-      flex: 6;
+
+    .brand img {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      flex: 0 0 auto;
     }
+
+    .brand-title {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      line-height: 1.25;
+    }
+
+    .brand-subtitle {
+      margin-top: 5px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .header-note {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: #fff1f2;
+      color: #be123c;
+      font-size: 14px;
+      font-weight: 700;
+      border: 1px solid #fecdd3;
+      white-space: nowrap;
+    }
+
+    .hero {
+      margin: 28px 0 22px;
+      padding: 34px;
+      border-radius: 28px;
+      color: #ffffff;
+      background:
+        linear-gradient(135deg, rgba(37, 99, 235, 0.98), rgba(30, 64, 175, 0.96)),
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.25), transparent 30%);
+      box-shadow: var(--shadow);
+      text-align: left;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -100px;
+      width: 260px;
+      height: 260px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.13);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+    }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 4.5vw, 46px);
+      line-height: 1.16;
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      margin: 15px 0 0;
+      font-size: 16px;
+      line-height: 1.75;
+      color: rgba(255, 255, 255, 0.88);
+      max-width: 760px;
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .quick-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #1d4ed8;
+      font-weight: 800;
+      font-size: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .quick-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+    }
+
+    .section {
+      margin: 22px 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+      text-align: left;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.3;
+    }
+
+    .section-desc {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .news-card,
+    .room-section,
+    .info-card {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(229, 231, 235, 0.92);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .news-card {
+      padding: 22px;
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 22px;
+      text-align: left;
+      overflow: hidden;
+    }
+
+    .news-title {
+      min-height: 100%;
+      border-radius: 18px;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+
+    .news-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .news-list li {
+      display: grid;
+      grid-template-columns: 142px 1fr;
+      gap: 14px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .news-list li:last-child {
+      border-bottom: none;
+    }
+
+    .news-date {
+      color: var(--primary-dark);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .room-section {
+      padding: 24px;
+      text-align: left;
+    }
+
+    .room-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .room-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 142px;
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid #dbeafe;
+      background:
+        linear-gradient(180deg, #ffffff, #f8fbff);
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    }
+
+    .room-card:hover {
+      transform: translateY(-2px);
+      border-color: #93c5fd;
+      box-shadow: 0 15px 28px rgba(37, 99, 235, 0.13);
+    }
+
+    .room-mark {
+      width: 48px;
+      height: 48px;
+      border-radius: 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #dbeafe;
+      color: var(--primary-dark);
+      font-size: 15px;
+      font-weight: 900;
+      margin-bottom: 14px;
+    }
+
+    .room-name {
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .room-meta {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .room-action {
+      margin-top: auto;
+      padding-top: 16px;
+      color: var(--primary-dark);
+      font-weight: 900;
+      font-size: 14px;
+    }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 18px;
+      margin: 22px 0 36px;
+    }
+
+    .info-card {
+      padding: 24px;
+      text-align: left;
+      min-height: 170px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-card h2 {
+      margin: 0;
+      font-size: 21px;
+    }
+
+    .info-card p {
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      width: fit-content;
+      margin-top: auto;
+      padding: 0 18px;
+      border-radius: 999px;
+      color: #ffffff;
+      background: var(--primary);
+      font-weight: 900;
+      font-size: 15px;
+      border: none;
+      transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: var(--primary-dark);
+      box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22);
+    }
+
     .btn-orange {
-      background-color: #f08c2e;
+      background: var(--orange);
     }
+
     .btn-orange:hover {
-      background-color: #d9761f;
+      background: var(--orange-dark);
+      box-shadow: 0 10px 22px rgba(240, 140, 46, 0.24);
     }
-    .warning-text {
-      color: #d32f2f;
-      font-size: 27px;
+
+    .btn-muted {
+      background: #e5e7eb;
+      color: #4b5563;
+      pointer-events: none;
+    }
+
+    .site-footer {
+      background: rgba(255, 255, 255, 0.78);
+      border-top: 1px solid var(--line);
+      padding: 18px 0;
+      color: var(--muted);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      font-size: 14px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+    }
+
+    .footer-brand img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+
+    .footer-title {
+      font-weight: 800;
+      color: #4b5563;
+      line-height: 1.35;
+    }
+
+    .footer-subtitle,
+    .footer-contact {
+      font-size: 12px;
+      color: #7b8494;
+      line-height: 1.45;
+    }
+
+    .footer-right {
+      text-align: right;
+      flex: 0 0 auto;
+    }
+
+    @media (max-width: 860px) {
+      .page {
+        width: min(100% - 24px, 1120px);
+      }
+
+      .site-header {
+        position: static;
+      }
+
+      .header-inner,
+      .footer-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .header-note {
+        align-self: flex-start;
+      }
+
+      .hero {
+        padding: 26px 22px;
+        border-radius: 24px;
+        margin-top: 18px;
+      }
+
+      .quick-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .quick-link {
+        width: 100%;
+      }
+
+      .news-card {
+        grid-template-columns: 1fr;
+      }
+
+      .news-title {
+        min-height: auto;
+        justify-content: flex-start;
+        padding: 14px 16px;
+        font-size: 21px;
+      }
+
+      .room-grid,
+      .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .room-card {
+        min-height: 132px;
+      }
+
+      .footer-right {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .brand {
+        gap: 12px;
+      }
+
+      .brand img {
+        width: 54px;
+        height: 54px;
+      }
+
+      .brand-title {
+        font-size: 17px;
+      }
+
+      .brand-subtitle {
+        font-size: 12px;
+      }
+
+      .hero p {
+        font-size: 15px;
+      }
+
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        display: block;
+      }
+
+      .room-section,
+      .news-card,
+      .info-card {
+        padding: 18px;
+        border-radius: 20px;
+      }
+
+      .news-list li {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+
+      .room-card {
+        padding: 16px;
+      }
     }
   </style>
 </head>
 <body>
 
-<header style="display:flex; align-items:center; padding:10px 40px;">
-  <img src="../images/lnu_logo.png" alt="辽宁大学" style="height:70px; margin-right:50px;">
-
-  <div style="margin-left:auto; text-align:right;">
-    <div style="font-size:22px; font-weight:600;">
-      辽宁省心理测试与行为分析重点实验室
+<header class="site-header">
+  <div class="page header-inner">
+    <div class="brand">
+      <img src="../images/lnu_logo.png" alt="辽宁大学">
+      <div>
+        <div class="brand-title">辽宁省心理测试与行为分析重点实验室</div>
+        <div class="brand-subtitle">Liaoning Key Laboratory of Psychological Testing and Behavioral Analysis</div>
+      </div>
     </div>
-
-    <div style="font-size:14px; color:#666;">
-      Liaoning Key Laboratory of Psychological Testing and Behavioral Analysis
-    </div>
+    <div class="header-note">内部专用，请勿外传</div>
   </div>
 </header>
-<hr class="header-divider">
 
-<h1>辽宁大学心理测试与行为分析实验室预约登记系统</h1>
-<h2 class="warning-text">内部专用，请勿外传</h2>
-
-<div class="blue-section-full">
-  <div class="blue-inner">
-    <div class="split-row">
-      <div class="left-box">
-        <h2>News</h2>
+<main class="page">
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-label">Laboratory Booking System</div>
+      <h1>辽宁大学心理测试与行为分析实验室预约登记系统</h1>
+      <p>请选择对应房间和实验设备进入预约页面。提交前请确认预约日期、开始时间、结束时间和个人信息；预约系统为内部使用，请勿转发给无关人员。</p>
+      <div class="quick-actions" aria-label="快捷入口">
+        <a class="quick-link" href="../lab343-eeg/">343 EEG</a>
+        <a class="quick-link" href="../lab343-eyetracking/">343 EyeTracking</a>
+        <a class="quick-link" href="../lab343-fnirs/">343 fNIRS</a>
+        <a class="quick-link" href="../lab440-tES/">440 tES</a>
+        <a class="quick-link" href="../lab440-eyetracking/">440 EyeTracking</a>
+        <a class="quick-link" href="../lab440-thermography/">440 热成像</a>
       </div>
-      <div class="right-box" style="text-align:left">
-        <p>2026.05.23 09:19 文档手册等下载已移至飞书“实验相关”文件夹</p>
-        <p>2026.05.23 09:19 《知情同意书》更新至ver 2.1，有问题请随时联系我。</p>
-        <p>2026.03.19 22:00 预约系统测试全部完成，已正式投入使用；有问题请随时联系我。</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<section class="section">
-
-<h2>纪检大楼343 预约</h2>
-  
-<a class="btn" href="../lab343-eeg/">EEG预约</a>
-<a class="btn" href="../lab343-eyetracking/">EyeTracking预约</a>
-<a class="btn" href="../lab343-fnirs/">fNIRS预约</a>
-
-</section>
-
-<section class="section">
-<h2>纪检大楼440 预约</h2>
-
-<a class="btn" href="../lab440-tES/">tES预约</a>
-<a class="btn" href="../lab440-eyetracking/">EyeTracking预约</a>
-<a class="btn" href="../lab440-thermography/">热成像预约</a>
-
-</section>
-
-<div class="section-row">
-
-  <!-- 左 1/3 -->
-  <section class="section section-left">
-    <h2>被试预约信息</h2>
-    <a class="btn btn-orange" href="../sharing-sheet.html">点击查看</a>
-  </section>
-
-  <!-- 右 2/3 -->
-  <section class="section section-right">
-    <h2>实验室相关文档下载</h2>
-    <div style="font-size:22px;">
-      <a class="btn">已移至飞书</a>
     </div>
   </section>
 
-</div>
+  <section class="section">
+    <div class="news-card">
+      <div class="news-title">News</div>
+      <ul class="news-list">
+        <li>
+          <span class="news-date">2026.05.23 09:19</span>
+          <span>文档手册等下载已移至飞书“实验相关”文件夹。</span>
+        </li>
+        <li>
+          <span class="news-date">2026.05.23 09:19</span>
+          <span>《知情同意书》更新至 ver 2.1，有问题请随时联系我。</span>
+        </li>
+        <li>
+          <span class="news-date">2026.03.19 22:00</span>
+          <span>预约系统测试全部完成，已正式投入使用；有问题请随时联系我。</span>
+        </li>
+      </ul>
+    </div>
+  </section>
 
-<footer style="display:flex; align-items:center; justify-content:space-between; padding:18px 40px; font-size:14px; color:#666; background:#f2f2f2; border-top:1px solid #ddd;">
-  <div style="display:flex; align-items:center; text-align:left;">
-    <img src="../images/lab_logo.png" alt="实验室logo" style="height:36px; margin-right:12px;">
-    <div style="line-height:1.3;">
-      <div style="font-weight:600;">心理测试与行为分析实验室 | 辽宁大学</div>
-      <div style="font-size:12px; color:#888;">
-        Laboratory of Psychological Testing and Behavioral Analysis
+  <section class="section room-section">
+    <div class="section-head">
+      <div>
+        <h2 class="section-title">纪检大楼 343 预约</h2>
+        <p class="section-desc">选择对应实验间进入预约日历。</p>
       </div>
     </div>
-  </div>
 
-  <div style="text-align:right;">
-    <div>© 2022–2026 实验室预约系统</div>
-    <div style="font-size:12px;">Contact: shanglinlin@lnu.edu.cn</div>
+    <div class="room-grid">
+      <a class="room-card" href="../lab343-eeg/">
+        <span class="room-mark">EEG</span>
+        <span class="room-name">EEG 预约</span>
+        <span class="room-meta">Rm.343 · 脑电实验间</span>
+        <span class="room-action">进入预约 →</span>
+      </a>
+
+      <a class="room-card" href="../lab343-eyetracking/">
+        <span class="room-mark">EYE</span>
+        <span class="room-name">EyeTracking 预约</span>
+        <span class="room-meta">Rm.343 · 眼动实验间</span>
+        <span class="room-action">进入预约 →</span>
+      </a>
+
+      <a class="room-card" href="../lab343-fnirs/">
+        <span class="room-mark">NIRS</span>
+        <span class="room-name">fNIRS 预约</span>
+        <span class="room-meta">Rm.343 · 近红外实验间</span>
+        <span class="room-action">进入预约 →</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="section room-section">
+    <div class="section-head">
+      <div>
+        <h2 class="section-title">纪检大楼 440 预约</h2>
+        <p class="section-desc">选择对应实验间进入预约日历。</p>
+      </div>
+    </div>
+
+    <div class="room-grid">
+      <a class="room-card" href="../lab440-tES/">
+        <span class="room-mark">tES</span>
+        <span class="room-name">tES 预约</span>
+        <span class="room-meta">Rm.440 · 电刺激实验间</span>
+        <span class="room-action">进入预约 →</span>
+      </a>
+
+      <a class="room-card" href="../lab440-eyetracking/">
+        <span class="room-mark">EYE</span>
+        <span class="room-name">EyeTracking 预约</span>
+        <span class="room-meta">Rm.440 · 眼动实验间</span>
+        <span class="room-action">进入预约 →</span>
+      </a>
+
+      <a class="room-card" href="../lab440-thermography/">
+        <span class="room-mark">THM</span>
+        <span class="room-name">热成像预约</span>
+        <span class="room-meta">Rm.440 · 热成像实验间</span>
+        <span class="room-action">进入预约 →</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="bottom-grid">
+    <div class="info-card">
+      <h2>被试预约信息</h2>
+      <p>查看被试专用预约信息与相关登记内容。</p>
+      <a class="btn btn-orange" href="../sharing-sheet.html">点击查看</a>
+    </div>
+
+    <div class="info-card">
+      <h2>实验室相关文档下载</h2>
+      <p>文档手册等下载已移至飞书“实验相关”文件夹。请在飞书中查看最新版本，避免继续使用旧版文件。</p>
+      <span class="btn btn-muted">已移至飞书</span>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="page footer-inner">
+    <div class="footer-brand">
+      <img src="../images/lab_logo.png" alt="实验室logo">
+      <div>
+        <div class="footer-title">心理测试与行为分析实验室 | 辽宁大学</div>
+        <div class="footer-subtitle">Laboratory of Psychological Testing and Behavioral Analysis</div>
+      </div>
+    </div>
+
+    <div class="footer-right">
+      <div>© 2022–2026 实验室预约系统</div>
+      <div class="footer-contact">Contact: shanglinlin@lnu.edu.cn</div>
+    </div>
   </div>
 </footer>
-  
+
 </body>
 </html>
