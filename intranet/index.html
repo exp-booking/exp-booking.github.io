@@ -269,16 +269,19 @@
     }
 
     .room-card {
-      display: flex;
-      flex-direction: column;
-      min-height: 142px;
+      display: grid;
+      grid-template-columns: 76px 1fr;
+      grid-template-rows: auto auto;
+      column-gap: 16px;
+      row-gap: 8px;
+      align-items: center;
+      min-height: 118px;
       padding: 18px;
       border-radius: 20px;
       border: 1px solid #dbeafe;
       background: linear-gradient(180deg, #ffffff, #f8fbff);
       transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
     }
-
     .room-card:hover {
       transform: translateY(-2px);
       border-color: #93c5fd;
@@ -286,8 +289,10 @@
     }
 
     .room-mark {
-      width: 48px;
-      height: 48px;
+      grid-column: 1;
+      grid-row: 1;
+      width: 52px;
+      height: 52px;
       border-radius: 15px;
       display: inline-flex;
       align-items: center;
@@ -296,28 +301,31 @@
       color: var(--primary-dark);
       font-size: 15px;
       font-weight: 900;
-      margin-bottom: 14px;
     }
 
     .room-name {
+      grid-column: 2;
+      grid-row: 1;
       font-size: 18px;
       font-weight: 900;
       line-height: 1.25;
     }
 
     .room-meta {
-      margin-top: 8px;
+      grid-column: 2;
+      grid-row: 2;
       color: var(--muted);
       font-size: 13px;
       line-height: 1.5;
     }
 
     .room-action {
-      margin-top: auto;
-      padding-top: 16px;
+      grid-column: 1;
+      grid-row: 2;
       color: var(--primary-dark);
       font-weight: 900;
-      font-size: 14px;
+      font-size: 13px;
+      line-height: 1.2;
     }
 
     .bottom-grid {
@@ -585,21 +593,21 @@
         <span class="room-mark">EEG</span>
         <span class="room-name">EEG 预约</span>
         <span class="room-meta">Rm.343 · 脑电实验间</span>
-        <span class="room-action">进入预约 →</span>
+        <span class="room-action">点击预约 →</span>
       </a>
 
       <a class="room-card" href="../lab343-eyetracking/">
         <span class="room-mark">EYE</span>
         <span class="room-name">EyeTracking 预约</span>
         <span class="room-meta">Rm.343 · 眼动实验间</span>
-        <span class="room-action">进入预约 →</span>
+        <span class="room-action">点击预约 →</span>
       </a>
 
       <a class="room-card" href="../lab343-fnirs/">
         <span class="room-mark">NIRS</span>
         <span class="room-name">fNIRS 预约</span>
         <span class="room-meta">Rm.343 · 近红外实验间</span>
-        <span class="room-action">进入预约 →</span>
+        <span class="room-action">点击预约 →</span>
       </a>
     </div>
   </section>
@@ -615,21 +623,21 @@
         <span class="room-mark">tES</span>
         <span class="room-name">tES 预约</span>
         <span class="room-meta">Rm.440 · 电刺激实验间</span>
-        <span class="room-action">进入预约 →</span>
+        <span class="room-action">点击预约 →</span>
       </a>
 
       <a class="room-card" href="../lab440-eyetracking/">
         <span class="room-mark">EYE</span>
         <span class="room-name">EyeTracking 预约</span>
         <span class="room-meta">Rm.440 · 眼动实验间</span>
-        <span class="room-action">进入预约 →</span>
+        <span class="room-action">点击预约 →</span>
       </a>
 
       <a class="room-card" href="../lab440-thermography/">
         <span class="room-mark">THM</span>
         <span class="room-name">热成像预约</span>
         <span class="room-meta">Rm.440 · 热成像实验间</span>
-        <span class="room-action">进入预约 →</span>
+        <span class="room-action">点击预约 →</span>
       </a>
     </div>
   </section>
