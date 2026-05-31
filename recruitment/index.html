@@ -223,7 +223,49 @@
       color: var(--muted);
       font-size: 17px;}
     .group-list {
-      border-top: 1px solid var(--line);}
+      border-top: none;}
+    .study-nav {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 26px 0 10px;}
+    .study-link {
+      display: block;
+      padding: 16px 18px;
+      border-radius: 18px;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;}
+    .study-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(17, 24, 39, 0.08);}
+    .study-link span {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+      font-weight: 850;}
+    .study-link strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1.25;}
+    .study-link-blue {
+      color: var(--blue-dark);
+      background: var(--blue-soft);
+      border-color: rgba(44, 123, 229, 0.18);}
+    .study-link-green {
+      color: var(--green);
+      background: var(--green-soft);
+      border-color: rgba(23, 143, 104, 0.18);}
+    .study-link-orange {
+      color: #a95711;
+      background: #fff0df;
+      border-color: rgba(240, 140, 46, 0.24);}
+    @media (max-width: 980px) {
+      .study-nav {
+        grid-template-columns: repeat(2, 1fr);}}
+    @media (max-width: 560px) {
+      .study-nav {
+        grid-template-columns: 1fr;}}
     .group-item {
       display: block;
       padding: 42px 0;
@@ -464,6 +506,28 @@
             以下信息可根据各课题组提供的广告、二维码或报名链接更新。若某项实验已停止招募，请各课题组及时修改状态。
           </p>
         </div>
+        
+        <nav class="study-nav" aria-label="课题组快速跳转">
+          <a class="study-link study-link-blue" href="#group-hyf">
+            <span>Group 01</span>
+            <strong>何云凤课题组</strong>
+          </a>
+        
+          <a class="study-link study-link-green" href="#group-zxc">
+            <span>Group 02</span>
+            <strong>周星辰课题组</strong>
+          </a>
+        
+          <a class="study-link study-link-orange" href="#group-yyy">
+            <span>Group 03</span>
+            <strong>于溢洋课题组</strong>
+          </a>
+        
+          <a class="study-link study-link-blue" href="#group-vrc">
+            <span>Group 04</span>
+            <strong>VRC Lab</strong>
+          </a>
+        </nav>
     
         <div class="group-list">
           <article class="group-item" id="group-hyf">
