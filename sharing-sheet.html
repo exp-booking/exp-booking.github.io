@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>被试专用预约</title>
 
 <link rel="icon" type="image/png" href="../images/lab_logo.png">
@@ -10,195 +11,630 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
+:root {
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --danger: #dc2626;
+  --danger-bg: #fff1f2;
+  --notice-bg: #eff6ff;
+  --notice-line: #bfdbfe;
+  --shadow: 0 14px 35px rgba(15, 23, 42, 0.10);
+  --radius: 18px;
+}
+
 * {
   box-sizing: border-box;
 }
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont,
-               "PingFang SC", "Microsoft YaHei", sans-serif;
-  text-align: center;
-  margin: 10px;
-}
-h1 {
-  margin-bottom: 40px;
-}
-.btn {
-  display: inline-block;
-  margin: 15px;
-  padding: 18px 36px;
-  font-size: 18px;
-  text-decoration: none;
-  color: white;
-  background-color: #2c7be5;
-  border-radius: 8px;
-}
-.btn:hover {
-  background-color: #1a68d1;
-}
-hr {
-  border: none;
-  border-top: 1px solid #ddd;
-  margin: 25px 0;
-}
-.header-divider {
-  border: none;
-  border-top: 1px solid #ddd;
   margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.10), transparent 34rem),
+    var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.65;
 }
-.section {
-  max-width: 900px;
-  margin: 20px auto; 
-  padding: 25px; 
-  background: #faf8f2;
-  border-radius: 10px;
+
+button,
+input,
+select {
+  font: inherit;
 }
-.section h2 {
-  margin-top: 0;
+
+button {
+  cursor: pointer;
 }
-.section-row {
-  display: flex;
-  gap: 20px;
-  max-width: 900px;
-  margin: 20px auto;
-  box-sizing: border-box;
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
 }
-.section-left,
-.section-right {
-  box-sizing: border-box;
+
+a {
+  color: var(--primary);
+  text-decoration: none;
 }
-.section-left {
-  flex: 1;
+
+a:hover {
+  text-decoration: underline;
 }
-.section-right {
-  flex: 1;
-}
-.blue-section-full {
-  width: 100%;
-  background: #e6f0ff;
-  color: grey;
-  padding: 9px 0;
-}
-.blue-inner {
-  max-width: 900px;
+
+.page {
+  width: min(1160px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 0 9px;
+  padding: 22px 0 44px;
 }
-.split-row {
+
+.top-bar {
   display: flex;
-  gap: 20px;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 14px;
 }
-.left-box {
-  flex: 1;
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+  font-size: 14px;
 }
-.right-box {
-  flex: 6;
+
+.hero {
+  margin-bottom: 18px;
+  padding: 22px 24px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+  color: #fff;
+  box-shadow: var(--shadow);
 }
-.btn-orange {
-  background-color: #f08c2e;
+
+.hero h1 {
+  margin: 0 0 6px;
+  font-size: clamp(24px, 4vw, 36px);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
 }
-.btn-orange:hover {
-  background-color: #d9761f;
+
+.hero p {
+  margin: 0;
+  max-width: 760px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 15px;
 }
-.warning-text {
-  color: #d32f2f;
+
+.notice-card {
+  margin-bottom: 18px;
+  padding: 20px 22px;
+  background: var(--notice-bg);
+  border: 1px solid var(--notice-line);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 28px rgba(37, 99, 235, 0.08);
 }
-body{font-family:"Microsoft YaHei",sans-serif;margin:20px;}
-#calendar{max-width:1100px;margin:0 auto;}
-#bookingModal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.4);
-  z-index:9999;
+
+.notice-card h2 {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 12px;
+  color: var(--danger);
+  font-size: clamp(18px, 3vw, 23px);
+  line-height: 1.42;
 }
-.modal-content{
-  background:white;
-  max-width:420px;
-  margin:120px auto;
-  padding:20px;
-  border-radius:8px;
+
+.notice-card h2::before {
+  content: "!";
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background: var(--danger);
+  color: white;
+  font-weight: 800;
+  font-size: 15px;
 }
-.modal-content input,
-.modal-content select{
-  width:100%;
-  margin-bottom:10px;
+
+.notice-list {
+  margin: 0;
+  padding-left: 1.2em;
+  color: #374151;
 }
-.modal-actions{text-align:right;}
+
+.notice-list li + li {
+  margin-top: 8px;
+}
+
+.group-notice {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed #93c5fd;
+}
+
+.group-notice h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+.calendar-card {
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid rgba(229, 231, 235, 0.95);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.calendar-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.calendar-card-header h2 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.35;
+}
+
+.calendar-card-header p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.mobile-hint {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+#calendar {
+  padding: 16px;
+}
+
+.fc {
+  --fc-border-color: #e5e7eb;
+  --fc-today-bg-color: #eff6ff;
+  --fc-now-indicator-color: #ef4444;
+  font-size: 14px;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 14px;
+}
+
+.fc .fc-toolbar-title {
+  font-size: clamp(18px, 3vw, 24px);
+  font-weight: 750;
+}
+
+.fc .fc-button {
+  border: 0;
+  border-radius: 11px;
+  background: var(--primary);
+  box-shadow: none;
+  padding: 8px 12px;
+}
+
+.fc .fc-button:hover,
+.fc .fc-button:focus {
+  background: var(--primary-dark);
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+  background: #1e40af;
+}
+
+.fc .fc-col-header-cell-cushion,
+.fc .fc-timegrid-axis-cushion,
+.fc .fc-timegrid-slot-label-cushion {
+  color: #4b5563;
+}
+
+.fc-event {
+  border: 0;
+  border-radius: 8px;
+  padding: 2px 4px;
+}
+
+#bookingModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.52);
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  width: min(520px, 100%);
+  max-height: min(760px, calc(100vh - 40px));
+  overflow: auto;
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.28);
+}
+
+.modal-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 18px 20px 14px;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(8px);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.35;
+}
+
+.modal-header p {
+  margin: 4px 0 0;
+  color: var(--danger);
+  font-size: 14px;
+}
+
+.booking-form {
+  padding: 18px 20px 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-field {
+  text-align: left;
+}
+
+.form-field.full {
+  grid-column: 1 / -1;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 6px;
+  color: #374151;
+  font-weight: 650;
+  font-size: 14px;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  background: #fff;
+  color: #111827;
+  outline: none;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.form-note {
+  margin: 14px 0 0;
+  padding: 11px 12px;
+  border-radius: 13px;
+  background: var(--danger-bg);
+  color: #991b1b;
+  font-size: 13px;
+  text-align: left;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.btn-secondary,
+.btn-primary {
+  min-height: 44px;
+  padding: 10px 15px;
+  border-radius: 12px;
+  border: 0;
+  font-weight: 700;
+}
+
+.btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.btn-secondary:hover {
+  background: #e5e7eb;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+@media (max-width: 760px) {
+  .page {
+    width: min(100% - 20px, 1160px);
+    padding: 12px 0 26px;
+  }
+
+  .top-bar {
+    justify-content: flex-start;
+  }
+
+  .hero {
+    padding: 18px 16px;
+    border-radius: 16px;
+  }
+
+  .hero p {
+    font-size: 14px;
+  }
+
+  .notice-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .notice-card h2 {
+    gap: 8px;
+  }
+
+  .calendar-card {
+    border-radius: 16px;
+  }
+
+  .calendar-card-header {
+    display: block;
+    padding: 16px;
+  }
+
+  .mobile-hint {
+    display: inline-block;
+    margin-top: 10px;
+    white-space: normal;
+  }
+
+  #calendar {
+    padding: 10px;
+  }
+
+  .fc {
+    font-size: 12px;
+  }
+
+  .fc .fc-toolbar.fc-header-toolbar {
+    gap: 8px;
+  }
+
+  .fc .fc-toolbar-chunk {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .fc .fc-button {
+    min-height: 38px;
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+
+  .fc .fc-toolbar-title {
+    text-align: center;
+  }
+
+  .fc .fc-timegrid-slot {
+    height: 2.3em;
+  }
+
+  .fc-event-title,
+  .fc-event-time {
+    font-size: 11px;
+  }
+
+  #bookingModal {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-height: 92vh;
+    border-radius: 22px 22px 0 0;
+  }
+
+  .booking-form {
+    padding-bottom: calc(18px + env(safe-area-inset-bottom));
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .modal-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    margin: 16px -20px -20px;
+    padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+    background: rgba(255, 255, 255, 0.96);
+    border-top: 1px solid var(--line);
+    backdrop-filter: blur(8px);
+  }
+
+  .btn-secondary,
+  .btn-primary {
+    flex: 1;
+  }
+}
+
+@media (max-width: 420px) {
+  .notice-list {
+    padding-left: 1em;
+  }
+
+  .fc .fc-toolbar.fc-header-toolbar {
+    flex-direction: column;
+  }
+}
 </style>
 </head>
 
 <body>
-
-<div class="top-bar" style="text-align:right">
-  <a href="index.html">← 返回主页</a>
-</div>
-
-<div class="blue-section-full">
-  <div class="blue-inner" style="text-align:left">
-    <h2 class="warning-text">请确保已认真阅读过《知情同意》，并请务必按照主页预约规则操作。乱填后台直接删除。</h2>
-    <p>- 5月10日前（含）的被试费已报送财务，预计月底到账。月底未收到被试费，请务必联系相应的课题组。<br>
-    - 提交预约时，请确认开始时间和结束时间是正确时段，预约无法自行修改或取消，请务必谨慎填写。<br>
-    - 因存在网速差异、多人同时在线、黑名单检测等情况，点击提交时会有卡顿现象，推荐使用校园网；遇到卡顿【请勿重复点击提交】！！！【只需点击一次提交】。后台发现重复提交直接删除。</p>
-    <p>-------------------------------------------------------------------------------------------------------------------------------</p>
-    <h3>【视觉表征与计算课题组公告】</h3>
-    <p>- 目前招募的是物体表征的正式实验。预约可选连续三天或连续两天（如选连续两天，第二天分上下午前来，中间间隔2-3小时），单次预约至少1.5小时，每小时30元。<br>
-    - 同一时段最多可预约2人；递交预约后系统报错，表示该时段已满额。</p>
+<main class="page">
+  <div class="top-bar">
+    <a class="back-link" href="index.html">← 返回主页</a>
   </div>
-</div>
 
+  <section class="hero" aria-labelledby="page-title">
+    <h1 id="page-title">被试专用预约</h1>
+    <p>请在日历中选择合适时段，并在提交前确认个人信息、开始时间和结束时间。手机端建议使用“日”视图。</p>
+  </section>
 
-<div id="calendar"></div>
-<div id="bookingModal">
+  <section class="notice-card" aria-label="预约规则与课题组公告">
+    <h2>请确保已认真阅读《知情同意》，并务必按照主页预约规则操作。乱填后台直接删除。</h2>
+    <ul class="notice-list">
+      <li>5月10日前（含）的被试费已报送财务，预计月底到账。月底未收到被试费，请务必联系相应课题组。</li>
+      <li>提交预约时，请确认开始时间和结束时间是正确时段。预约无法自行修改或取消，请务必谨慎填写。</li>
+      <li>因存在网速差异、多人同时在线、黑名单检测等情况，点击提交时可能卡顿。请勿重复点击提交，只需点击一次。后台发现重复提交直接删除。</li>
+    </ul>
+
+    <div class="group-notice">
+      <h3>【视觉表征与计算课题组公告】</h3>
+      <ul class="notice-list">
+        <li>目前招募的是物体表征的正式实验。预约可选连续三天或连续两天；如选连续两天，第二天分上下午前来，中间间隔 2–3 小时。单次预约至少 1.5 小时，每小时 30 元。</li>
+        <li>同一时段最多可预约 2 人。递交预约后系统报错，表示该时段已满额。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="calendar-card" aria-label="预约日历">
+    <div class="calendar-card-header">
+      <div>
+        <h2>选择预约时间</h2>
+        <p>点击日历空白处会自动带入开始时间，默认结束时间为 30 分钟后，可在表单内修改。</p>
+      </div>
+      <div class="mobile-hint">手机端默认显示单日视图</div>
+    </div>
+    <div id="calendar"></div>
+  </section>
+</main>
+
+<div id="bookingModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="modal-content">
-    <h3>预约无法取消，请谨慎填写</h3>
+    <div class="modal-header">
+      <h3 id="modalTitle">填写预约信息</h3>
+      <p>预约无法自行取消或修改，请提交前再次确认。</p>
+    </div>
 
-    <form name="booking-sharing">
+    <form class="booking-form" name="booking-sharing" onsubmit="event.preventDefault(); submitBooking();">
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="nameInput">姓名</label>
+          <input id="nameInput" type="text" autocomplete="name" required>
+        </div>
 
-      姓名：
-      <input id="nameInput" type="text">
+        <div class="form-field">
+          <label for="groupInput">课题组</label>
+          <select id="groupInput" required>
+            <option value="">请选择</option>
+            <option value="何云凤">何云凤课题组</option>
+            <option value="周星辰">周星辰课题组</option>
+            <option value="于溢洋">于溢洋课题组</option>
+            <option value="VRC">视觉表征与计算课题组</option>
+          </select>
+        </div>
 
-      课题组：
-      <select id="groupInput" type="text">
-        <option value="">请选择</option>
-        <option value="何云凤">何云凤课题组</option>
-        <option value="周星辰">周星辰课题组</option>
-        <option value="于溢洋">于溢洋课题组</option>
-        <option value="VRC">视觉表征与计算课题组</option>
-      </select>
+        <div class="form-field">
+          <label for="studentIdInput">学号</label>
+          <input id="studentIdInput" type="text" inputmode="numeric" autocomplete="off" required>
+        </div>
 
-      学号：
-      <input id="studentIdInput" type="text">
+        <div class="form-field">
+          <label for="phoneInput">电话</label>
+          <input id="phoneInput" type="tel" inputmode="tel" autocomplete="tel" required>
+        </div>
 
-      电话：
-      <input id="phoneInput" type="text">
+        <div class="form-field">
+          <label for="genderInput">性别</label>
+          <select id="genderInput" required>
+            <option value="">请选择</option>
+            <option value="男">男</option>
+            <option value="女">女</option>
+          </select>
+        </div>
 
-      性别：
-      <select id="genderInput">
-        <option value="">请选择</option>
-        <option value="男">男</option>
-        <option value="女">女</option>
-      </select>
+        <div class="form-field">
+          <label for="ageInput">年龄</label>
+          <input id="ageInput" type="number" inputmode="numeric" min="16" max="80" required>
+        </div>
 
-      年龄：
-      <input id="ageInput" type="number">
+        <div class="form-field full">
+          <label for="startInput">开始时间</label>
+          <input id="startInput" type="datetime-local" required>
+        </div>
 
-      开始时间：
-      <input id="startInput" type="datetime-local">
-
-      结束时间：
-      <input id="endInput" type="datetime-local">
-
-      <div class="modal-actions">
-        <button type="button" onclick="closeModal()">关闭</button>
-        <button type="button" onclick="submitBooking()">提交预约</button>
+        <div class="form-field full">
+          <label for="endInput">结束时间</label>
+          <input id="endInput" type="datetime-local" required>
+        </div>
       </div>
 
+      <p class="form-note">提交时如果页面短暂无响应，请等待结果，不要重复点击提交按钮。</p>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" type="button" onclick="closeModal()">关闭</button>
+        <button id="submitBtn" class="btn-primary" type="submit">提交预约</button>
+      </div>
     </form>
   </div>
 </div>
 
 <script>
-
 const SUPABASE_URL = "https://ipqvhykwlvzagbffhdzp.supabase.co";
 const SUPABASE_KEY = "sb_publishable_Nv9QOCAV0sD-sTgYeCFKfQ_QOCMXmrM";
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -206,164 +642,231 @@ const TABLE_NAME = "booking-sharing";
 
 let calendar;
 let bookings = [];
+let isSubmitting = false;
 
-async function loadBookings(){
-  const { data } = await sb.from(TABLE_NAME).select("*");
+const mobileQuery = window.matchMedia("(max-width: 760px)");
+const pad = n => String(n).padStart(2, "0");
+
+function toLocalDateTimeValue(date) {
+  const d = new Date(date);
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+async function loadBookings() {
+  const { data, error } = await sb.from(TABLE_NAME).select("*");
+  if (error) {
+    alert("读取预约信息失败，请刷新后再试");
+    console.error(error);
+    bookings = [];
+    return;
+  }
+
   bookings = (data || []).map(row => ({
-    id:String(row.id),
-    title:`${row.group}｜${row.name}`,
-    start:row.start,
-    end:row.end
+    id: String(row.id),
+    title: `${row.group}｜${row.name}`,
+    start: row.start,
+    end: row.end
   }));
 }
 
-function renderCalendar(){
+function renderCalendar() {
+  const isMobile = mobileQuery.matches;
+
   calendar = new FullCalendar.Calendar(
     document.getElementById("calendar"),
     {
-      initialView:"timeGridWeek",
-      locale:"zh-cn",
-      firstDay:1,
-      nowIndicator:true,
-      selectable:true,
-      editable:false,
+      initialView: isMobile ? "timeGridDay" : "timeGridWeek",
+      locale: "zh-cn",
+      firstDay: 1,
+      nowIndicator: true,
+      selectable: true,
+      editable: false,
+      expandRows: true,
+      height: "auto",
       slotMinTime: "08:00:00",
       slotMaxTime: "20:00:00",
-      headerToolbar:{
-        left:"prev,next today",
-        center:"title",
-        right:"timeGridWeek,timeGridDay"
+      slotDuration: "00:30:00",
+      allDaySlot: false,
+      headerToolbar: isMobile
+        ? { left: "prev,next", center: "title", right: "today" }
+        : { left: "prev,next today", center: "title", right: "timeGridWeek,timeGridDay" },
+      buttonText: {
+        today: "今天",
+        week: "周",
+        day: "日"
       },
-      events:bookings,
-      dateClick:(info)=>openModal(info.date)
+      slotLabelFormat: {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      },
+      eventTimeFormat: {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      },
+      events: bookings,
+      dateClick: info => openModal(info.date),
+      select: info => openModal(info.start, info.end)
     }
   );
+
   calendar.render();
 }
 
-function openModal(date){
-  const pad=n=>String(n).padStart(2,"0");
-  const d=new Date(date);
+function openModal(startDate, endDate) {
+  const start = new Date(startDate);
+  const end = endDate ? new Date(endDate) : new Date(start.getTime() + 30 * 60000);
 
-  startInput.value=
-    `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  startInput.value = toLocalDateTimeValue(start);
+  endInput.value = toLocalDateTimeValue(end);
 
-  const d2=new Date(d.getTime()+30*60000);
-  endInput.value=
-    `${d2.getFullYear()}-${pad(d2.getMonth()+1)}-${pad(d2.getDate())}T${pad(d2.getHours())}:${pad(d2.getMinutes())}`;
-
-  bookingModal.style.display="block";
+  bookingModal.style.display = "flex";
+  setTimeout(() => nameInput.focus(), 50);
 }
 
-function closeModal(){
-  bookingModal.style.display="none";
+function closeModal() {
+  bookingModal.style.display = "none";
 }
 
-async function submitBooking(){
+function setSubmitState(isBusy) {
+  const btn = document.getElementById("submitBtn");
+  btn.disabled = isBusy;
+  btn.textContent = isBusy ? "提交中..." : "提交预约";
+}
 
-  const name=nameInput.value.trim();
-  const studentId=studentIdInput.value.trim();
-  const phone=phoneInput.value.trim();
-  const gender=genderInput.value;
-  const group=groupInput.value;
-  const age=ageInput.value.trim();
+async function submitBooking() {
+  const name = nameInput.value.trim();
+  const studentId = studentIdInput.value.trim();
+  const phone = phoneInput.value.trim();
+  const gender = genderInput.value;
+  const group = groupInput.value;
+  const age = ageInput.value.trim();
   const start = startInput.value;
   const end = endInput.value;
 
-  // 必填检查（加入 phone）
-  if(!name||!studentId||!phone||!gender||!group||!age||!start||!end){
+  if (!name || !studentId || !phone || !gender || !group || !age || !start || !end) {
     alert("所有字段必须填写");
     return;
   }
 
-  // 黑名单检查：姓名+手机号 / 姓名+学号 / 学号+手机号 任一组合匹配即禁止
-  const cleanName = name.trim();
-  const cleanStudentId = studentId.trim();
-  const cleanPhone = phone.trim();
-  
-  const { data: blacklistData, error: blacklistError } = await sb
-    .from("blacklist")
-    .select("name, studentId, phone");
-  if (blacklistError) {
-    alert("黑名单检查失败，请稍后再试");
-    console.error(blacklistError);
-    return;
-  }
-  const isBlacklisted = (blacklistData || []).some(item => {
-    const bName = (item.name || "").trim();
-    const bStudentId = (item.studentId || "").trim();
-    const bPhone = (item.phone || "").trim();
-    return (
-      (bName === cleanName && bPhone === cleanPhone) ||
-      (bName === cleanName && bStudentId === cleanStudentId) ||
-      (bStudentId === cleanStudentId && bPhone === cleanPhone)
-    );
-  });
-  if (isBlacklisted) {
-    alert("禁止预约：该信息与黑名单记录匹配");
-    return;
-  }
-
-  if(new Date(end)<=new Date(start)){
+  if (new Date(end) <= new Date(start)) {
     alert("结束时间必须晚于开始时间");
     return;
   }
 
-  let overlapCount = 0;
-  for (const ev of bookings) {
-    const isOverlap = !(new Date(end) <= new Date(ev.start) ||
-                        new Date(start) >= new Date(ev.end));
-    if (isOverlap) {
-      overlapCount++;
+  if (isSubmitting) return;
+  isSubmitting = true;
+  setSubmitState(true);
+
+  try {
+    // 黑名单检查：姓名+手机号 / 姓名+学号 / 学号+手机号 任一组合匹配即禁止
+    const { data: blacklistData, error: blacklistError } = await sb
+      .from("blacklist")
+      .select("name, studentId, phone");
+
+    if (blacklistError) {
+      alert("黑名单检查失败，请稍后再试");
+      console.error(blacklistError);
+      return;
     }
+
+    const isBlacklisted = (blacklistData || []).some(item => {
+      const bName = (item.name || "").trim();
+      const bStudentId = (item.studentId || "").trim();
+      const bPhone = (item.phone || "").trim();
+      return (
+        (bName === name && bPhone === phone) ||
+        (bName === name && bStudentId === studentId) ||
+        (bStudentId === studentId && bPhone === phone)
+      );
+    });
+
+    if (isBlacklisted) {
+      alert("禁止预约：该信息与黑名单记录匹配");
+      return;
+    }
+
+    // 提交前重新读取预约，减少多人同时在线导致的前端缓存误判。
+    const { data: currentBookings, error: bookingCheckError } = await sb
+      .from(TABLE_NAME)
+      .select("start, end");
+
+    if (bookingCheckError) {
+      alert("预约时段检查失败，请稍后再试");
+      console.error(bookingCheckError);
+      return;
+    }
+
+    let overlapCount = 0;
+    for (const ev of currentBookings || []) {
+      const isOverlap = !(new Date(end) <= new Date(ev.start) ||
+                          new Date(start) >= new Date(ev.end));
+      if (isOverlap) overlapCount++;
+    }
+
+    if (overlapCount >= 2) {
+      alert("该时间段人数已满（最多允许2人同时预约）");
+      return;
+    }
+
+    const { data, error } = await sb
+      .from(TABLE_NAME)
+      .insert([{
+        name,
+        studentId,
+        phone,
+        gender,
+        group,
+        age,
+        start,
+        end
+      }])
+      .select();
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    const row = data[0];
+
+    calendar.addEvent({
+      id: String(row.id),
+      title: `${row.group}｜${row.name}`,
+      start: row.start,
+      end: row.end
+    });
+
+    bookings.push({
+      id: String(row.id),
+      title: `${row.group}｜${row.name}`,
+      start: row.start,
+      end: row.end
+    });
+
+    closeModal();
+    alert("预约提交成功");
+  } finally {
+    isSubmitting = false;
+    setSubmitState(false);
   }
-  if (overlapCount >= 2) {
-    alert("该时间段人数已满（最多允许2人同时预约）");
-    return;
-  }
-
-  const { data,error } = await sb
-    .from(TABLE_NAME)
-    .insert([{
-      name,
-      studentId,
-      phone,
-      gender,
-      group,
-      age,
-      start,
-      end
-    }])
-    .select();
-
-  if(error){
-    alert(error.message);
-    return;
-  }
-
-  const row=data[0];
-
-  calendar.addEvent({
-    id:String(row.id),
-    title:`${row.group}｜${row.name}`,
-    start:row.start,
-    end:row.end
-  });
-
-  bookings.push({
-    id:String(row.id),
-    start:row.start,
-    end:row.end
-  });
-
-  closeModal();
 }
 
-(async()=>{
+bookingModal.addEventListener("click", event => {
+  if (event.target === bookingModal) closeModal();
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && bookingModal.style.display === "flex") {
+    closeModal();
+  }
+});
+
+(async () => {
   await loadBookings();
   renderCalendar();
 })();
 </script>
-
 </body>
 </html>
