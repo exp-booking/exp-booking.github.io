@@ -532,7 +532,7 @@ a:hover {
 
   <section class="hero" aria-labelledby="page-title">
     <h1 id="page-title">被试专用预约</h1>
-    <p>请在日历中选择合适时段，并在提交前确认个人信息、开始时间和结束时间。手机端建议使用“日”视图。</p>
+    <p>请在日历中选择合适时段，并在提交前确认个人信息、开始时间和结束时间。手机端默认使用“日”视图，也可以切换到“周”视图。</p>
   </section>
 
   <section class="notice-card" aria-label="预约规则与课题组公告">
@@ -688,7 +688,7 @@ function renderCalendar() {
       slotDuration: "00:30:00",
       allDaySlot: false,
       headerToolbar: isMobile
-        ? { left: "prev,next", center: "title", right: "today" }
+        ? { left: "prev,next today", center: "title", right: "timeGridWeek,timeGridDay" }
         : { left: "prev,next today", center: "title", right: "timeGridWeek,timeGridDay" },
       buttonText: {
         today: "今天",
