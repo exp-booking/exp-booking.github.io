@@ -227,14 +227,25 @@
       align-items: start;
       margin-bottom: 24px;}
     .rules-head h2 {
-      margin-bottom: 10px;
+      margin-bottom: 6px;
       font-size: clamp(28px, 4vw, 42px);
       line-height: 1.1;
       letter-spacing: -0.04em;}
+    .section-title-en {
+      margin: 0 0 18px;
+      color: var(--blue);
+      font-size: 15px;
+      line-height: 1.45;
+      font-weight: 700;
+      letter-spacing: -0.01em;}
+    .rules-head .section-title-en {
+      color: rgba(255,255,255,0.78);}
     .rules-head p {
       margin-bottom: 0;
       color: rgba(255,255,255,0.82);
       font-size: 17px;}
+    .rules-side-note {
+      padding-top: 52px;}
     .rules-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -369,11 +380,13 @@
       margin-bottom: 24px;
       text-align: center;}
     .section-title h2 {
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       font-size: clamp(28px, 4vw, 42px);
       line-height: 1.1;
       letter-spacing: -0.04em;}
-    .section-title p {
+    .section-title .section-title-en {
+      margin-bottom: 14px;}
+    .section-title p:not(.section-title-en) {
       margin-bottom: 0;
       color: var(--muted);
       font-size: 17px;}
@@ -458,6 +471,8 @@
       .hero-inner,
       .rules-head {
         grid-template-columns: 1fr;}
+      .rules-side-note {
+        padding-top: 0;}
       .rules-grid {
         grid-template-columns: repeat(2, 1fr);}
       .consent-grid {
@@ -545,9 +560,10 @@
         <div class="rules-head">
           <div>
             <h2>预约规则</h2>
-            <p>请仔细阅读后再进入预约页面。乱填、重复提交或选择错误课题组的预约，后台将直接删除。</p>
+            <p class="section-title-en">Booking Rules</p>
           </div>
-          <p>
+        
+          <p class="rules-side-note">
             为确保实验正常进行，实验员需要提前完成调试、人员安排和材料准备。
             请按规则预约，避免影响实验安排。
           </p>
@@ -602,6 +618,7 @@
       <div class="container">
         <div class="section-title">
           <h2>请选择实验类型</h2>
+          <p class="section-title-en">Select Experiment Type</p>
           <p>阅读并同意知情同意书后，方可进入预约页面。</p>
         </div>
 
