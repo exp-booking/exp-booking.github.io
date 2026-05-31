@@ -25,86 +25,58 @@
       --red-soft: #fff1f1;
       --shadow: 0 18px 50px rgba(17, 24, 39, 0.10);
       --radius: 22px;
-      --container: 1080px;
-    }
-
+      --container: 1080px;}
     * {
-      box-sizing: border-box;
-    }
-
+      box-sizing: border-box;}
     html {
-      scroll-behavior: smooth;
-    }
-
+      scroll-behavior: smooth;}
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
       color: var(--text);
       background: var(--bg);
-      line-height: 1.65;
-    }
-
+      line-height: 1.65;}
     img {
       max-width: 100%;
-      height: auto;
-    }
-
+      height: auto;}
     a {
-      color: inherit;
-    }
-
+      color: inherit;}
     .container {
       width: min(var(--container), calc(100% - 40px));
-      margin: 0 auto;
-    }
-
+      margin: 0 auto;}
     .site-header {
       position: sticky;
       top: 0;
       z-index: 20;
       background: rgba(255, 255, 255, 0.90);
       border-bottom: 1px solid var(--line);
-      backdrop-filter: blur(12px);
-    }
-
+      backdrop-filter: blur(12px);}
     .header-inner {
       min-height: 82px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
-    }
-
+      gap: 24px;}
     .header-left {
       display: flex;
       align-items: center;
       gap: 16px;
-      min-width: 0;
-    }
-
+      min-width: 0;}
     .lnu-logo {
       height: 58px;
       width: auto;
-      flex: 0 0 auto;
-    }
-
+      flex: 0 0 auto;}
     .lab-title {
-      text-align: right;
-    }
-
+      text-align: right;}
     .lab-title-cn {
       font-size: 21px;
       font-weight: 750;
       letter-spacing: -0.02em;
-      white-space: nowrap;
-    }
-
+      white-space: nowrap;}
     .lab-title-en {
       margin-top: 2px;
       color: var(--muted);
-      font-size: 13px;
-    }
-
+      font-size: 13px;}
     .hero {
       position: relative;
       overflow: hidden;
@@ -112,9 +84,7 @@
       background:
         radial-gradient(circle at 20% 16%, rgba(44, 123, 229, 0.18), transparent 32%),
         radial-gradient(circle at 86% 10%, rgba(240, 140, 46, 0.14), transparent 26%),
-        linear-gradient(135deg, #f9fbff 0%, #eef5ff 68%, #f8fbff 100%);
-    }
-
+        linear-gradient(135deg, #f9fbff 0%, #eef5ff 68%, #f8fbff 100%);}
     .hero::before {
       content: "";
       position: absolute;
@@ -123,17 +93,13 @@
         linear-gradient(120deg, rgba(44, 123, 229, 0.08) 1px, transparent 1px),
         linear-gradient(30deg, rgba(44, 123, 229, 0.06) 1px, transparent 1px);
       background-size: 76px 76px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.12));
-    }
-
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.12));}
     .hero-inner {
       position: relative;
       display: grid;
       grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
       gap: 36px;
-      align-items: end;
-    }
-
+      align-items: end;}
     .eyebrow {
       display: inline-flex;
       align-items: center;
@@ -145,29 +111,21 @@
       color: var(--blue-dark);
       background: rgba(255, 255, 255, 0.72);
       font-size: 13px;
-      font-weight: 750;
-    }
-
+      font-weight: 750;}
     .eyebrow::before {
       content: "";
       width: 8px;
       height: 8px;
       border-radius: 99px;
-      background: var(--blue);
-    }
-
+      background: var(--blue);}
     h1, h2, h3, p {
-      margin-top: 0;
-    }
-
+      margin-top: 0;}
     h1 {
       max-width: 760px;
       margin-bottom: 14px;
       font-size: clamp(40px, 7vw, 68px);
       line-height: 1.03;
-      letter-spacing: -0.055em;
-    }
-
+      letter-spacing: -0.055em;}
     .hero-title-en {
       max-width: 760px;
       margin: 0 0 28px;
@@ -175,39 +133,29 @@
       font-size: clamp(17px, 2vw, 22px);
       line-height: 1.45;
       font-weight: 650;
-      letter-spacing: -0.015em;
-    }
-
+      letter-spacing: -0.015em;}
     .hero-lead {
       max-width: 820px;
       margin-bottom: 0;
       color: #46556c;
       font-size: clamp(17px, 2vw, 21px);
-      line-height: 1.6;
-    }
-
+      line-height: 1.6;}
     .hero-card {
       padding: 26px;
       border: 1px solid rgba(219, 227, 239, 0.95);
       border-radius: var(--radius);
       background: rgba(255, 255, 255, 0.86);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(12px);
-    }
-
+      backdrop-filter: blur(12px);}
     .hero-card h2 {
       margin-bottom: 12px;
       font-size: 24px;
       line-height: 1.25;
-      letter-spacing: -0.03em;
-    }
-
+      letter-spacing: -0.03em;}
     .hero-card p {
       margin-bottom: 16px;
       color: var(--muted);
-      font-size: 15px;
-    }
-
+      font-size: 15px;}
     .back-link {
       display: inline-flex;
       align-items: center;
@@ -220,18 +168,12 @@
       font-size: 15px;
       font-weight: 750;
       text-decoration: none;
-      box-shadow: 0 12px 28px rgba(44, 123, 229, 0.22);
-    }
-
+      box-shadow: 0 12px 28px rgba(44, 123, 229, 0.22);}
     .back-link:hover {
-      background: var(--blue-dark);
-    }
-
+      background: var(--blue-dark);}
     .notice-section {
       padding: 34px 0 0;
-      background: var(--surface);
-    }
-
+      background: var(--surface);}
     .notice-card {
       display: grid;
       grid-template-columns: auto 1fr;
@@ -239,9 +181,7 @@
       padding: 22px;
       border: 1px solid rgba(198, 40, 40, 0.18);
       border-radius: 20px;
-      background: var(--red-soft);
-    }
-
+      background: var(--red-soft);}
     .notice-icon {
       display: grid;
       place-items: center;
@@ -251,84 +191,58 @@
       color: #fff;
       background: var(--red);
       font-size: 22px;
-      font-weight: 900;
-    }
-
+      font-weight: 900;}
     .notice-card h2 {
       margin-bottom: 8px;
       color: var(--red);
       font-size: 22px;
-      line-height: 1.25;
-    }
-
+      line-height: 1.25;}
     .notice-card p {
       margin-bottom: 0;
       color: #5c2930;
-      font-size: 16px;
-    }
-
+      font-size: 16px;}
     .recruitment-section {
       padding: 56px 0 68px;
-      background: var(--surface);
-    }
-
+      background: var(--surface);}
     .section-head {
       max-width: 820px;
-      margin-bottom: 24px;
-    }
-
+      margin-bottom: 24px;}
     .section-kicker {
       margin: 0 0 10px;
       color: var(--blue);
       font-size: 13px;
       font-weight: 850;
       letter-spacing: 0.13em;
-      text-transform: uppercase;
-    }
-
+      text-transform: uppercase;}
     .section-head h2 {
       margin-bottom: 12px;
       font-size: clamp(30px, 4vw, 46px);
       line-height: 1.08;
-      letter-spacing: -0.04em;
-    }
-
+      letter-spacing: -0.04em;}
     .section-head p {
       color: var(--muted);
-      font-size: 17px;
-    }
-
+      font-size: 17px;}
     .group-list {
-      border-top: 1px solid var(--line);
-    }
-
+      border-top: 1px solid var(--line);}
     .group-item {
       display: grid;
       grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
       gap: 32px;
       padding: 38px 0;
       border-bottom: 1px solid var(--line);
-      align-items: start;
-    }
-
+      align-items: start;}
     .group-item:last-child {
-      border-bottom: none;
-    }
-
+      border-bottom: none;}
     .poster-wrap {
       position: sticky;
-      top: 106px;
-    }
-
+      top: 106px;}
     .poster-image {
       display: block;
       width: 100%;
       border-radius: 20px;
       border: 1px solid var(--line);
       background: #fff;
-      box-shadow: 0 14px 36px rgba(17, 24, 39, 0.10);
-    }
-
+      box-shadow: 0 14px 36px rgba(17, 24, 39, 0.10);}
     .poster-placeholder {
       display: grid;
       place-items: center;
@@ -341,23 +255,17 @@
         linear-gradient(90deg, transparent 46%, rgba(44,123,229,0.10) 46% 54%, transparent 54%),
         linear-gradient(0deg, transparent 46%, rgba(44,123,229,0.10) 46% 54%, transparent 54%),
         #f8fafc;
-      text-align: center;
-    }
-
+      text-align: center;}
     .poster-placeholder strong {
       display: block;
       margin-bottom: 6px;
       color: var(--blue-dark);
-      font-size: 20px;
-    }
-
+      font-size: 20px;}
     .group-tag-row {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 14px;
-    }
-
+      margin-bottom: 14px;}
     .tag {
       display: inline-flex;
       align-items: center;
@@ -366,76 +274,52 @@
       color: var(--blue-dark);
       background: var(--blue-soft);
       font-size: 13px;
-      font-weight: 800;
-    }
-
+      font-weight: 800;}
     .tag.green {
       color: var(--green);
-      background: var(--green-soft);
-    }
-
+      background: var(--green-soft);}
     .tag.orange {
       color: #a95711;
-      background: #fff0df;
-    }
-
+      background: #fff0df;}
     .group-info h3 {
       margin-bottom: 12px;
       font-size: clamp(26px, 3vw, 36px);
       line-height: 1.16;
-      letter-spacing: -0.04em;
-    }
-
+      letter-spacing: -0.04em;}
     .group-desc {
       margin-bottom: 22px;
       color: #475467;
-      font-size: 17px;
-    }
-
+      font-size: 17px;}
     .info-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
-      margin: 20px 0 22px;
-    }
-
+      margin: 20px 0 22px;}
     .info-box {
       padding: 16px;
       border: 1px solid var(--line);
       border-radius: 18px;
-      background: var(--surface-soft);
-    }
-
+      background: var(--surface-soft);}
     .info-box span {
       display: block;
       margin-bottom: 5px;
       color: var(--muted);
       font-size: 13px;
-      font-weight: 800;
-    }
-
+      font-weight: 800;}
     .info-box strong {
       display: block;
       font-size: 16px;
-      line-height: 1.4;
-    }
-
+      line-height: 1.4;}
     .detail-list {
       margin: 0 0 24px;
       padding-left: 1.2em;
-      color: #475467;
-    }
-
+      color: #475467;}
     .detail-list li + li {
-      margin-top: 6px;
-    }
-
+      margin-top: 6px;}
     .button-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-    }
-
+      gap: 12px;}
     .primary-button,
     .secondary-button {
       display: inline-flex;
@@ -446,135 +330,82 @@
       border-radius: 999px;
       font-size: 15px;
       font-weight: 800;
-      text-decoration: none;
-    }
-
+      text-decoration: none;}
     .primary-button {
       color: #fff;
       background: var(--blue);
-      box-shadow: 0 12px 28px rgba(44, 123, 229, 0.20);
-    }
-
+      box-shadow: 0 12px 28px rgba(44, 123, 229, 0.20);}
     .primary-button:hover {
-      background: var(--blue-dark);
-    }
-
+      background: var(--blue-dark);}
     .secondary-button {
       color: var(--blue-dark);
       background: #fff;
-      border: 1px solid var(--line);
-    }
-
+      border: 1px solid var(--line);}
     .secondary-button:hover {
-      background: var(--blue-soft);
-    }
-
+      background: var(--blue-soft);}
     .site-footer {
       padding: 24px 0;
       color: #667085;
       background: #eef1f6;
-      border-top: 1px solid var(--line);
-    }
-
+      border-top: 1px solid var(--line);}
     .footer-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
-    }
-
+      gap: 24px;}
     .footer-brand {
       display: flex;
       align-items: center;
       gap: 12px;
-      min-width: 0;
-    }
-
+      min-width: 0;}
     .footer-brand img {
       width: auto;
       height: 38px;
-      flex: 0 0 auto;
-    }
-
+      flex: 0 0 auto;}
     .footer-title {
       font-weight: 750;
-      color: #475467;
-    }
-
+      color: #475467;}
     .footer-subtitle,
     .footer-meta-small {
       color: #8a94a6;
-      font-size: 12px;
-    }
-
+      font-size: 12px;}
     .footer-meta {
       text-align: right;
-      font-size: 14px;
-    }
-
+      font-size: 14px;}
     .footer-meta p {
-      margin: 0;
-    }
-
+      margin: 0;}
     @media (max-width: 980px) {
       .hero-inner,
       .group-item {
-        grid-template-columns: 1fr;
-      }
-
+        grid-template-columns: 1fr;}
       .poster-wrap {
-        position: static;
-      }
-
+        position: static;}
       .poster-image,
       .poster-placeholder {
-        width: min(100%, 720px);
-      }
-    }
-
+        width: min(100%, 720px);}}
     @media (max-width: 720px) {
       .container {
-        width: min(100% - 28px, var(--container));
-      }
-
+        width: min(100% - 28px, var(--container));}
       .header-inner,
       .footer-inner {
         align-items: flex-start;
-        flex-direction: column;
-      }
-
+        flex-direction: column;}
       .lab-title {
-        text-align: left;
-      }
-
+        text-align: left;}
       .lab-title-cn {
-        white-space: normal;
-      }
-
+        white-space: normal;}
       .lnu-logo {
-        height: 50px;
-      }
-
+        height: 50px;}
       .hero {
-        padding: 54px 0 42px;
-      }
-
+        padding: 54px 0 42px;}
       .notice-card {
-        grid-template-columns: 1fr;
-      }
-
+        grid-template-columns: 1fr;}
       .group-item {
-        padding: 30px 0;
-      }
-
+        padding: 30px 0;}
       .info-grid {
-        grid-template-columns: 1fr;
-      }
-
+        grid-template-columns: 1fr;}
       .footer-meta {
-        text-align: left;
-      }
-    }
+        text-align: left;}}
   </style>
 </head>
 
@@ -606,7 +437,7 @@
         <aside class="hero-card" aria-label="返回预约系统">
           <h2>实验预约入口</h2>
           <p>
-            如果您已经阅读知情同意书，并需要预约实验室时段，请返回实验室自助预约登记系统。
+            如果您已经阅读过招募公告，并需要预约实验室时段，可直接返回实验室自助预约登记系统。
           </p>
           <a class="back-link" href="../">返回预约主页 →</a>
         </aside>
@@ -620,7 +451,7 @@
           <div>
             <h2>报名说明</h2>
             <p>
-              不同实验的招募条件和实验要求可能不同。请按对应课题组提供的方式报名；如对实验内容、时间安排或报酬有疑问，请联系相应课题组。
+              不同实验的招募条件和实验要求可能不同。请按对应课题组提供的方式报名；如对实验内容、时间安排或酬金有疑问，请联系相应课题组。
             </p>
           </div>
         </div>
@@ -633,26 +464,135 @@
           <p class="section-kicker">Open studies</p>
           <h2>当前招募中的课题组</h2>
           <p>
-            以下信息可根据各课题组提供的广告、二维码或报名链接更新。若某项实验已停止招募，请及时修改状态。
+            以下信息可根据各课题组提供的广告、二维码或报名链接更新。若某项实验已停止招募，请各课题组及时修改状态。
           </p>
         </div>
 
         <div class="group-list">
-          <article class="group-item" id="yuyiyang">
+            <article class="group-item" id="group-hyf">
+              <div class="poster-wrap">
+                <div class="poster-placeholder">
+                  <div>
+                    <strong>何云凤课题组广告位</strong>
+                    <span>暂无招募海报或二维码图片</span>
+                  </div>
+                </div>
+              </div>
+
+            <div class="group-info">
+              <div class="group-tag-row">
+                <span class="tag green">暂无招募</span>
+                <span class="tag">何云凤课题组</span>
+                <span class="tag orange">暂无实验</span>
+              </div>
+
+              <h3>何云凤课题组广告位</h3>
+              <p class="group-desc">
+                何云凤课题组正在进行实验数据收集。请根据广告图片或报名链接中的说明确认自己是否符合招募条件。
+              </p>
+
+              <div class="info-grid">
+                <div class="info-box">
+                  <span>招募对象</span>
+                  <strong>待补充</strong>
+                </div>
+                <div class="info-box">
+                  <span>实验地点</span>
+                  <strong>待补充</strong>
+                </div>
+                <div class="info-box">
+                  <span>实验时长</span>
+                  <strong>待补充</strong>
+                </div>
+                <div class="info-box">
+                  <span>实验报酬</span>
+                  <strong>待补充</strong>
+                </div>
+              </div>
+
+              <ul class="detail-list">
+                <li>暂无要求。</li>
+              </ul>
+
+              <div class="button-row">
+                <a class="primary-button" href="#">报名链接待补充 →</a>
+                <a class="secondary-button" href="../">返回预约主页</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="group-item" id="group-zxc">
             <div class="poster-wrap">
-              <img class="poster-image" src="../images/recruitment-yuyiyang.png" alt="于溢洋课题组被试招募广告" />
+              <div class="poster-placeholder">
+                <div>
+                  <strong>周星辰课题组广告位</strong>
+                  <span>暂无招募海报或二维码图片</span>
+                </div>
+              </div>
             </div>
 
             <div class="group-info">
               <div class="group-tag-row">
-                <span class="tag green">正在招募</span>
+                <span class="tag green">暂无招募</span>
+                <span class="tag">周星辰课题组</span>
+                <span class="tag orange">暂无实验</span>
+              </div>
+
+              <h3>周星辰课题组实验招募</h3>
+              <p class="group-desc">
+                暂无实验招募简介。
+              </p>
+
+              <div class="info-grid">
+                <div class="info-box">
+                  <span>招募对象</span>
+                  <strong>待补充</strong>
+                </div>
+                <div class="info-box">
+                  <span>实验地点</span>
+                  <strong>待补充</strong>
+                </div>
+                <div class="info-box">
+                  <span>实验时长</span>
+                  <strong>待补充</strong>
+                </div>
+                <div class="info-box">
+                  <span>实验报酬</span>
+                  <strong>待补充</strong>
+                </div>
+              </div>
+
+              <ul class="detail-list">
+                <li>暂无要求。</li>
+              </ul>
+
+              <div class="button-row">
+                <a class="primary-button" href="#">报名链接待补充 →</a>
+                <a class="secondary-button" href="../">返回预约主页</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="group-item" id="group-yyy">
+            <div class="poster-wrap">
+              <div class="poster-placeholder">
+                <div>
+                  <strong>于溢洋课题组广告位</strong>
+                  <span>暂无招募海报或二维码图片</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="group-info">
+              <div class="group-tag-row">
+                <span class="tag green">暂无招募</span>
                 <span class="tag">于溢洋课题组</span>
-                <span class="tag orange">信息待补充</span>
+                <span class="tag orange">暂无实验</span>
               </div>
 
               <h3>于溢洋课题组实验招募</h3>
               <p class="group-desc">
-                于溢洋课题组正在进行实验数据收集。请根据广告图片或报名链接中的说明确认自己是否符合招募条件。
+                暂无招募信息。
               </p>
 
               <div class="info-grid">
@@ -675,9 +615,7 @@
               </div>
 
               <ul class="detail-list">
-                <li>请仔细阅读广告中的报名条件和实验要求。</li>
-                <li>如需调整预约时间，请提前联系对应课题组。</li>
-                <li>请勿重复报名或填写无效信息。</li>
+                <li>暂无要求。</li>
               </ul>
 
               <div class="button-row">
@@ -687,11 +625,11 @@
             </div>
           </article>
 
-          <article class="group-item" id="group-2">
+          <article class="group-item" id="group-vrc">
             <div class="poster-wrap">
               <div class="poster-placeholder">
                 <div>
-                  <strong>课题组二广告位</strong>
+                  <strong>视觉表征与计算课题组广告位</strong>
                   <span>可替换为招募海报或二维码图片</span>
                 </div>
               </div>
@@ -700,119 +638,11 @@
             <div class="group-info">
               <div class="group-tag-row">
                 <span class="tag green">正在招募</span>
-                <span class="tag">课题组二</span>
-                <span class="tag orange">信息待补充</span>
+                <span class="tag">视觉表征与计算课题组</span>
+                <span class="tag orange">物体表征实验</span>
               </div>
 
-              <h3>课题组二实验招募</h3>
-              <p class="group-desc">
-                这里填写课题组二的实验招募简介。建议简要说明实验主题、适合人群、报名方式和注意事项。
-              </p>
-
-              <div class="info-grid">
-                <div class="info-box">
-                  <span>招募对象</span>
-                  <strong>待补充</strong>
-                </div>
-                <div class="info-box">
-                  <span>实验地点</span>
-                  <strong>待补充</strong>
-                </div>
-                <div class="info-box">
-                  <span>实验时长</span>
-                  <strong>待补充</strong>
-                </div>
-                <div class="info-box">
-                  <span>实验报酬</span>
-                  <strong>待补充</strong>
-                </div>
-              </div>
-
-              <ul class="detail-list">
-                <li>请确认自己符合招募条件后再报名。</li>
-                <li>请按课题组要求准时到达实验地点。</li>
-                <li>如有问题，请联系对应课题组。</li>
-              </ul>
-
-              <div class="button-row">
-                <a class="primary-button" href="#">报名链接待补充 →</a>
-                <a class="secondary-button" href="../">返回预约主页</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="group-item" id="group-3">
-            <div class="poster-wrap">
-              <div class="poster-placeholder">
-                <div>
-                  <strong>课题组三广告位</strong>
-                  <span>可替换为招募海报或二维码图片</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="group-info">
-              <div class="group-tag-row">
-                <span class="tag green">正在招募</span>
-                <span class="tag">课题组三</span>
-                <span class="tag orange">信息待补充</span>
-              </div>
-
-              <h3>课题组三实验招募</h3>
-              <p class="group-desc">
-                这里填写课题组三的实验招募简介。建议避免写太长，重点说明参与者最关心的信息。
-              </p>
-
-              <div class="info-grid">
-                <div class="info-box">
-                  <span>招募对象</span>
-                  <strong>待补充</strong>
-                </div>
-                <div class="info-box">
-                  <span>实验地点</span>
-                  <strong>待补充</strong>
-                </div>
-                <div class="info-box">
-                  <span>实验时长</span>
-                  <strong>待补充</strong>
-                </div>
-                <div class="info-box">
-                  <span>实验报酬</span>
-                  <strong>待补充</strong>
-                </div>
-              </div>
-
-              <ul class="detail-list">
-                <li>请根据课题组提供的二维码或链接报名。</li>
-                <li>请勿填写他人信息或重复提交。</li>
-                <li>实验安排以课题组最终通知为准。</li>
-              </ul>
-
-              <div class="button-row">
-                <a class="primary-button" href="#">报名链接待补充 →</a>
-                <a class="secondary-button" href="../">返回预约主页</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="group-item" id="group-4">
-            <div class="poster-wrap">
-              <div class="poster-placeholder">
-                <div>
-                  <strong>课题组四广告位</strong>
-                  <span>可替换为招募海报或二维码图片</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="group-info">
-              <div class="group-tag-row">
-                <span class="tag green">正在招募</span>
-                <span class="tag">课题组四</span>
-                <span class="tag orange">信息待补充</span>
-              </div>
-
-              <h3>课题组四实验招募</h3>
+              <h3>视觉表征与计算课题组实验招募</h3>
               <p class="group-desc">
                 这里填写课题组四的实验招募简介。后续可替换为正式招募文案、图片和报名链接。
               </p>
@@ -820,26 +650,28 @@
               <div class="info-grid">
                 <div class="info-box">
                   <span>招募对象</span>
-                  <strong>待补充</strong>
+                  <p>20周岁-40周岁健康成人，19周岁没过20生日可接受；</p>
+                  <p>崇山来报地铁费；</p>
+                  <p>还差1人！！！缺男生。</p>
                 </div>
                 <div class="info-box">
                   <span>实验地点</span>
-                  <strong>待补充</strong>
+                  <strong>纪检大楼343</strong>
                 </div>
                 <div class="info-box">
                   <span>实验时长</span>
-                  <strong>待补充</strong>
+                  <strong>请按照预约页面上的说明预约</strong>
+                  <p>两个实验分3次进行，单次1.5小时；</p>
                 </div>
                 <div class="info-box">
                   <span>实验报酬</span>
-                  <strong>待补充</strong>
+                  <strong>总计约103-105元</strong>
+                  <p>单价：30元/时</p>
                 </div>
               </div>
 
               <ul class="detail-list">
-                <li>请先阅读招募说明，再提交报名信息。</li>
-                <li>具体实验时间以课题组联系确认为准。</li>
-                <li>如实验已满额，请关注后续招募更新。</li>
+                <li>请务必按照预约规则预约实验，感谢。</li>
               </ul>
 
               <div class="button-row">
