@@ -35,6 +35,9 @@
       color: var(--text);
       background: var(--bg);
       line-height: 1.65;}
+    img {
+      max-width: 100%;
+      height: auto;}
     a {
       color: inherit;}
     .container {
@@ -214,6 +217,21 @@
       margin-bottom: 0;
       color: #5c2930;
       font-size: 18px;}
+    .section-label {
+      display: inline-flex;
+      align-self: flex-start;
+      margin-bottom: 14px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      color: var(--blue-dark);
+      background: var(--blue-soft);
+      font-size: 13px;
+      font-weight: 850;
+      line-height: 1.2;
+      letter-spacing: 0;}
+    .section-label-light {
+      color: rgba(255,255,255,0.92);
+      background: rgba(255,255,255,0.16);}
     .rules-section {
       padding: 54px 0;
       color: #fff;
@@ -227,31 +245,16 @@
       align-items: start;
       margin-bottom: 24px;}
     .rules-head h2 {
-      margin-bottom: 6px;
+      margin-bottom: 0;
       font-size: clamp(28px, 4vw, 42px);
       line-height: 1.1;
       letter-spacing: -0.04em;}
-    .section-title-en {
-      display: inline-flex;
-      align-self: flex-start;
-      margin: 0 0 18px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      color: var(--blue-dark);
-      background: var(--blue-soft);
-      font-size: 13px;
-      font-weight: 850;
-      line-height: 1.2;
-      letter-spacing: 0;}
-    .rules-head .section-title-en {
-      color: rgba(255,255,255,0.92);
-      background: rgba(255,255,255,0.16);}
     .rules-head p {
       margin-bottom: 0;
       color: rgba(255,255,255,0.82);
       font-size: 17px;}
     .rules-side-note {
-      padding-top: 52px;}
+      padding-top: 50px;}
     .rules-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -386,13 +389,11 @@
       margin-bottom: 24px;
       text-align: center;}
     .section-title h2 {
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       font-size: clamp(28px, 4vw, 42px);
       line-height: 1.1;
       letter-spacing: -0.04em;}
-    .section-title .section-title-en {
-      margin-bottom: 14px;}
-    .section-title p:not(.section-title-en) {
+    .section-title p {
       margin-bottom: 0;
       color: var(--muted);
       font-size: 17px;}
@@ -565,8 +566,8 @@
       <div class="container">
         <div class="rules-head">
           <div>
+            <span class="section-label section-label-light">Booking rules</span>
             <h2>预约规则</h2>
-            <p class="section-title-en">Booking rules</p>
           </div>
         
           <p class="rules-side-note">
@@ -606,7 +607,7 @@
     <section class="recruitment-section" aria-label="被试招募公告">
       <div class="container">
         <div class="recruitment-card recruitment-entry">
-          <span class="recruitment-label">Participant recruitment</span>
+          <span class="section-label">Participant recruitment</span>
           <h2>被试招募公告</h2>
           <p class="recruitment-intro">
             实验室各课题组正在进行的被试招募信息已整理至独立公告页面。请点击下方按钮查看当前招募项目、实验要求和报名方式。
@@ -623,8 +624,8 @@
     <section class="consent-section">
       <div class="container">
         <div class="section-title">
+          <span class="section-label">Select experiment type</span>
           <h2>请选择实验类型</h2>
-          <p class="section-title-en">Select experiment type</p>
           <p>阅读并同意知情同意书后，方可进入预约页面。</p>
         </div>
 
