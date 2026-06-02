@@ -332,20 +332,17 @@
       --group-soft: var(--vrc-orange-soft);}
     .group-info {
       position: relative;
+      overflow: hidden;
       padding: 30px;
       border: 1px solid var(--line);
-      border-left: 8px solid var(--group-color, var(--blue-dark));
       border-radius: var(--radius);
       background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
-      box-shadow: 0 14px 38px rgba(17, 24, 39, 0.07);}
+      box-shadow:
+        inset 8px 0 0 var(--group-color, var(--blue-dark)),
+        inset 0 6px 0 var(--group-color, var(--blue-dark)),
+        0 14px 38px rgba(17, 24, 39, 0.07);}
     .group-info::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 6px;
-      border-radius: var(--radius) var(--radius) 0 0;
-      background: var(--group-color, var(--blue-dark));
-      opacity: 0.9;}
+      content: none;}
     .group-inactive .group-info {
       background: linear-gradient(180deg, #ffffff 0%, #fbfbfc 100%);}
     .group-inactive .poster-placeholder {
