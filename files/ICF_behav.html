@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>实验室预约登记系统</title>
 
   <link rel="icon" type="image/png" href="../images/lab_logo.png">
@@ -99,6 +100,130 @@
     .warning-text {
       color: #d32f2f;
       font-size: 27px;
+    }
+    /* ===== 手机端适配 ===== */
+    @media (max-width: 768px) {
+      body {
+        margin: 0;
+        text-align: center;
+        background: #ffffff;
+      }
+    
+      header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        padding: 14px 18px !important;
+        gap: 10px;
+      }
+    
+      header img {
+        height: 52px !important;
+        margin-right: 0 !important;
+      }
+    
+      header > div {
+        margin-left: 0 !important;
+        text-align: left !important;
+        width: 100%;
+      }
+    
+      header > div > div:first-child {
+        font-size: 16px !important;
+        line-height: 1.45;
+      }
+    
+      header > div > div:last-child {
+        font-size: 12px !important;
+        line-height: 1.4;
+      }
+    
+      h2 {
+        width: calc(100% - 28px);
+        margin: 22px auto 8px;
+        font-size: 22px;
+        line-height: 1.35;
+      }
+    
+      h3 {
+        width: calc(100% - 28px);
+        margin: 8px auto 18px;
+        font-size: 16px;
+        line-height: 1.45;
+      }
+    
+      .section {
+        width: calc(100% - 28px);
+        max-width: none;
+        margin: 16px auto;
+        padding: 18px 16px;
+        border-radius: 14px;
+      }
+    
+      .section h2 {
+        width: 100%;
+        margin: 0 0 14px;
+        font-size: 20px;
+        line-height: 1.4;
+      }
+    
+      .section h3 {
+        width: 100%;
+        margin: 8px 0 14px;
+        font-size: 16px;
+        line-height: 1.45;
+      }
+    
+      .section h4 {
+        font-size: 18px;
+        line-height: 1.45;
+        margin: 22px 0 8px;
+      }
+    
+      .section div[style*="font-size:20px"] {
+        font-size: 16px !important;
+        line-height: 1.75;
+      }
+    
+      .section p {
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      }
+    
+      .btn {
+        display: block;
+        width: calc(100% - 36px);
+        max-width: 420px;
+        margin: 12px auto;
+        padding: 15px 18px;
+        font-size: 16px;
+        line-height: 1.45;
+        border-radius: 10px;
+      }
+    
+      body > p {
+        width: calc(100% - 32px);
+        margin: 18px auto;
+        text-align: left;
+        font-size: 14px;
+        line-height: 1.7;
+      }
+    
+      footer {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        padding: 18px !important;
+        gap: 14px;
+        text-align: left !important;
+      }
+    
+      footer > div {
+        text-align: left !important;
+      }
+    
+      footer img {
+        height: 32px !important;
+      }
     }
   </style>
 </head>
