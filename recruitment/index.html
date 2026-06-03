@@ -349,13 +349,15 @@
       background: #f8fafc;
       border-color: #cfd6e1;}
     .poster-wrap {
-      position: static;
+      display: flex;
+      justify-content: center;
       margin: 22px 0 24px;}
     .poster-image {
       display: block;
-      width: 100%;
+      width: min(260px, 80vw);
       height: auto;
-      border-radius: 20px;
+      padding: 12px;
+      border-radius: 18px;
       border: 1px solid var(--line);
       background: #fff;
       box-shadow: 0 14px 36px rgba(17, 24, 39, 0.10);}
