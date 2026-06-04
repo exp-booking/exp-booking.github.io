@@ -268,6 +268,18 @@ h1 {
   margin-bottom: 24px;
 }
 
+.speaker-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.speaker-line strong,
+.speaker-line span {
+  display: inline;
+}
+
 .hero-card h2 {
   font-size: 24px;
   line-height: 1.2;
