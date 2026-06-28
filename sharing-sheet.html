@@ -374,7 +374,7 @@ a:hover {
 
   <section class="hero" aria-labelledby="page-title">
     <h1 id="page-title">被试专用预约</h1>
-    <p>请在日历中选择合适时段，并在提交前确认个人信息、开始时间和结束时间。手机端默认使用“日”视图，也可以切换到“周”视图。</p>
+    <p>请在日历中选择合适时段，并在提交前确认个人信息、开始时间和结束时间。请按预约规则填写喔！</p>
   </section>
 
   <section class="notice-card" aria-label="预约规则与课题组公告">
@@ -404,7 +404,7 @@ a:hover {
         <h2>选择预约时间</h2>
         <p>点击日历空白处会自动带入开始时间，默认结束时间为 30 分钟后，可在表单内修改。</p>
       </div>
-      <div class="mobile-hint">手机端默认显示单日视图</div>
+      <div class="mobile-hint">手机端可切换单日视图</div>
     </div>
     <div id="calendar"></div>
   </section>
@@ -532,6 +532,7 @@ function renderCalendar() {
       slotMinTime: "08:00:00",
       slotMaxTime: "20:00:00",
       slotDuration: "00:30:00",
+      defaultTimedEventDuration: "01:00:00",
       allDaySlot: false,
       headerToolbar: isMobile
         ? { left: "prev,next today", center: "title", right: "timeGridWeek,timeGridDay" }
@@ -562,8 +563,7 @@ function renderCalendar() {
 
 function openModal(startDate, endDate) {
   const start = new Date(startDate);
-  const end = endDate ? new Date(endDate) : new Date(start.getTime() + 30 * 60000);
-
+  const end = endDate ? new Date(endDate) : new Date(start.getTime() + 1 * 60 * 60000);
   startInput.value = toLocalDateTimeValue(start);
   endInput.value = toLocalDateTimeValue(end);
 
