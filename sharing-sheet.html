@@ -521,7 +521,7 @@ function renderCalendar() {
   calendar = new FullCalendar.Calendar(
     document.getElementById("calendar"),
     {
-      initialView: isMobile ? "timeGridDay" : "timeGridWeek",
+      initialView: isMobile ? "timeGridWeek" : "timeGridDay",
       locale: "zh-cn",
       firstDay: 1,
       nowIndicator: true,
@@ -531,7 +531,7 @@ function renderCalendar() {
       height: "auto",
       slotMinTime: "08:00:00",
       slotMaxTime: "20:00:00",
-      slotDuration: "00:30:00",
+      slotDuration: "01:00:00",
       allDaySlot: false,
       headerToolbar: isMobile
         ? { left: "prev,next today", center: "title", right: "timeGridWeek,timeGridDay" }
