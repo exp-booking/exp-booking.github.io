@@ -1,797 +1,352 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>预约结果查询 | 辽宁大学心理测试与行为分析实验室</title>
-  <meta name="description" content="辽宁大学心理测试与行为分析实验室预约结果查询" />
-  <link rel="icon" type="image/png" href="./images/lab_logo.png" />
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-
-  <style>
-    :root {
-      --bg: #f6f8fb;
-      --surface: #ffffff;
-      --surface-soft: #f1f5fb;
-      --text: #162033;
-      --muted: #667085;
-      --line: #dbe3ef;
-      --blue: #2c7be5;
-      --blue-dark: #1f62bd;
-      --blue-soft: #e8f1ff;
-      --green: #178f68;
-      --red: #c62828;
-      --red-soft: #fff1f1;
-      --shadow: 0 18px 50px rgba(17, 24, 39, 0.10);
-      --radius: 22px;
-      --container: 1080px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
-      color: var(--text);
-      background: var(--bg);
-      line-height: 1.65;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    a {
-      color: inherit;
-    }
-
-    .container {
-      width: min(var(--container), calc(100% - 40px));
-      margin: 0 auto;
-    }
-
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: rgba(255, 255, 255, 0.92);
-      border-bottom: 1px solid var(--line);
-      backdrop-filter: blur(12px);
-    }
-
-    .header-inner {
-      min-height: 82px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      min-width: 0;
-    }
-
-    .lnu-logo {
-      height: 58px;
-      width: auto;
-      flex: 0 0 auto;
-    }
-
-    .lab-title {
-      text-align: right;
-    }
-
-    .lab-title-cn {
-      font-size: 21px;
-      font-weight: 750;
-      letter-spacing: -0.02em;
-      white-space: nowrap;
-    }
-
-    .lab-title-en {
-      margin-top: 2px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      padding: 58px 0 44px;
-      background:
-        radial-gradient(circle at 20% 16%, rgba(44, 123, 229, 0.16), transparent 32%),
-        radial-gradient(circle at 86% 10%, rgba(44, 123, 229, 0.08), transparent 26%),
-        linear-gradient(135deg, #f9fbff 0%, #eef5ff 68%, #f8fbff 100%);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(120deg, rgba(44, 123, 229, 0.08) 1px, transparent 1px),
-        linear-gradient(30deg, rgba(44, 123, 229, 0.06) 1px, transparent 1px);
-      background-size: 76px 76px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.12));
-    }
-
-    .hero-inner {
-      position: relative;
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
-      gap: 34px;
-      align-items: end;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin: 0 0 16px;
-      padding: 7px 12px;
-      border: 1px solid rgba(44, 123, 229, 0.18);
-      border-radius: 999px;
-      color: var(--blue-dark);
-      background: rgba(255, 255, 255, 0.72);
-      font-size: 13px;
-      font-weight: 750;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 99px;
-      background: var(--blue);
-    }
-
-    h1, h2, p {
-      margin-top: 0;
-    }
-
-    h1 {
-      max-width: 760px;
-      margin-bottom: 14px;
-      font-size: clamp(36px, 6vw, 60px);
-      line-height: 1.04;
-      letter-spacing: -0.05em;
-    }
-
-    .hero-title-en {
-      max-width: 760px;
-      margin: 0 0 24px;
-      color: #2c3f5f;
-      font-size: clamp(16px, 2vw, 21px);
-      line-height: 1.45;
-      font-weight: 650;
-      letter-spacing: -0.015em;
-    }
-
-    .hero-lead {
-      max-width: 820px;
-      margin-bottom: 0;
-      color: #46556c;
-      font-size: clamp(16px, 2vw, 19px);
-      line-height: 1.65;
-    }
-
-    .hero-card {
-      padding: 24px;
-      border: 1px solid rgba(219, 227, 239, 0.95);
-      border-radius: var(--radius);
-      background: rgba(255, 255, 255, 0.88);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(12px);
-    }
-
-    .hero-card h2 {
-      margin-bottom: 10px;
-      font-size: 23px;
-      line-height: 1.25;
-      letter-spacing: -0.03em;
-    }
-
-    .hero-card p {
-      margin-bottom: 16px;
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 0 18px;
-      border: none;
-      border-radius: 999px;
-      color: #fff;
-      background: var(--blue);
-      font-size: 15px;
-      font-weight: 750;
-      text-decoration: none;
-      cursor: pointer;
-      box-shadow: 0 12px 28px rgba(44, 123, 229, 0.18);
-    }
-
-    .btn:hover {
-      background: var(--blue-dark);
-    }
-
-    .btn-secondary {
-      color: var(--blue-dark);
-      background: #fff;
-      border: 1px solid var(--line);
-      box-shadow: none;
-    }
-
-    .btn-secondary:hover {
-      background: var(--blue-soft);
-    }
-
-    .notice-section {
-      padding: 34px 0 0;
-      background: var(--surface);
-    }
-
-    .notice-card {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 16px;
-      padding: 22px;
-      border: 1px solid rgba(44, 123, 229, 0.18);
-      border-radius: 20px;
-      background: var(--blue-soft);
-    }
-
-    .notice-icon {
-      display: grid;
-      place-items: center;
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      color: #fff;
-      background: var(--blue);
-      font-size: 20px;
-      font-weight: 900;
-    }
-
-    .notice-card h2 {
-      margin-bottom: 8px;
-      color: var(--blue-dark);
-      font-size: 22px;
-      line-height: 1.25;
-    }
-
-    .notice-card p {
-      margin-bottom: 0;
-      color: #344054;
-      font-size: 16px;
-    }
-
-    .calendar-section {
-      padding: 42px 0 68px;
-      background: var(--surface);
-    }
-
-    .calendar-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-
-    .status-text {
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .calendar-card {
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: #fff;
-      box-shadow: 0 14px 38px rgba(17, 24, 39, 0.07);
-    }
-
-    #calendar {
-      min-height: 680px;
-    }
-
-    .fc {
-      font-family: inherit;
-      color: var(--text);
-    }
-
-    .fc .fc-toolbar-title {
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-    }
-
-    .fc .fc-button {
-      border: none;
-      border-radius: 999px;
-      background: var(--blue);
-      font-weight: 700;
-      box-shadow: none;
-    }
-
-    .fc .fc-button:hover {
-      background: var(--blue-dark);
-    }
-
-    .fc .fc-button-primary:not(:disabled).fc-button-active,
-    .fc .fc-button-primary:not(:disabled):active {
-      background: var(--blue-dark);
-    }
-
-    .fc .fc-timegrid-slot {
-      height: 2.2em;
-    }
-
-    .fc .fc-event {
-      border: none;
-      border-radius: 8px;
-      padding: 2px 4px;
-      background: var(--blue);
-      cursor: pointer;
-    }
-
-    .readonly-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 5px 10px;
-      border-radius: 999px;
-      color: var(--green);
-      background: #e7f6f1;
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .error-box {
-      display: none;
-      margin-top: 16px;
-      padding: 14px 16px;
-      border: 1px solid rgba(198, 40, 40, 0.20);
-      border-radius: 14px;
-      color: var(--red);
-      background: var(--red-soft);
-    }
-
-    .site-footer {
-      padding: 24px 0;
-      color: #667085;
-      background: #eef1f6;
-      border-top: 1px solid var(--line);
-    }
-
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .footer-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .footer-brand img {
-      width: auto;
-      height: 38px;
-      flex: 0 0 auto;
-    }
-
-    .footer-title {
-      font-weight: 750;
-      color: #475467;
-    }
-
-    .footer-subtitle,
-    .footer-meta-small {
-      color: #8a94a6;
-      font-size: 12px;
-    }
-
-    .footer-meta {
-      text-align: right;
-      font-size: 14px;
-    }
-
-    .footer-meta p {
-      margin: 0;
-    }
-
-    @media (max-width: 980px) {
-      .hero-inner {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 720px) {
-      .container {
-        width: min(100% - 28px, var(--container));
-      }
-
-      .header-inner,
-      .footer-inner {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .lab-title {
-        text-align: left;
-      }
-
-      .lab-title-cn {
-        white-space: normal;
-        font-size: 18px;
-      }
-
-      .lnu-logo {
-        height: 50px;
-      }
-
-      .hero {
-        padding: 48px 0 34px;
-      }
-
-      .notice-card {
-        grid-template-columns: 1fr;
-      }
-
-      .calendar-toolbar {
-        align-items: stretch;
-        flex-direction: column;
-      }
-
-      .button-row,
-      .btn {
-        width: 100%;
-      }
-
-      .calendar-card {
-        padding: 12px;
-        border-radius: 16px;
-      }
-
-      #calendar {
-        min-height: 620px;
-      }
-
-      .fc .fc-toolbar {
-        align-items: stretch;
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .fc .fc-toolbar-title {
-        font-size: 20px;
-        text-align: center;
-      }
-
-      .fc .fc-toolbar-chunk {
-        display: flex;
-        justify-content: center;
-      }
-
-      .fc .fc-timegrid-slot {
-        height: 2.5em;
-      }
-
-      .footer-meta {
-        text-align: left;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>预约结果查询</title>
+
+<link rel="icon" type="image/png" href="../images/lab_logo.png">
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<style>
+:root {
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --notice-bg: #eff6ff;
+  --notice-line: #bfdbfe;
+  --shadow: 0 14px 35px rgba(15, 23, 42, 0.10);
+  --radius: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.10), transparent 34rem),
+    var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.65;
+}
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.page {
+  width: min(1160px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 22px 0 44px;
+}
+.hero {
+  margin-bottom: 18px;
+  padding: 22px 24px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+.hero h1 {
+  margin: 0 0 6px;
+  font-size: clamp(24px, 4vw, 36px);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+.hero p {
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 15px;
+}
+.calendar-card {
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid rgba(229, 231, 235, 0.95);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.calendar-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.calendar-card-header h2 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.35;
+}
+.calendar-card-header p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.readonly-badge {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--notice-bg);
+  border: 1px solid var(--notice-line);
+  color: var(--primary-dark);
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+#calendar {
+  padding: 16px;
+}
+.fc {
+  --fc-border-color: #e5e7eb;
+  --fc-today-bg-color: #eff6ff;
+  --fc-now-indicator-color: #ef4444;
+  font-size: 14px;
+}
+.fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 14px;
+}
+.fc .fc-toolbar-title {
+  font-size: clamp(18px, 3vw, 24px);
+  font-weight: 750;
+}
+.fc .fc-button {
+  border: 0;
+  border-radius: 11px;
+  background: var(--primary);
+  box-shadow: none;
+  padding: 8px 12px;
+}
+.fc .fc-button:hover,
+.fc .fc-button:focus {
+  background: var(--primary-dark);
+}
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+  background: #1e40af;
+}
+.fc .fc-col-header-cell-cushion,
+.fc .fc-timegrid-axis-cushion,
+.fc .fc-timegrid-slot-label-cushion {
+  color: #4b5563;
+}
+.fc-event {
+  border: 0;
+  border-radius: 8px;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+@media (max-width: 760px) {
+  .page {
+    width: min(100% - 20px, 1160px);
+    padding: 12px 0 26px;
+  }
+  .hero {
+    padding: 18px 16px;
+    border-radius: 16px;
+  }
+  .hero p {
+    font-size: 14px;
+  }
+  .calendar-card {
+    border-radius: 16px;
+  }
+  .calendar-card-header {
+    display: block;
+    padding: 16px;
+  }
+  .readonly-badge {
+    margin-top: 10px;
+  }
+  #calendar {
+    padding: 10px;
+  }
+  .fc {
+    font-size: 12px;
+  }
+  .fc .fc-toolbar.fc-header-toolbar {
+    gap: 8px;
+  }
+  .fc .fc-toolbar-chunk {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .fc .fc-button {
+    min-height: 38px;
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+  .fc .fc-toolbar-title {
+    text-align: center;
+  }
+  .fc .fc-timegrid-slot {
+    height: 2.3em;
+  }
+  .fc-event-title,
+  .fc-event-time {
+    font-size: 11px;
+  }
+}
+@media (max-width: 420px) {
+  .fc .fc-toolbar.fc-header-toolbar {
+    flex-direction: column;
+  }
+}
+</style>
 </head>
 
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <div class="header-left">
-        <img class="lnu-logo" src="./images/lnu_logo.png" alt="辽宁大学" />
-      </div>
+<main class="page">
+  <section class="hero" aria-labelledby="page-title">
+    <h1 id="page-title">预约结果查询</h1>
+    <p>本页面仅用于查看已提交的预约记录，不能新增、修改或取消预约。</p>
+  </section>
 
-      <div class="lab-title">
-        <div class="lab-title-cn">辽宁省心理测试与行为分析重点实验室</div>
-        <div class="lab-title-en">Liaoning Key Laboratory of Psychological Testing and Behavioural Analysis</div>
+  <section class="calendar-card" aria-label="预约日历">
+    <div class="calendar-card-header">
+      <div>
+        <h2>预约日历</h2>
+        <p>点击已有预约可查看时间信息。</p>
       </div>
+      <span class="readonly-badge">只读模式</span>
     </div>
-  </header>
+    <div id="calendar"></div>
+  </section>
+</main>
 
-  <main>
-    <section class="hero">
-      <div class="container hero-inner">
-        <div>
-          <p class="eyebrow">Booking status</p>
-          <h1>预约结果查询</h1>
-          <p class="hero-title-en">Booking Status Calendar</p>
-          <p class="hero-lead">
-            本页面用于查看已成功提交的预约记录。页面仅供查询，不能新增、修改或取消预约。
-          </p>
-        </div>
+<script>
+const SUPABASE_URL = "https://ipqvhykwlvzagbffhdzp.supabase.co";
+const SUPABASE_KEY = "sb_publishable_Nv9QOCAV0sD-sTgYeCFKfQ_QOCMXmrM";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const TABLE_NAME = "booking-sharing";
 
-        <aside class="hero-card" aria-label="预约入口说明">
-          <h2>需要新预约？</h2>
-          <p>
-            如需进行新预约，请先阅读知情同意书，再进入正式预约页面。
-          </p>
-          <div class="button-row">
-            <a class="btn" href="./index.html">返回主页</a>
-          </div>
-        </aside>
-      </div>
-    </section>
+let calendar;
+let bookings = [];
 
-    <section class="notice-section">
-      <div class="container">
-        <div class="notice-card">
-          <div class="notice-icon">i</div>
-          <div>
-            <h2>查看说明</h2>
-            <p>
-              本页面不开放任何预约提交功能。下方日历仅显示系统中已登记的预约。名字被匿名表示预约已受理（例如，张三 → 张X），此时个人信息已无法更改。
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
+const mobileQuery = window.matchMedia("(max-width: 760px)");
 
-    <section class="calendar-section">
-      <div class="container">
-        <div class="calendar-toolbar">
-          <div>
-            <span class="readonly-badge">只读模式</span>
-            <span class="status-text" id="statusText">正在读取预约记录...</span>
-          </div>
+function formatDateTime(date) {
+  if (!date) return "";
+  return new Date(date).toLocaleString("zh-CN", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  });
+}
 
-          <div class="button-row">
-            <button class="btn" type="button" id="refreshBtn">刷新预约结果</button>
-            <a class="btn btn-secondary" href="./index.html">返回主页</a>
-          </div>
-        </div>
+function formatTime(date) {
+  if (!date) return "";
+  return new Date(date).toLocaleTimeString("zh-CN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  });
+}
 
-        <div class="calendar-card">
-          <div id="calendar"></div>
-          <div class="error-box" id="errorBox"></div>
-        </div>
-      </div>
-    </section>
-  </main>
+async function loadBookings() {
+  const { data, error } = await sb.from(TABLE_NAME).select("id, name, group, start, end");
+  if (error) {
+    alert("读取预约信息失败，请刷新后再试");
+    console.error(error);
+    bookings = [];
+    return;
+  }
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <img src="./images/lab_logo.png" alt="实验室 logo" />
-        <div>
-          <div class="footer-title">心理测试与行为分析实验室 | 辽宁大学</div>
-          <div class="footer-subtitle">Laboratory of Psychological Testing and Behavioural Analysis</div>
-        </div>
-      </div>
-
-      <div class="footer-meta">
-        <p>© 2022–2026 实验室预约系统</p>
-        <p class="footer-meta-small">Contact: shanglinlin@lnu.edu.cn</p>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    const SUPABASE_URL = "https://ipqvhykwlvzagbffhdzp.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_Nv9QOCAV0sD-sTgYeCFKfQ_QOCMXmrM";
-    const TABLE_NAME = "booking-sharing";
-
-    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    let calendar = null;
-
-    function escapeHTML(value) {
-      return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+  bookings = (data || []).map(row => ({
+    id: String(row.id),
+    title: `${row.group || "未填写课题组"}｜${row.name || "匿名被试"}`,
+    start: row.start,
+    end: row.end,
+    extendedProps: {
+      name: row.name || "匿名被试",
+      group: row.group || "未填写课题组"
     }
+  }));
+}
 
-    function formatDateTime(value) {
-      if (!value) return "";
-      const d = new Date(value);
-      return d.toLocaleString("zh-CN", {
-        timeZone: "Asia/Shanghai",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
+function renderCalendar() {
+  const isMobile = mobileQuery.matches;
+
+  calendar = new FullCalendar.Calendar(
+    document.getElementById("calendar"),
+    {
+      initialView: "timeGridWeek",
+      locale: "zh-cn",
+      firstDay: 1,
+      nowIndicator: true,
+      selectable: false,
+      editable: false,
+      eventStartEditable: false,
+      eventDurationEditable: false,
+      eventResizableFromStart: false,
+      expandRows: true,
+      height: "auto",
+      slotMinTime: "08:00:00",
+      slotMaxTime: "20:00:00",
+      slotDuration: "00:30:00",
+      defaultTimedEventDuration: "01:00:00",
+      allDaySlot: false,
+      headerToolbar: isMobile
+        ? { left: "prev,next today", center: "title", right: "timeGridWeek,timeGridDay" }
+        : { left: "prev,next today", center: "title", right: "timeGridWeek,timeGridDay" },
+      buttonText: {
+        today: "今天",
+        week: "周",
+        day: "日"
+      },
+      slotLabelFormat: {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false
-      });
-    }
-
-    function formatTime(value) {
-      if (!value) return "";
-      const d = new Date(value);
-      return d.toLocaleTimeString("zh-CN", {
-        timeZone: "Asia/Shanghai",
+      },
+      eventTimeFormat: {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false
-      });
-    }
-
-    function formatUpdateTime() {
-      const d = new Date();
-      return d.toLocaleString("zh-CN", {
-        timeZone: "Asia/Shanghai",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false
-      });
-    }
-
-    function setStatus(text) {
-      document.getElementById("statusText").textContent = text;
-    }
-
-    function showError(message) {
-      const errorBox = document.getElementById("errorBox");
-      errorBox.style.display = "block";
-      errorBox.textContent = message;
-    }
-
-    function clearError() {
-      const errorBox = document.getElementById("errorBox");
-      errorBox.style.display = "none";
-      errorBox.textContent = "";
-    }
-
-    async function loadEvents(fetchInfo, successCallback, failureCallback) {
-      clearError();
-      setStatus("正在读取预约记录...");
-
-      const { data, error } = await sb
-        .from(TABLE_NAME)
-        .select("name, group, start, end")
-        .gte("start", fetchInfo.startStr)
-        .lt("start", fetchInfo.endStr)
-        .order("start", { ascending: true });
-
-      if (error) {
-        console.error(error);
-        showError("预约记录读取失败。请稍后刷新页面，或联系实验人员。");
-        setStatus("读取失败");
-        failureCallback(error);
-        return;
+      },
+      events: bookings,
+      eventClick: info => {
+        const event = info.event;
+        const name = event.extendedProps.name || "匿名被试";
+        const group = event.extendedProps.group || "未填写课题组";
+        const start = formatDateTime(event.start);
+        const end = formatTime(event.end);
+        alert(`预约信息\n\n被试：${name}\n课题组：${group}\n时间：${start} – ${end}\n\n本页面为只读模式，不能新增、修改或取消预约。`);
       }
-
-      const events = (data || []).map((row) => {
-        const name = row.name || "匿名被试";
-        const group = row.group || "未填写课题组";
-
-        return {
-          title: `${group}｜${name}`,
-          start: row.start,
-          end: row.end,
-          allDay: false,
-          extendedProps: {
-            name,
-            group
-          }
-        };
-      });
-
-      setStatus(`已更新：${formatUpdateTime()}，当前视图内 ${events.length} 条预约记录`);
-      successCallback(events);
     }
+  );
 
-    function initCalendar() {
-      const calendarEl = document.getElementById("calendar");
+  calendar.render();
+}
 
-      calendar = new FullCalendar.Calendar(calendarEl, {
-        //locale: "zh-cn",
-        timeZone: "Asia/Shanghai",
-
-        initialView: "timeGridWeek",
-
-        headerToolbar: {
-          left: "prev,next today",
-          center: "title",
-          right: "timeGridWeek,timeGridDay,listWeek"
-        },
-
-        buttonText: {
-          today: "今天",
-          week: "周",
-          day: "日",
-          list: "列表"
-        },
-
-        allDaySlot: false,
-        nowIndicator: true,
-        expandRows: true,
-        height: "auto",
-
-        slotMinTime: "08:00:00",
-        slotMaxTime: "22:00:00",
-        slotDuration: "00:30:00",
-        snapDuration: "00:30:00",
-
-        selectable: false,
-        editable: false,
-        eventStartEditable: false,
-        eventDurationEditable: false,
-        eventResizableFromStart: false,
-        selectMirror: false,
-
-        events: loadEvents,
-
-        eventClick: function(info) {
-          const event = info.event;
-          const name = event.extendedProps.name || "匿名被试";
-          const group = event.extendedProps.group || "未填写课题组";
-          const start = formatDateTime(event.start);
-          const end = formatTime(event.end);
-
-          alert(
-            "预约信息\n\n" +
-            "被试：" + name + "\n" +
-            "课题组：" + group + "\n" +
-            "时间：" + start + " – " + end + "\n\n" +
-            "本页面仅用于查看预约结果，不能新增或修改预约。"
-          );
-        },
-
-        eventDidMount: function(info) {
-          const event = info.event;
-          const name = event.extendedProps.name || "匿名被试";
-          const group = event.extendedProps.group || "未填写课题组";
-          info.el.title = `${group}｜${name}\n${formatDateTime(event.start)} – ${formatTime(event.end)}`;
-        }
-      });
-
-      calendar.render();
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-      initCalendar();
-
-      document.getElementById("refreshBtn").addEventListener("click", function() {
-        if (calendar) {
-          calendar.refetchEvents();
-        }
-      });
-    });
-  </script>
+(async () => {
+  await loadBookings();
+  renderCalendar();
+})();
+</script>
 </body>
 </html>
