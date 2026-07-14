@@ -1,0 +1,65 @@
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
+  const SUPABASE_URL = "你的 SUPABASE_URL";
+  const SUPABASE_KEY = "你的 SUPABASE_ANON_KEY";
+  const TABLE_NAME = "booking-sharing";
+
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  function formatDate(value) {
+    const d = new Date(value);
+    return d.toLocaleDateString("zh-CN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      weekday: "short"
+    });
+  }
+
+  function formatTime(value) {
+    const d = new Date(value);
+    return d.toLocaleTimeString("zh-CN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    });
+  }
+
+  async function loadBookings() {
+    const list = document.getElementById("bookingList");
+    list.innerHTML = "<p>正在加载预约记录...</p>";
+
+    const now = new Date().toISOString();
+
+    const { data, error } = await sb
+      .from(TABLE_NAME)
+      .select("name, group, start, end")
+      .gte("start", now)
+      .order("start", { ascending: true });
+
+    if (error) {
+      console.error(error);
+      list.innerHTML = "<p>预约记录加载失败，请稍后刷新页面。</p>";
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      list.innerHTML = "<p>目前暂无未来预约记录。</p>";
+      return;
+    }
+
+    list.innerHTML = data.map(row => `
+      <div class="booking-card">
+        <div class="booking-name">${row.name || "匿名被试"}</div>
+        <div class="booking-meta">${row.group || "未填写课题组"}</div>
+        <div class="booking-time">
+          ${formatDate(row.start)}　
+          ${formatTime(row.start)}–${formatTime(row.end)}
+        </div>
+      </div>
+    `).join("");
+  }
+
+  loadBookings();
+</script>
