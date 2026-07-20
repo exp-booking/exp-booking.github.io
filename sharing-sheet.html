@@ -642,14 +642,39 @@ async function submitBooking() {
       return;
     }
 
-    let overlapCount = 0;
-    for (const ev of currentBookings || []) {
-      const isOverlap = !(new Date(end) <= new Date(ev.start) ||
-                          new Date(start) >= new Date(ev.end));
-      if (isOverlap) overlapCount++;
+    function wouldExceedCapacity(existingBookings, newStart, newEnd, maxCapacity = 2) {
+      const startDate = new Date(newStart);
+      const endDate = new Date(newEnd);
+    
+      if (endDate <= startDate) {
+        return true;
+      }
+    
+      const relevantBookings = (existingBookings || [])
+        .filter(ev => ev.start && ev.end)
+        .map(ev => ({
+          start: new Date(ev.start),
+          end: new Date(ev.end)
+        }))
+        .filter(ev => ev.end > startDate && ev.start < endDate);
+    
+      const checkPoints = [
+        startDate.getTime(),
+        ...relevantBookings
+          .map(ev => ev.start.getTime())
+          .filter(t => t > startDate.getTime() && t < endDate.getTime())
+      ];
+    
+      return checkPoints.some(t => {
+        const existingCount = relevantBookings.filter(ev =>
+          ev.start.getTime() <= t && ev.end.getTime() > t
+        ).length;
+    
+        return existingCount + 1 > maxCapacity;
+      });
     }
-
-    if (overlapCount >= 2) {
+    
+    if (wouldExceedCapacity(currentBookings, start, end, 2)) {
       alert("该时间段人数已满（最多允许2人同时预约）");
       return;
     }
